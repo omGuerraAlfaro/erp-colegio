@@ -4,11 +4,11 @@ import { CategoriaServiceService } from 'src/app/services/categoria-service.serv
 
 
 @Component({
-  selector: 'app-flujo-efectivo',
-  templateUrl: './flujo-efectivo.component.html',
-  styleUrls: ['./flujo-efectivo.component.css']
+  selector: 'app-boletas',
+  templateUrl: './boletas.component.html',
+  styleUrls: ['./boletas.component.css']
 })
-export class FlujoEfectivoComponent implements OnInit {
+export class BoletasComponent implements OnInit {
 
   vars = [
     {

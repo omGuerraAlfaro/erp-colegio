@@ -21,7 +21,7 @@ registerLocaleData(localeEs, 'es');
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 //Finanzas
-import { FlujoEfectivoComponent } from './components/finance/boletas/flujo-efectivo.component';
+import { BoletasComponent } from './components/boletas/boletas/boletas.component';
 //rrhh
 import { ColaboradoresComponent } from './components/rrhh/colaboradores/colaboradores.component';
 import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remuneraciones.component';
@@ -33,11 +33,11 @@ import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remune
     HomeComponent,
     LoginComponent,
     ContentComponent,
-    FlujoEfectivoComponent,
     Sidebar2Component,
     RemuneracionesComponent,
     ColaboradoresComponent,
     MountPipe,
+    BoletasComponent,
   ],
   imports: [
     BrowserModule,

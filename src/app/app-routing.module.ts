@@ -4,8 +4,8 @@ import { ContentComponent } from './components/template/content/content.componen
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 //Finanzas
+import { BoletasComponent } from './components/boletas/boletas/boletas.component';
 
-import { FlujoEfectivoComponent } from './components/finance/boletas/flujo-efectivo.component';
 
 //recursos humanos
 import { ColaboradoresComponent } from './components/rrhh/colaboradores/colaboradores.component';
@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'content', component: ContentComponent },
   { path: 'home', component: HomeComponent, /* canActivate: [AuthGuard] */ },
 
-  { path: 'flujo-efectivo', component: FlujoEfectivoComponent },
+  { path: 'boletas', component: BoletasComponent },
   { path: 'colaboradores', component: ColaboradoresComponent},
   { path: 'remuneraciones', component: RemuneracionesComponent},
 
