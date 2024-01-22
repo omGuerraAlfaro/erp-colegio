@@ -1,0 +1,10 @@
+<div *ngIf="isLogged; else isNotLogged">
+    <app-sidebar></app-sidebar>
+    <div class="posicion">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+<ng-template #isNotLogged>
+    <app-login></app-login>
+</ng-template>

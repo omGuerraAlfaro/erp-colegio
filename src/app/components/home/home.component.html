@@ -1,0 +1,27 @@
+<div class="color posicion border">
+    <div class="container">
+        <div class="cabezera">
+            <h1>Bienvenido Celia Gomez</h1>
+            <small>Gráfica Financiera:</small>
+        </div>
+        <hr>
+        <div class="cardContenedor">
+            <div class="card text-center m-2" *ngFor="let var1 of vars">
+                <a routerLink="/{{var1.link}}">
+                    <div><small>{{var1.name}}</small></div>
+                    <div>
+                        <h5>{{var1.date | date }}</h5>
+                    </div>
+                    <div>
+                        <h3>{{var1.mount | mount }}</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="chart-container m-3">
+            <canvas id="myChart"></canvas>
+            <canvas id="myChart2"></canvas>
+        </div>
+
+    </div>
+</div>

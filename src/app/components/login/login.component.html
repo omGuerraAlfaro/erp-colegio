@@ -1,0 +1,16 @@
+<div class="bgLogin"></div>
+<div class="form-signin card">
+  <img class="mb-4" src="../../../../assets/img/logo.png" alt="" class="logo">
+  <h1 class="h3 font-weight-normal">Inicio de Sesión</h1>
+  <small class="mb-3 text-muted">Bienvenido. Ingrese sus credeciales para acceder a su cuenta</small>
+  <label class="sr-only">Usuario</label>
+  <input type="text" class="form-control" placeholder="Ingrese su usuario" required autofocus [(ngModel)]="user.usuario">
+  <label for="inputPassword" class="sr-only">Contraseña</label>
+  <input type="password" class="form-control" placeholder="Contraseña" required [(ngModel)]="user.password">
+  <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> Mantener Sesión Iniciada
+    </label>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit" (click)="ingresar()">Sign in</button>
+</div>
