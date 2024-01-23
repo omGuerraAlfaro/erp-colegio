@@ -1,156 +1,109 @@
 <div class="color posicion border">
-    <div class="container-fluid">
-        <h1>Boletas</h1>
-        <hr>
-        <ul class="nav nav-tabs container" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen"
-                    type="button" role="tab" aria-controls="resumen" aria-selected="true"><span
-                        class="linkColor">Resumen</span></button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="boletas-tab" data-bs-toggle="tab" data-bs-target="#boletas" type="button"
-                    role="tab" aria-controls="boletas" aria-selected="false"><span
-                        class="linkColor">Boletas</span></button>
-            </li>
-        </ul>
-        <div class="tab-content container" id="myTabContent">
-            <div class="tab-pane fade show active" id="resumen" role="tabpanel" aria-labelledby="resumen-tab">
-                <div class="cardContenedor justify-content-center">
-                    <div class="card text-center m-2" *ngFor="let var1 of vars">
-                        <a routerLink="/{{var1.link}}">
-                            <div><small>{{var1.name}}</small></div>
-                            <div>
-                                <h5>{{var1.date | date }}</h5>
-                            </div>
-                            <div>
-                                <h3>{{var1.mount | mount }}</h3>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="chart-container m-3">
-                    <canvas id="myChart"></canvas>
-                    <canvas id="myChart2"></canvas>
-                </div>
-            </div>
+  <div class="container-fluid">
+    <h1>Boletas</h1>
+    <hr>
+    <ul class="nav nav-tabs container" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="resumen-tab" data-bs-toggle="tab" data-bs-target="#resumen" type="button"
+          role="tab" aria-controls="resumen" aria-selected="true"><span class="linkColor">Resumen</span></button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="boletas-tab" data-bs-toggle="tab" data-bs-target="#boletas" type="button"
+          role="tab" aria-controls="boletas" aria-selected="false"><span class="linkColor">Boletas</span></button>
+      </li>
+    </ul>
+    <div class="tab-content container" id="myTabContent">
+      <div class="tab-pane fade show active" id="resumen" role="tabpanel" aria-labelledby="resumen-tab">
+        <div class="cardContenedor justify-content-center">
+          <div class="card text-center m-2" *ngFor="let var1 of vars">
+            <a routerLink="/{{var1.link}}">
+              <div><small>{{var1.name}}</small></div>
+              <div>
+                <h5>{{var1.date | date }}</h5>
+              </div>
+              <div>
+                <h3>{{var1.mount | formatNumeros }}</h3>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="chart-container m-3">
+          <canvas id="myChart"></canvas>
+          <canvas id="myChart2"></canvas>
+        </div>
+      </div>
 
-            <div class="tab-pane fade" id="boletas" role="tabpanel" aria-labelledby="boletas-tab">
-                <br>
-                <div class="responsive-table">
-                    <table class="table table-striped table-bordered table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    <div>Cod Contable</div>
-                                </th>
-                                <th scope="col">
-                                    <div>Nombre Categoria</div>
-                                </th>
-                                <th scope="col">
-                                    <span>Total</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let cat of catActivo">
-                                <th class="text-center" scope="row">{{cat.cod}}</th>
-                                <th>{{cat.nombre_cod}}</th>
-                                <th class="spacing">
-                                    {{cat.valor | mount}}
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="responsive-table">
-                    <table class="table table-bordered table-sm">
-                        <thead class="text-center">
-                            <tr>
-                                <th scope="col">
-                                    <div>Sub Categoria</div>
-                                </th>
-                                <th scope="col">
-                                    <div>Indicadores</div>
-                                </th>
-                                <th scope="col">
-                                    <span>Sub Indicadores</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <table class="table table-striped table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" scope="col">Codigo Contable</th>
-                                                <th scope="col">Detalle</th>
-                                                <th scope="col">Valor</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let cat2 of subActivo">
-                                                <th class="text-center" scope=row>{{cat2.cod}}</th>
-                                                <td>{{cat2.nombre_cod}}</td>
-                                                <th class="spacing">
-                                                    {{cat2.valor | mount}}
-                                                </th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table
-                                        class="table table-striped table-sm table-wrapper-scroll-y my-custom-scrollbar">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" scope="col">Codigo Contable</th>
-                                                <th scope="col">Detalle</th>
-                                                <th scope="col">Valor</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let cat2 of subSubActivo">
-                                                <th class="text-center" scope=row>{{cat2.cod}}</th>
-                                                <td>{{cat2.nombre_cod}}</td>
-                                                <th class="spacing">
-                                                    {{cat2.valor | mount}}
-                                                </th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table
-                                        class="table table-striped table-sm table-wrapper-scroll-y my-custom-scrollbar">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" scope="col">Codigo Contable</th>
-                                                <th scope="col">Detalle</th>
-                                                <th scope="col">Valor</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let cat3 of indActivo">
-                                                <th class="text-center" scope="row">{{cat3.cod}}</th>
-                                                <td>{{cat3.nombre_cod}}</td>
-                                                <th class="spacing">
-                                                    {{cat3.valor | mount}}
-                                                </th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+      <div class="tab-pane fade" id="boletas" role="tabpanel" aria-labelledby="boletas-tab">
 
-            </div>
+        <div class="mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource" class="full-width">
 
-            
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="rut_apoderado">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Apoderado RUT</th>
+              <td mat-cell *matCellDef="let element">{{ element.rut_apoderado }}</td>
+            </ng-container>
+
+            <!-- Detalle Column -->
+            <ng-container matColumnDef="detalle">
+              <th mat-header-cell *matHeaderCellDef> Detalle </th>
+              <td mat-cell *matCellDef="let element"> {{element.detalle}} </td>
+            </ng-container>
+
+            <!-- Fecha Vencimiento Column -->
+            <ng-container matColumnDef="fecha_vencimiento">
+              <th mat-header-cell *matHeaderCellDef> Fecha Vencimiento </th>
+              <td mat-cell *matCellDef="let element"> {{element.fecha_vencimiento | date}} </td>
+            </ng-container>
+
+            <!-- Descuento Column -->
+            <ng-container matColumnDef="estado_id">
+              <th mat-header-cell *matHeaderCellDef> Estado </th>
+              <td mat-cell *matCellDef="let element"> {{element.estado_id }} </td>
+            </ng-container>
+
+            <!-- Descuento Column -->
+            <ng-container matColumnDef="descuento">
+              <th mat-header-cell *matHeaderCellDef> Descuento </th>
+              <td mat-cell *matCellDef="let element"> {{element.descuento }} </td>
+            </ng-container>
+
+            <!-- Subtotal Column -->
+            <ng-container matColumnDef="subtotal">
+              <th mat-header-cell *matHeaderCellDef> Subtotal </th>
+              <td mat-cell *matCellDef="let element"> {{element.subtotal | formatNumeros}} </td>
+            </ng-container>
+
+            <!-- Total Column -->
+            <ng-container matColumnDef="total">
+              <th mat-header-cell *matHeaderCellDef> Total </th>
+              <td mat-cell *matCellDef="let element"> {{element.total | formatNumeros}} </td>
+            </ng-container>
+
+            <!-- Nota Column -->
+            <ng-container matColumnDef="nota">
+              <th mat-header-cell *matHeaderCellDef> Nota </th>
+              <td mat-cell *matCellDef="let element"> {{element.nota}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[15]" showFirstLastButtons></mat-paginator>
+
         </div>
 
 
+      </div>
+
+
     </div>
+
+
+  </div>

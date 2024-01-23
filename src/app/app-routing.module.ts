@@ -4,7 +4,7 @@ import { ContentComponent } from './components/template/content/content.componen
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 //Finanzas
-import { BoletasComponent } from './components/boletas/boletas/boletas.component';
+import { BoletasComponent } from './components/boletas/boletas.component';
 
 
 //recursos humanos

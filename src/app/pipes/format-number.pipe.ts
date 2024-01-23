@@ -1,12 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'mount'
+  name: 'formatNumeros'
 })
-export class MountPipe implements PipeTransform {
+export class FormatNumberPipe implements PipeTransform {
 
-  transform(value: number)
-  {
+  transform(value: number){
     return "$" + new Intl.NumberFormat().format(value);
   }
 

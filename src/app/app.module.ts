@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import 'bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { MountPipe } from './pipes/mount.pipe';
 
 import { SidebarComponent } from './components/template/sidebar/sidebar.component';
 import { Sidebar2Component } from './components/template/sidebar2/sidebar2.component';
@@ -21,10 +20,15 @@ registerLocaleData(localeEs, 'es');
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 //Finanzas
-import { BoletasComponent } from './components/boletas/boletas/boletas.component';
+import { BoletasComponent } from './components/boletas/boletas.component';
 //rrhh
 import { ColaboradoresComponent } from './components/rrhh/colaboradores/colaboradores.component';
 import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remuneraciones.component';
+import { RutFormatPipe } from './pipes/rut-format.pipe';
+import { FormatNumberPipe } from './pipes/format-number.pipe';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -36,15 +40,19 @@ import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remune
     Sidebar2Component,
     RemuneracionesComponent,
     ColaboradoresComponent,
-    MountPipe,
     BoletasComponent,
+    RutFormatPipe,
+    FormatNumberPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatPaginatorModule,
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es' },],
   bootstrap: [AppComponent]

@@ -1,6 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { CategoriaServiceService } from 'src/app/services/categoria-service.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { BoletaDetalle } from 'src/app/interfaces/boletaInterface';
+import { InfoApoderadoService } from 'src/app/services/apoderadoService/infoApoderado.service';
+import { EstudianteService } from 'src/app/services/estudianteService/estudiante.service';
+import { Router } from '@angular/router';
+import { BoletasService } from 'src/app/services/boletasService/boletas.service';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -60,30 +66,41 @@ export class BoletasComponent implements OnInit {
       link: 'flujo-efectivo'
     }
   ]
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  catEgreso: any;
-  subEgreso: any;
-  subSubEgreso: any;
-  indEgreso: any;
+  displayedColumns: string[] = ['id', 'rut_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'descuento', 'subtotal', 'total', 'nota'];
+  dataSource = new MatTableDataSource<BoletaDetalle>();
 
-  catIngreso: any;
-  subIngreso: any;
-  subSubIngreso: any;
-  indIngreso: any;
-
-  catActivo: any;
-  subActivo: any;
-  subSubActivo: any;
-  indActivo: any;
-
-  catPasivo: any;
-  subPasivo: any;
-  subSubPasivo: any;
-  indPasivo: any;
-
-  constructor(public data: CategoriaServiceService) { }
+  constructor(
+    private router: Router,
+    public apoderadoService: InfoApoderadoService,
+    public estudianteService: EstudianteService,
+    public boletasService: BoletasService
+  ) { }
 
   ngOnInit(): void {
+    //this.loadChart();
+    this.loadBoletas();
+
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  loadBoletas(): void {
+    this.boletasService.getBoletas().subscribe({
+      next: (boletas: BoletaDetalle[]) => {
+        this.dataSource.data = boletas;
+      },
+      error: (error) => {
+        console.error('Error fetching boletas:', error);
+      }
+    });
+  }
+
+
+  loadChart(): void {
     const myChart = new Chart('myChart', {
       type: 'bar',
       data: {
@@ -137,248 +154,6 @@ export class BoletasComponent implements OnInit {
         maintainAspectRatio: true
       }
     });
-
-    //Egresos
-    this.data.getCategoryEgresoValor().subscribe((data) => {
-      //categoria
-      const { categoria } = data;
-      const cat = [categoria];
-      cat.map((categoria: { cod: any; nombre_cod: any; valor: any; }) => ({
-        cod: categoria.cod,
-        nombre_cod: categoria.nombre_cod,
-        valor: categoria.valor
-      })
-      );
-      this.catEgreso = cat;
-
-      //subcategoria Egreso
-      const { sub_categoria } = categoria;
-      const sub = sub_categoria;
-      sub.filter((sub_categoria: { cod: any; nombre_cod: any; valor: any; index_sub: any; }) => ({
-        cod: sub_categoria.cod,
-        nombre_cod: sub_categoria.nombre_cod,
-        valor: sub_categoria.valor,
-        index_sub: sub_categoria.index_sub
-      })
-      );
-      this.subEgreso = sub;
-
-      //indicadores Egreso
-      const dataIndicadores = sub_categoria.flatMap(function (sub_categoria: { cod: any; nombre_cod: any; index_sub: any; }) {
-        return sub_categoria.index_sub.map(function (subCategoria: { cod: any; nombre_cod: any; indicador: any }) {
-          return subCategoria.indicador.map(function (indicador: { cod: any; nombre_cod: any; valor: any; }) {
-            let cod_indicadores = indicador.cod
-            let name_indicadores = indicador.nombre_cod
-            let valor_indicadores = indicador.valor
-            return {
-              cod: cod_indicadores,
-              nombre_cod: name_indicadores,
-              valor: valor_indicadores,
-            }
-          });
-        });
-      });;
-      this.indEgreso = dataIndicadores.flat();
-
-
-      //sub indicadores Egreso
-      const dataSubIndex = sub_categoria.flatMap(function (sub_categoria: { cod: any; nombre_cod: any; valor: any; index_sub: any; }) {
-        return sub_categoria.index_sub.map(function (subCategoria: { cod: any; nombre_cod: any; valor: any; indicador: any }) {
-          let cod_indicadores = subCategoria.cod
-          let name_indicadores = subCategoria.nombre_cod
-          let valor_indicadores = subCategoria.valor
-          return {
-            cod: cod_indicadores,
-            nombre_cod: name_indicadores,
-            valor: valor_indicadores,
-          }
-        });
-      });
-      this.subSubEgreso = dataSubIndex;
-    });
-
-    //Ingresos
-    this.data.getCategoryIngresoValor().subscribe((data) => {
-      //categoria
-      const { categoria } = data;
-      const cat = [categoria];
-      cat.map((categoria: { cod: any; nombre_cod: any; valor: any; }) => ({
-        cod: categoria.cod,
-        nombre_cod: categoria.nombre_cod,
-        valor: categoria.valor
-      })
-      );
-      this.catIngreso = cat;
-
-      //subcategoria Ingresos
-      const { sub_categoria } = categoria;
-      const sub = sub_categoria;
-      sub.filter((sub_categoria: { cod: any; nombre_cod: any; valor: any; index_sub: any; }) => ({
-        cod: sub_categoria.cod,
-        nombre_cod: sub_categoria.nombre_cod,
-        valor: sub_categoria.valor,
-        index_sub: sub_categoria.index_sub
-      })
-      );
-      this.subIngreso = sub;
-
-      //indicadores Ingresos
-      const dataIndicadores = sub_categoria.flatMap(function (sub_categoria: { cod: any; nombre_cod: any; index_sub: any; }) {
-        return sub_categoria.index_sub.map(function (subCategoria: { cod: any; nombre_cod: any; indicador: any }) {
-          return subCategoria.indicador.map(function (indicador: { cod: any; nombre_cod: any; valor: any; }) {
-            let cod_indicadores = indicador.cod
-            let name_indicadores = indicador.nombre_cod
-            let valor_indicadores = indicador.valor
-            return {
-              cod: cod_indicadores,
-              nombre_cod: name_indicadores,
-              valor: valor_indicadores,
-            }
-          });
-        });
-      });;
-      this.indIngreso = dataIndicadores.flat();
-
-
-      //sub indicadores Ingresos
-      const dataSubIndex = sub_categoria.flatMap(function (sub_categoria: { cod: any; nombre_cod: any; valor: any; index_sub: any; }) {
-        return sub_categoria.index_sub.map(function (subCategoria: { cod: any; nombre_cod: any; valor: any; indicador: any }) {
-          let cod_indicadores = subCategoria.cod
-          let name_indicadores = subCategoria.nombre_cod
-          let valor_indicadores = subCategoria.valor
-          return {
-            cod: cod_indicadores,
-            nombre_cod: name_indicadores,
-            valor: valor_indicadores,
-          }
-        });
-      });
-      this.subSubIngreso = dataSubIndex;
-    });
-
-
-    this.data.getCategoryActivoValor().subscribe((data) => {
-      //Activos
-      const { categoria } = data;
-      const cat = [categoria];
-      cat.map((categoria: { cod: any; nombre_cod: any; valor: any; }) => ({
-        cod: categoria.cod,
-        nombre_cod: categoria.nombre_cod,
-        valor: categoria.valor
-      })
-      );
-      this.catActivo = cat;
-
-      //subcategoria activos
-      const { sub_categoria } = categoria;
-      const sub = sub_categoria;
-      sub.filter((sub_categoria: { cod: any; nombre_cod: any; valor: any; index_sub: any; }) => ({
-        cod: sub_categoria.cod,
-        nombre_cod: sub_categoria.nombre_cod,
-        valor: sub_categoria.valor,
-        index_sub: sub_categoria.index_sub
-      })
-      );
-      this.subActivo = sub;
-
-      //indicadores activos
-      const dataIndicadores = sub_categoria.flatMap(function (sub_categoria: { cod: any; nombre_cod: any; index_sub: any; }) {
-        return sub_categoria.index_sub.map(function (subCategoria: { cod: any; nombre_cod: any; indicador: any }) {
-          return subCategoria.indicador.map(function (indicador: { cod: any; nombre_cod: any; valor: any; }) {
-            let cod_indicadores = indicador.cod
-            let name_indicadores = indicador.nombre_cod
-            let valor_indicadores = indicador.valor
-            return {
-              cod: cod_indicadores,
-              nombre_cod: name_indicadores,
-              valor: valor_indicadores,
-            }
-          });
-        });
-      });;
-      this.indActivo = dataIndicadores.flat();
-
-
-      //sub indicadores activos
-      const dataSubIndex = sub_categoria.flatMap(function (sub_categoria: { cod: any; nombre_cod: any; valor: any; index_sub: any; }) {
-        return sub_categoria.index_sub.map(function (subCategoria: { cod: any; nombre_cod: any; valor: any; indicador: any }) {
-          let cod_indicadores = subCategoria.cod
-          let name_indicadores = subCategoria.nombre_cod
-          let valor_indicadores = subCategoria.valor
-          return {
-            cod: cod_indicadores,
-            nombre_cod: name_indicadores,
-            valor: valor_indicadores,
-          }
-        });
-      });
-      this.subSubActivo = dataSubIndex;
-    });
-
-
-    //Pasivos
-    this.data.getCategoryPasivoValor().subscribe((data) => {
-      //categoria
-      const { categoria } = data;
-      const cat = [categoria];
-      cat.map((categoria: { cod: any; nombre_cod: any; valor: any; }) => ({
-        cod: categoria.cod,
-        nombre_cod: categoria.nombre_cod,
-        valor: categoria.valor
-      })
-      );
-      this.catPasivo = cat;
-
-      //subcategoria Pasivos
-      const { sub_categoria } = categoria;
-      const sub = sub_categoria;
-      sub.filter((sub_categoria: { cod: any; nombre_cod: any; valor: any; index_sub: any; }) => ({
-        cod: sub_categoria.cod,
-        nombre_cod: sub_categoria.nombre_cod,
-        valor: sub_categoria.valor,
-        index_sub: sub_categoria.index_sub
-      })
-      );
-      this.subPasivo = sub;
-
-      //sub indicadores Pasivos
-            const dataSubIndex = sub_categoria.flatMap(function (sub_categoria: { cod: any; nombre_cod: any; valor: any; index_sub: any; }) {
-              return sub_categoria.index_sub.map(function (subCategoria: { cod: any; nombre_cod: any; valor: any; indicador: any }) {
-                let cod_indicadores = subCategoria.cod
-                let name_indicadores = subCategoria.nombre_cod
-                let valor_indicadores = subCategoria.valor
-                return {
-                  cod: cod_indicadores,
-                  nombre_cod: name_indicadores,
-                  valor: valor_indicadores,
-                }
-              });
-            });
-            this.subSubPasivo = dataSubIndex;
-
-      //indicadores Pasivos
-      const dataIndicadores = sub_categoria.flatMap(function (sub_categoria: { cod: any; nombre_cod: any; index_sub: any; }) {
-        return sub_categoria.index_sub.map(function (subCategoria: { cod: any; nombre_cod: any; indicador: any }) {
-          return subCategoria.indicador.map(function (indicador: { cod: any; nombre_cod: any; valor: any; }) {
-            let cod_indicadores = indicador.cod
-            let name_indicadores = indicador.nombre_cod
-            let valor_indicadores = indicador.valor
-            return {
-              cod: cod_indicadores,
-              nombre_cod: name_indicadores,
-              valor: valor_indicadores,
-            }
-          });
-        });
-      });;
-      this.indPasivo = dataIndicadores.flat();
-
-
-      
-    });
-
   }
 
 }
-
-
