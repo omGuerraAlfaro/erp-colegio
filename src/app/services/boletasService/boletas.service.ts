@@ -18,7 +18,7 @@ export class BoletasService {
   constructor(private http: HttpClient) { }
 
   getBoletas(): Observable<BoletaDetalle[]> {
-    return this.http.get<BoletaDetalle[]>(`${environment.api}/boleta`, this.httpOptions)
+    return this.http.get<BoletaDetalle[]>(`${environment.api}/boleta/con-apoderado`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

@@ -53,7 +53,7 @@ export class BoletasComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  displayedColumns: string[] = ['id', 'rut_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'descuento', 'subtotal', 'total', 'nota'];
+  displayedColumns: string[] = ['id', 'rut_apoderado2', 'nombre_apoderado', 'telefono_apoderado', 'correo_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'descuento', 'subtotal', 'total'];
   dataSource = new MatTableDataSource<BoletaDetalle>();
 
   constructor(
@@ -75,14 +75,25 @@ export class BoletasComponent implements OnInit {
 
   loadBoletas(): void {
     this.boletasService.getBoletas().subscribe({
-      next: (boletas: BoletaDetalle[]) => {
-        this.dataSource.data = boletas;
-      },
-      error: (error) => {
-        console.error('Error fetching boletas:', error);
-      }
+        next: (boletas: any[]) => {
+            console.log('Boletas:', boletas);
+            const modifiedData = boletas.map(boleta => {
+                return {
+                    ...boleta,
+                    nombre_apoderado: boleta.apoderado.primer_nombre + ' ' + boleta.apoderado.primer_apellido,
+                    telefono_apoderado: boleta.apoderado.telefono,
+                    correo_apoderado: boleta.apoderado.correo_electronico,
+                    rut_apoderado2: boleta.apoderado.rut + '-' + boleta.apoderado.dv,
+                };
+            });
+            this.dataSource.data = modifiedData;
+        },
+        error: (error) => {
+            console.error('Error fetching boletas:', error);
+        }
     });
-  }
+}
+
   
   searchTerms = {
     text: '',
@@ -117,8 +128,7 @@ export class BoletasComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.searchTerms.text = filterValue.trim().toLowerCase();
     this.updateFilter();
-  }
-  
+  }  
   
   applyEstadoFilter(checked: boolean, estadoId: number): void {
     this.estadoFilters[estadoId.toString()] = checked;
