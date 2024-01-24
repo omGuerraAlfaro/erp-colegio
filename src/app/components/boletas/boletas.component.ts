@@ -9,6 +9,7 @@ import { BoletasService } from 'src/app/services/boletasService/boletas.service'
 import { MatPaginator } from '@angular/material/paginator';
 
 
+
 @Component({
   selector: 'app-boletas',
   templateUrl: './boletas.component.html',
@@ -16,56 +17,40 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class BoletasComponent implements OnInit {
 
+  estadoFilters: Record<string, boolean> = {
+    '1': false, // Pendiente
+    '2': false, // Pagada
+    '3': false, // Rechazada
+    '4': false  // Repactada
+  };
+
   vars = [
     {
-      name: 'Saldo Final del Banco Mes Anterior',
+      name: 'Monto Adeudado Mes',
       mount: 1000000,
       date: '2021-01-01',
       link: 'flujo-efectivo'
     },
     {
-      name: 'Total Ingresos',
+      name: 'Monto Adeudado Total',
       mount: 1000000,
       date: '2021-01-01',
       link: 'flujo-efectivo'
     },
     {
-      name: 'Total Costos y Gastos',
+      name: 'Numero de Morosos',
       mount: 1000000,
       date: '2021-01-01',
       link: 'flujo-efectivo'
     },
     {
-      name: 'Total Costos de Explotación',
+      name: 'Curso con mas Morosos',
       mount: 1000000,
       date: '2021-01-01',
       link: 'flujo-efectivo'
     },
-    {
-      name: 'Total Gastos',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
-    },
-    {
-      name: 'Aumento y Disminución de Activos',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
-    },
-    {
-      name: 'Aumento y Disminución de Pasivos',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
-    },
-    {
-      name: 'Saldo Final del Banco',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
-    }
   ]
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   displayedColumns: string[] = ['id', 'rut_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'descuento', 'subtotal', 'total', 'nota'];
@@ -79,9 +64,9 @@ export class BoletasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //this.loadChart();
+    this.loadChart();
     this.loadBoletas();
-
+    this.dataSource.filterPredicate = this.createFilter();
   }
 
   ngAfterViewInit() {
@@ -98,10 +83,69 @@ export class BoletasComponent implements OnInit {
       }
     });
   }
+  
+  searchTerms = {
+    text: '',
+    estado: this.estadoFilters
+  };
+  
+  createFilter(): (data: BoletaDetalle, filter: string) => boolean {
+    let filterFunction = function (data: BoletaDetalle, filter: string): boolean {
+      let searchTerms = JSON.parse(filter);
+  
+      // Verificar si algún estado está activo
+      let estadoIsActive = Object.keys(searchTerms.estado).some((key) => {
+        return searchTerms.estado[key];
+      });
+  
+      // Comprobar si los datos coinciden con los filtros de estado activos
+      let estadoMatches = !estadoIsActive || searchTerms.estado[data.estado_id];
+  
+      // Comprobar si los datos coinciden con el texto de búsqueda
+      let textMatches = !searchTerms.text || 
+                        data.rut_apoderado.toLowerCase().includes(searchTerms.text.toLowerCase()) ||
+                        data.detalle.toLowerCase().includes(searchTerms.text.toLowerCase());
+                        // Agrega aquí otras propiedades por las que desees buscar.
+  
+      // Devolver true si los datos coinciden con ambos, el texto y los filtros de estado
+      return estadoMatches && textMatches;
+    };
+    return filterFunction;
+  } 
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchTerms.text = filterValue.trim().toLowerCase();
+    this.updateFilter();
+  }
+  
+  
+  applyEstadoFilter(checked: boolean, estadoId: number): void {
+    this.estadoFilters[estadoId.toString()] = checked;
+    
+    // Si todos los filtros de estado están desactivados, reiniciar el filtro
+    const isAnyFilterActive = Object.values(this.estadoFilters).some(value => value);
+    if (!isAnyFilterActive && !this.searchTerms.text) {
+      this.dataSource.filter = '';
+    } else {
+      this.updateFilter();
+    }
+  }  
+  
+  updateFilter(): void {
+    // Combina los términos de búsqueda y los filtros de estado en un solo objeto de filtro
+    const filter = JSON.stringify({
+      text: this.searchTerms.text,
+      estado: this.estadoFilters
+    });
+    this.dataSource.filter = filter;
+  }
+  
+  
 
 
   loadChart(): void {
-    const myChart = new Chart('myChart', {
+    const myChart = new Chart('myChart3', {
       type: 'bar',
       data: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -137,7 +181,7 @@ export class BoletasComponent implements OnInit {
     });
 
     //chart 2
-    const myChart2 = new Chart('myChart2', {
+    const myChart2 = new Chart('myChart4', {
       type: 'line',
       data: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],

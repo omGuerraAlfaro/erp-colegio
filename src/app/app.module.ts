@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { SidebarComponent } from './components/template/sidebar/sidebar.component';
-import { Sidebar2Component } from './components/template/sidebar2/sidebar2.component';
 import { ContentComponent } from './components/template/content/content.component';
 
 //formato de fecha
@@ -29,6 +28,10 @@ import { FormatNumberPipe } from './pipes/format-number.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 
 @NgModule({
   declarations: [
@@ -37,7 +40,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     HomeComponent,
     LoginComponent,
     ContentComponent,
-    Sidebar2Component,
     RemuneracionesComponent,
     ColaboradoresComponent,
     BoletasComponent,
@@ -53,6 +55,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es' },],
   bootstrap: [AppComponent]

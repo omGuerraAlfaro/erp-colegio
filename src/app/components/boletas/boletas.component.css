@@ -88,3 +88,44 @@
 .table-wrapper-scroll-y {
     display: block;
 }
+
+.estado-pendiente {
+    color: rgba(227, 167, 46, 0.772);
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-pagada {
+    color: green;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-rechazada {
+    color: red;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-atrasada {
+    color: red;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-repactada {
+    color: rgb(188, 36, 188);
+    font-weight: bold;
+    font-size: medium;
+}
+
+.search-bar {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.filters {
+    margin-top: 20px;
+}
