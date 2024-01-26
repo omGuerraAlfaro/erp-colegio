@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
       next: (loginData: ILoginResponse) => {
         if (loginData && loginData.token) {
           this.userData = loginData.user;
+          console.log(this.userData);
           const { username, correo_electronico, rut } = this.userData;
 
           this.saveUserDataToLocalStorage(username, correo_electronico, rut, loginData.token);
@@ -65,7 +66,6 @@ export class LoginComponent implements OnInit {
   private saveUserDataToLocalStorage(name_user: string, email_user: string, rut: string, token: string): void {
     localStorage.setItem('ingresado', 'true');
     localStorage.setItem('usuario', name_user);
-    // localStorage.setItem('username', name_user);
     localStorage.setItem('email', email_user);
     localStorage.setItem('rutAmbiente', rut);
     localStorage.setItem('token', token);

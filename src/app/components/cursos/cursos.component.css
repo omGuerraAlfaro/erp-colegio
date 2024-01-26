@@ -1,0 +1,130 @@
+.color {
+    background-color: #f5f5f5;
+}
+
+.full-width.mat-table {
+    width: 100% !important;
+}
+
+.posicion {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 164vh;
+}
+
+.cardContenedor {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: #cdcdcd;
+    box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+    width: 20rem;
+}
+
+.card a {
+    text-decoration: none;
+    color: #000;
+    transition: color 0.2s ease-in-out;
+}
+
+.card a:hover {
+    background-color: #d5d5d5;
+}
+
+.chart-container {
+    display: flex;
+    flex-direction: row;
+    width: 800px;
+    height: 300px;
+}
+
+#myChart {
+    background-color: #e1e1e1;
+    border-radius: 10px;
+    margin-right: 30px;
+}
+
+#myChart2 {
+    background-color: #e1e1e1;
+    border-radius: 10px;
+}
+
+.linkColor {
+    color: #000;
+}
+
+.linkColor:hover {
+    color: #8d8585;
+}
+
+.content-wrapper-scroll-y {
+    position: relative;
+    height: 93vh;
+    width: 100%;
+    overflow: auto;
+}
+
+.content-custom-scrollbar {
+    display: block;
+}
+
+.spacing {
+    letter-spacing: .05rem;
+    padding-left: 17px;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 60vh;
+    width: 100%;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+.estado-pendiente {
+    color: rgba(227, 167, 46, 0.772);
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-pagada {
+    color: green;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-rechazada {
+    color: red;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-atrasada {
+    color: red;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-repactada {
+    color: rgb(188, 36, 188);
+    font-weight: bold;
+    font-size: medium;
+}
+
+.search-bar {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.filters {
+    margin-top: 20px;
+}

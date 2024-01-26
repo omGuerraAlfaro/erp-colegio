@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { InfoAdmService } from 'src/app/services/administradorService/infoAdm.service';
 
 
 @Component({
@@ -36,9 +37,26 @@ export class HomeComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  nameUser: any;
+  constructor(private admService: InfoAdmService) { }
 
   ngOnInit(): void {
+    this.loadChart();
+    this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.nameUser = data.primer_nombre + ' ' + data.primer_apellido + ' ' + data.segundo_apellido;
+      },
+      error: (error) => {
+        console.error("Error al obtener datos:", error);
+      }
+    });
+
+    
+
+  }
+
+  loadChart(): void {
     const myChart = new Chart('myChart', {
       type: 'bar',
       data: {
@@ -92,7 +110,6 @@ export class HomeComponent implements OnInit {
         maintainAspectRatio: true
       }
     });
-
   }
 }
 

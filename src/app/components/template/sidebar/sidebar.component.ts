@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { InfoAdmService } from 'src/app/services/administradorService/infoAdm.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { VtigerService } from 'src/app/services/vtiger.service';
 import Swal from 'sweetalert2';
@@ -13,13 +14,24 @@ import Swal from 'sweetalert2';
 })
 export class SidebarComponent implements OnInit {
 
-  constructor(private router: Router, private auth: AuthService, private datav: VtigerService) { }
+  constructor(private router: Router, private auth: AuthService, private datav: VtigerService, private admService: InfoAdmService) { }
 
+  rut: any;
+  nombreUser: any;
   countVtiger: any;
   idCategorizados: any[] = [];
   dataVtiger: any;
   ngOnInit(): void {
-    
+    this.rut = localStorage.getItem('rutAmbiente');
+    this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido + ' ' + data.segundo_apellido;
+      },
+      error: (error) => {
+        console.error("Error al obtener datos:", error);
+      }
+    });
   }
 
 
