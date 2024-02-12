@@ -1,21 +1,22 @@
 <div class="color posicion border">
-    <div class="container-fluid">
-      <h1>Detalle Cursos</h1>
-      <hr>
-      <ul class="nav nav-tabs container" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="cursos-tab" data-bs-toggle="tab" data-bs-target="#cursos" type="button"
-            role="tab" aria-controls="cursos" aria-selected="true"><span class="linkColor">Cursos</span></button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="cursos-estudiante-tab" data-bs-toggle="tab" data-bs-target="#cursos-estudiante" type="button"
-            role="tab" aria-controls="cursos-estudiante" aria-selected="true"><span class="linkColor">Alumnos por Curso</span></button>
-        </li>
-        
-      </ul>
+  <div class="container-fluid">
+    <h1>Detalle Cursos</h1>
+    <hr>
+    <ul class="nav nav-tabs container" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="cursos-tab" data-bs-toggle="tab" data-bs-target="#cursos" type="button"
+          role="tab" aria-controls="cursos" aria-selected="true"><span class="linkColor">Cursos</span></button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="cursos-estudiante-tab" data-bs-toggle="tab" data-bs-target="#cursos-estudiante"
+          type="button" role="tab" aria-controls="cursos-estudiante" aria-selected="true"><span
+            class="linkColor">Alumnos por Curso</span></button>
+      </li>
 
-      <div class="tab-content container filters" id="myTabContent">
-  
+    </ul>
+
+    <div class="tab-content container filters" id="myTabContent">
+
       <div class="tab-pane fade show active" id="cursos" role="tabpanel" aria-labelledby="cursos-tab">
         <div class="mat-elevation-z8">
           <table mat-table [dataSource]="dataSource" class="full-width">
@@ -30,85 +31,81 @@
               <th mat-header-cell *matHeaderCellDef> Curso </th>
               <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
             </ng-container>
-  
+
             <ng-container matColumnDef="rut_profesor2">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Apoderado RUT</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>RUT</th>
               <td mat-cell *matCellDef="let element">{{ element.rut_profesor2}}</td>
             </ng-container>
-            
+
             <ng-container matColumnDef="nombre_profesor">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor Jefe</th>
               <td mat-cell *matCellDef="let element">{{ element.nombre_profesor }}</td>
             </ng-container>
-  
+
             <ng-container matColumnDef="telefono_profesor">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
               <td mat-cell *matCellDef="let element">{{ element.telefono_profesor }}</td>
             </ng-container>
-  
+
             <ng-container matColumnDef="correo_profesor">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Correo</th>
               <td mat-cell *matCellDef="let element">{{ element.correo_profesor }}</td>
             </ng-container>
-            
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
-  
+
           <mat-paginator [pageSizeOptions]="[14]" showFirstLastButtons></mat-paginator>
-  
+
         </div>
-  
-  
       </div>
       <!-- tab2 -->
       <div class="tab-pane fade" id="cursos-estudiante" role="tabpanel" aria-labelledby="cursos-estudiante-tab">
-        <div class="mat-elevation-z8">
-          <table mat-table [dataSource]="dataSource2" class="full-width">
-
+        
+        <div *ngFor="let cursoId of getCursoKeys()" class="curso-container">
+          <h3>{{ cursoId }}</h3>
+          <table mat-table [dataSource]="dataSourceCursos[cursoId]" class="full-width">
+            
+            <!-- Student ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef> ID </th>
               <td mat-cell *matCellDef="let element"> {{element.id}} </td>
             </ng-container>
-
-            <ng-container matColumnDef="nombre">
-              <th mat-header-cell *matHeaderCellDef> Curso </th>
-              <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
-            </ng-container>
-  
+        
+            <!-- Student Name Column -->
             <ng-container matColumnDef="nombre_estudiante">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre Estudiante</th>
-                <td mat-cell *matCellDef="let element">{{ element.nombre_estudiante }}</td>
-              </ng-container>
-
+              <th mat-header-cell *matHeaderCellDef> Nombre Estudiante </th>
+              <td mat-cell *matCellDef="let element"> {{element.nombre_estudiante}} </td>
+            </ng-container>
+        
+            <!-- Student RUT Column -->
             <ng-container matColumnDef="rut_estudiante2">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Estudiante RUT</th>
-              <td mat-cell *matCellDef="let element">{{ element.rut_estudiante2}}</td>
+              <th mat-header-cell *matHeaderCellDef> RUT Estudiante </th>
+              <td mat-cell *matCellDef="let element"> {{element.rut_estudiante2}} </td>
             </ng-container>
-  
-            <ng-container matColumnDef="telefono_estudiante">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono de Contacto</th>
-              <td mat-cell *matCellDef="let element">{{ element.telefono_estudiante }}</td>
-            </ng-container>
-
+        
+            <!-- Student Gender Column -->
             <ng-container matColumnDef="genero_estudiante">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Género</th>
-                <td mat-cell *matCellDef="let element">
-                    {{ element.genero_estudiante === 'M' ? 'Masculino' : (element.genero_estudiante === 'F' ? 'Femenino' : 'N/A') }}
-                </td>
+              <th mat-header-cell *matHeaderCellDef> Género </th>
+              <td mat-cell *matCellDef="let element"> {{element.genero_estudiante}} </td>
             </ng-container>
-            
-            
-            <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+        
+            <!-- Student Phone Column -->
+            <ng-container matColumnDef="telefono_estudiante">
+              <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+              <td mat-cell *matCellDef="let element"> {{element.telefono_estudiante}} </td>
+            </ng-container>
+        
+            <!-- Table Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsCursos"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsCursos;"></tr>
           </table>
-  
-          <mat-paginator [pageSizeOptions]="[14]" showFirstLastButtons></mat-paginator>
-  
+          
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </div>
-  
-  
+        
+
+
+
       </div>
-  
-  
-    </div>

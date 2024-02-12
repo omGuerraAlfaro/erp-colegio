@@ -32,6 +32,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CursosComponent } from './components/cursos/cursos.component';
+import { BoletasApoderadoComponent } from './components/boletas-apoderado/boletas-apoderado.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { CursosComponent } from './components/cursos/cursos.component';
     BoletasComponent,
     RutFormatPipe,
     FormatNumberPipe,
-    CursosComponent
+    CursosComponent,
+    BoletasApoderadoComponent
   ],
   imports: [
     BrowserModule,

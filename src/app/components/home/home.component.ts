@@ -12,29 +12,35 @@ export class HomeComponent implements OnInit {
 
   vars = [
     {
-      name: 'Saldo Anterior Caja Anterior',
+      name: 'Monto Adeudado Mes',
       mount: 1000000,
-      date: '2023-03-24',
-      link: 'flujo-caja'
+      date: '2021-01-01',
+      link: 'flujo-efectivo'
     },
     {
-      name: 'Ingresos Menos Costos y Gastos',
+      name: 'Monto Adeudado Total',
       mount: 1000000,
-      date: '2023-03-24',
-      link: 'flujo-caja'
+      date: '2021-01-01',
+      link: 'flujo-efectivo'
     },
     {
-      name: 'Total Costos y Gastos',
+      name: 'Numero de Morosos',
       mount: 1000000,
-      date: '2023-03-24',
-      link: 'flujo-caja'
+      date: '2021-01-01',
+      link: 'flujo-efectivo'
     },
     {
-      name: 'Total Costos de Explotación',
+      name: 'Curso con mas Morosos',
       mount: 1000000,
-      date: '2023-03-24',
-      link: 'flujo-caja'
-    }
+      date: '2021-01-01',
+      link: 'flujo-efectivo'
+    },
+    {
+      name: 'Monto recaudado Mes',
+      mount: 1000000,
+      date: '2021-01-01',
+      link: 'flujo-efectivo'
+    },
   ]
 
   nameUser: any;

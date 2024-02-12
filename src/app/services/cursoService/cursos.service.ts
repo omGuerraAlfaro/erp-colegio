@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
+import { ICursoEstudiante } from 'src/app/interfaces/cursoInterface';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -22,8 +23,8 @@ export class CursosService {
         catchError(this.handleError)
       );
   }
-  getInfoCursoConEstudiantes(): Observable<any> {
-    return this.http.get<any>(`${environment.api}/curso/estudiantes`, this.httpOptions)
+  getInfoCursoConEstudiantes(): Observable<ICursoEstudiante> {
+    return this.http.get<ICursoEstudiante>(`${environment.api}/curso/estudiantes`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

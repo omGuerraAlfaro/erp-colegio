@@ -49,6 +49,12 @@ export class BoletasComponent implements OnInit {
       date: '2021-01-01',
       link: 'flujo-efectivo'
     },
+    {
+      name: 'Monto recaudado Mes',
+      mount: 1000000,
+      date: '2021-01-01',
+      link: 'flujo-efectivo'
+    },
   ]
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -75,64 +81,64 @@ export class BoletasComponent implements OnInit {
 
   loadBoletas(): void {
     this.boletasService.getBoletas().subscribe({
-        next: (boletas: any[]) => {
-            console.log('Boletas:', boletas);
-            const modifiedData = boletas.map(boleta => {
-                return {
-                    ...boleta,
-                    nombre_apoderado: boleta.apoderado.primer_nombre + ' ' + boleta.apoderado.primer_apellido,
-                    telefono_apoderado: boleta.apoderado.telefono,
-                    correo_apoderado: boleta.apoderado.correo_electronico,
-                    rut_apoderado2: boleta.apoderado.rut + '-' + boleta.apoderado.dv,
-                };
-            });
-            this.dataSource.data = modifiedData;
-        },
-        error: (error) => {
-            console.error('Error fetching boletas:', error);
-        }
+      next: (boletas: any[]) => {
+        console.log('Boletas:', boletas);
+        const modifiedData = boletas.map(boleta => {
+          return {
+            ...boleta,
+            nombre_apoderado: boleta.apoderado.primer_nombre + ' ' + boleta.apoderado.primer_apellido,
+            telefono_apoderado: boleta.apoderado.telefono,
+            correo_apoderado: boleta.apoderado.correo_electronico,
+            rut_apoderado2: boleta.apoderado.rut + '-' + boleta.apoderado.dv,
+          };
+        });
+        this.dataSource.data = modifiedData;
+      },
+      error: (error) => {
+        console.error('Error fetching boletas:', error);
+      }
     });
-}
+  }
 
-  
+
   searchTerms = {
     text: '',
     estado: this.estadoFilters
   };
-  
+
   createFilter(): (data: BoletaDetalle, filter: string) => boolean {
     let filterFunction = function (data: BoletaDetalle, filter: string): boolean {
       let searchTerms = JSON.parse(filter);
-  
+
       // Verificar si algún estado está activo
       let estadoIsActive = Object.keys(searchTerms.estado).some((key) => {
         return searchTerms.estado[key];
       });
-  
+
       // Comprobar si los datos coinciden con los filtros de estado activos
       let estadoMatches = !estadoIsActive || searchTerms.estado[data.estado_id];
-  
+
       // Comprobar si los datos coinciden con el texto de búsqueda
-      let textMatches = !searchTerms.text || 
-                        data.rut_apoderado.toLowerCase().includes(searchTerms.text.toLowerCase()) ||
-                        data.detalle.toLowerCase().includes(searchTerms.text.toLowerCase());
-                        // Agrega aquí otras propiedades por las que desees buscar.
-  
+      let textMatches = !searchTerms.text ||
+        data.rut_apoderado.toLowerCase().includes(searchTerms.text.toLowerCase()) ||
+        data.detalle.toLowerCase().includes(searchTerms.text.toLowerCase());
+      // Agrega aquí otras propiedades por las que desees buscar.
+
       // Devolver true si los datos coinciden con ambos, el texto y los filtros de estado
       return estadoMatches && textMatches;
     };
     return filterFunction;
-  } 
+  }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.searchTerms.text = filterValue.trim().toLowerCase();
     this.updateFilter();
-  }  
-  
+  }
+
   applyEstadoFilter(checked: boolean, estadoId: number): void {
     this.estadoFilters[estadoId.toString()] = checked;
-    
+
     // Si todos los filtros de estado están desactivados, reiniciar el filtro
     const isAnyFilterActive = Object.values(this.estadoFilters).some(value => value);
     if (!isAnyFilterActive && !this.searchTerms.text) {
@@ -140,8 +146,8 @@ export class BoletasComponent implements OnInit {
     } else {
       this.updateFilter();
     }
-  }  
-  
+  }
+
   updateFilter(): void {
     // Combina los términos de búsqueda y los filtros de estado en un solo objeto de filtro
     const filter = JSON.stringify({
@@ -150,8 +156,8 @@ export class BoletasComponent implements OnInit {
     });
     this.dataSource.filter = filter;
   }
-  
-  
+
+
 
 
   loadChart(): void {
