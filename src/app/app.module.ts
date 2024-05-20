@@ -33,6 +33,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CursosComponent } from './components/cursos/cursos.component';
 import { BoletasApoderadoComponent } from './components/boletas-apoderado/boletas-apoderado.component';
+import { ModalDetalleBoletaComponent } from './components/modal-detalle-boleta/modal-detalle-boleta.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -48,7 +50,8 @@ import { BoletasApoderadoComponent } from './components/boletas-apoderado/boleta
     RutFormatPipe,
     FormatNumberPipe,
     CursosComponent,
-    BoletasApoderadoComponent
+    BoletasApoderadoComponent,
+    ModalDetalleBoletaComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +64,8 @@ import { BoletasApoderadoComponent } from './components/boletas-apoderado/boleta
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDialogModule,
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es' },],
   bootstrap: [AppComponent]

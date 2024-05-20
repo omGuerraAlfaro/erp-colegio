@@ -7,6 +7,9 @@ import { EstudianteService } from 'src/app/services/estudianteService/estudiante
 import { Router } from '@angular/router';
 import { BoletasService } from 'src/app/services/boletasService/boletas.service';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDetalleBoletaComponent } from '../modal-detalle-boleta/modal-detalle-boleta.component';
+
 
 
 
@@ -59,14 +62,15 @@ export class BoletasComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  displayedColumns: string[] = ['id', 'rut_apoderado2', 'nombre_apoderado', 'telefono_apoderado', 'correo_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'descuento', 'subtotal', 'total'];
+  displayedColumns: string[] = ['id', 'rut_apoderado2', 'nombre_apoderado', 'telefono_apoderado', 'correo_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'total', 'acciones'];
   dataSource = new MatTableDataSource<BoletaDetalle>();
 
   constructor(
     private router: Router,
     public apoderadoService: InfoApoderadoService,
     public estudianteService: EstudianteService,
-    public boletasService: BoletasService
+    public boletasService: BoletasService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -84,12 +88,15 @@ export class BoletasComponent implements OnInit {
       next: (boletas: any[]) => {
         console.log('Boletas:', boletas);
         const modifiedData = boletas.map(boleta => {
+          const fechaVencimiento = new Date(boleta.fecha_vencimiento);
+          const formattedFechaVencimiento = fechaVencimiento.toISOString().split('T')[0];
           return {
             ...boleta,
             nombre_apoderado: boleta.apoderado.primer_nombre + ' ' + boleta.apoderado.primer_apellido,
             telefono_apoderado: boleta.apoderado.telefono,
             correo_apoderado: boleta.apoderado.correo_electronico,
             rut_apoderado2: boleta.apoderado.rut + '-' + boleta.apoderado.dv,
+            fecha_vencimiento: formattedFechaVencimiento,
           };
         });
         this.dataSource.data = modifiedData;
@@ -157,7 +164,18 @@ export class BoletasComponent implements OnInit {
     this.dataSource.filter = filter;
   }
 
+  openModal(element: BoletaDetalle): void {
+    const dialogRef = this.dialog.open(ModalDetalleBoletaComponent, {
+      width: '80%',
+      height: '50%',
+      data: element
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('El modal se cerró');
+    });
+
+  }
 
 
   loadChart(): void {

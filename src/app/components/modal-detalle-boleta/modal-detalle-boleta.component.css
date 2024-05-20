@@ -1,0 +1,70 @@
+/* modal-detalle-boleta.component.css */
+.close-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.mat-dialog-title {
+  position: relative;
+}
+
+.mat-dialog-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Estilos para el título del modal */
+.modal-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-content {
+  max-height: 70vh; /* Ajusta esta altura según sea necesario */
+  overflow-y: auto;
+}
+
+/* Ajuste general del modal */
+.mat-dialog-container {
+  max-width: 80vw; /* Ajusta esta anchura según sea necesario */
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.tables-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px; /* Espacio entre las tablas */
+}
+
+.table {
+  width: 45%; /* Ancho de las tablas para que se acomoden una al lado de la otra */
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f5f5f5;
+}
+
+.button-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}

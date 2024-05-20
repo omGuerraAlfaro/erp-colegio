@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
     this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
       next: (data) => {
         console.log(data);
-        this.nameUser = data.primer_nombre + ' ' + data.primer_apellido + ' ' + data.segundo_apellido;
+        this.nameUser = data[0].primer_nombre + ' ' + data[0].primer_apellido + ' ' + data[0].segundo_apellido;
       },
       error: (error) => {
         console.error("Error al obtener datos:", error);
