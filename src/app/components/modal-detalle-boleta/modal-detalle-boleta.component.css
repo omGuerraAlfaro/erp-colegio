@@ -68,3 +68,7 @@
   display: flex;
   justify-content: center;
 }
+
+.total{
+    font-size: large;
+}

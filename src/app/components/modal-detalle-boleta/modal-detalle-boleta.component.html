@@ -1,75 +1,109 @@
 <h1 mat-dialog-title class="modal-title">
     Detalle Boleta N° {{ data.id }}
     <button class="close-button" (click)="closeModal()">X</button>
-  </h1>
-  <div mat-dialog-content class="modal-content">
+</h1>
+<div mat-dialog-content class="modal-content">
     <div class="tables-container">
-      <table class="table apoderado-table">
-        <thead>
-          <tr>
-            <th colspan="2">Información del Apoderado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Nombre Apoderado:</strong></td>
-            <td>{{ data.nombre_apoderado }}</td>
-          </tr>
-          <tr>
-            <td><strong>Teléfono:</strong></td>
-            <td>{{ data.telefono_apoderado }}</td>
-          </tr>
-          <tr>
-            <td><strong>Correo:</strong></td>
-            <td>{{ data.correo_apoderado }}</td>
-          </tr>
-          <tr>
-            <td><strong>Detalle:</strong></td>
-            <td>{{ data.detalle }}</td>
-          </tr>
-          <tr>
-            <td><strong>Fecha Vencimiento:</strong></td>
-            <td>{{ data.fecha_vencimiento | date: 'dd MMM yyyy' }}</td>
-          </tr>
-          <tr>
-            <td><strong>Total:</strong></td>
-            <td>{{ data.total | formatNumeros }}</td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <table class="table estudiante-table">
-        <thead>
-          <tr>
-            <th colspan="2">Información del Estudiante</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngIf="estudiante">
-            <tr>
-              <td><strong>Nombre Completo:</strong></td>
-              <td>{{ estudiante.primer_nombre }} {{ estudiante.segundo_nombre }} {{ estudiante.primer_apellido }} {{ estudiante.segundo_apellido }}</td>
-            </tr>
-            <tr>
-              <td><strong>RUT:</strong></td>
-              <td>{{ estudiante.rut }}-{{ estudiante.dv }}</td>
-            </tr>
-            <tr>
-              <td><strong>Fecha de Nacimiento:</strong></td>
-              <td>{{ estudiante.fecha_nacimiento | date: 'dd MMM yyyy' }}</td>
-            </tr>
-            <tr>
-              <td><strong>Género:</strong></td>
-              <td>{{ estudiante.genero }}</td>
-            </tr>
-          </ng-container>
-        </tbody>
-      </table>
+        <table class="table apoderado-table">
+            <thead>
+                <tr>
+                    <th colspan="2">Información Boleta</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Detalle:</strong></td>
+                    <td>{{ data.detalle }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Fecha Vencimiento:</strong></td>
+                    <td>{{ data.fecha_vencimiento | date: 'dd MMM yyyy' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Total:</strong></td>
+                    <td class="total"><strong>{{ data.total | formatNumeros }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table estudiante-table">
+            <thead>
+                <tr>
+                    <th colspan="2">Información Apoderado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Nombre Apoderado:</strong></td>
+                    <td>{{ data.nombre_apoderado }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Teléfono:</strong></td>
+                    <td>{{ data.telefono_apoderado }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Correo:</strong></td>
+                    <td>{{ data.correo_apoderado }}</td>
+                </tr>
+            </tbody>
+        </table>
+
     </div>
-  
+
+
+    <div class="tables-container">
+
+        <table class="table apoderado-table">
+            <thead>
+                <tr>
+                    <th colspan="2">Información Estudiante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="estudiante">
+                    <tr>
+                        <td><strong>Nombre Completo:</strong></td>
+                        <td>{{ estudiante.primer_nombre }} {{ estudiante.segundo_nombre }} {{
+                            estudiante.primer_apellido }} {{ estudiante.segundo_apellido }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RUT:</strong></td>
+                        <td>{{ estudiante.rut }}-{{ estudiante.dv }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fecha de Nacimiento:</strong></td>
+                        <td>{{ estudiante.fecha_nacimiento | date: 'dd MMM yyyy' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Género:</strong></td>
+                        <td>{{ estudiante.genero }}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+
+        <table class="table estudiante-table">
+            <thead>
+                <tr>
+                    <th colspan="2">Información Curso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="estudiante">
+                    <tr>
+                        <td><strong>Curso:</strong></td>
+                        <td>{{ estudiante.curso[0].nombre }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Descripción:</strong></td>
+                        <td>{{ estudiante.curso[0].descripcion }}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+
     <div class="button-container">
-      <button class="btn btn-primary mx-1" color="primary" (click)="editarBoleta()">Editar Boleta</button>
-      <button class="btn btn-primary mx-1" olor="accent" (click)="confirmarPagoTransferencia()">Confirmar Pago Transferencia</button>
+        <button class="btn btn-primary mx-1" color="primary" (click)="editarBoleta(this.data.id, this.data.pago_id)">Editar Estado Boleta</button>
     </div>
-  </div>
-  
+</div>

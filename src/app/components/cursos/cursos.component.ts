@@ -56,11 +56,8 @@ export class CursosComponent implements OnInit {
     this.cursosServices.getInfoCursoConEstudiantes().subscribe({
       next: (cursoEstudiante: ICursoEstudiante) => {
         console.log('cursoEstudiante:', cursoEstudiante);
-        // Make sure cursoEstudiante and cursoEstudiante.cursos is not null or undefined
         if (cursoEstudiante && cursoEstudiante.cursos) {
-          // Process each course to create a MatTableDataSource for its students
           for (const [cursoId, estudiantes] of Object.entries(cursoEstudiante.cursos)) {
-            // Make sure 'estudiantes' is not null or undefined before creating the MatTableDataSource
             console.log('estudiantes:', estudiantes);
             if (estudiantes) {
               const dataSource = new MatTableDataSource<CursoEstudianteDetalle>(estudiantes);

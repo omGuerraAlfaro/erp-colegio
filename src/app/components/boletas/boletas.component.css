@@ -89,6 +89,18 @@
     display: block;
 }
 
+.estado-transferenciaPendiente {
+    color: rgba(227, 167, 46, 0.772);
+    font-weight: bold;
+    font-size: medium;
+}
+
+.estado-transferenciaAprobada {
+    color: green;
+    font-weight: bold;
+    font-size: medium;
+}
+
 .estado-pendiente {
     color: rgba(227, 167, 46, 0.772);
     font-weight: bold;

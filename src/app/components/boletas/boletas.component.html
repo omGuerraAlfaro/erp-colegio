@@ -51,8 +51,10 @@
             <div class="filters">
               <mat-checkbox (change)="applyEstadoFilter($event.checked, 1)" class="m-2">Pendiente</mat-checkbox>
               <mat-checkbox (change)="applyEstadoFilter($event.checked, 2)" class="m-2">Pagada</mat-checkbox>
-              <mat-checkbox (change)="applyEstadoFilter($event.checked, 3)" class="m-2">Rechazada</mat-checkbox>
+              <!-- <mat-checkbox (change)="applyEstadoFilter($event.checked, 3)" class="m-2">Rechazada</mat-checkbox> -->
               <mat-checkbox (change)="applyEstadoFilter($event.checked, 4)" class="m-2">Repactada</mat-checkbox>
+              <mat-checkbox (change)="applyEstadoFilter($event.checked, 5)" class="m-2">Transferencia Pendiente</mat-checkbox>
+              <mat-checkbox (change)="applyEstadoFilter($event.checked, 6)" class="m-2">Transferencia Aprobada</mat-checkbox>
             </div>
           </div>
         </div>
@@ -98,12 +100,16 @@
                 'estado-pendiente': element.estado_id === 1,
                 'estado-pagada': element.estado_id === 2,
                 'estado-rechazada': element.estado_id === 3,
-                'estado-repactada': element.estado_id === 4
+                'estado-repactada': element.estado_id === 4,
+                'estado-transferenciaPendiente': element.estado_id === 5,
+                'estado-transferenciaAprobada': element.estado_id === 6
               }">
               {{ element.estado_id === 1 ? 'Pendiente' :
               element.estado_id === 2 ? 'Pagada' :
               element.estado_id === 3 ? 'Rechazada' :
-              element.estado_id === 4 ? 'Repactada' : '' }}
+              element.estado_id === 4 ? 'Repactada' :
+              element.estado_id === 5 ? 'Transferencia Pendiente' :
+              element.estado_id === 6 ? 'Transferencia Aprobada' : '' }}
             </td>
           </ng-container>
 

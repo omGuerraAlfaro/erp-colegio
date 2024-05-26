@@ -24,7 +24,9 @@ export class BoletasComponent implements OnInit {
     '1': false, // Pendiente
     '2': false, // Pagada
     '3': false, // Rechazada
-    '4': false  // Repactada
+    '4': false, // Repactada
+    '5': false, // Transferencia Pendiente
+    '6': false  // Transferencia Aprobada
   };
 
   vars = [
@@ -166,9 +168,13 @@ export class BoletasComponent implements OnInit {
 
   openModal(element: BoletaDetalle): void {
     const dialogRef = this.dialog.open(ModalDetalleBoletaComponent, {
-      width: '80%',
-      height: '50%',
+      width: '60%',
+      height: '60%',
       data: element
+    });
+
+    dialogRef.componentInstance.boletaEditada.subscribe(() => {
+      this.loadBoletas();
     });
 
     dialogRef.afterClosed().subscribe(result => {

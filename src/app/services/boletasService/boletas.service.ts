@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
-import { BoletaDetalle, IBoleta } from 'src/app/interfaces/boletaInterface';
+import { BoletaDetalle, IBoleta, UpdateBoleta } from 'src/app/interfaces/boletaInterface';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -19,6 +19,13 @@ export class BoletasService {
 
   getBoletas(): Observable<BoletaDetalle[]> {
     return this.http.get<BoletaDetalle[]>(`${environment.api}/boleta/con-apoderado`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  editarBoleta(data: UpdateBoleta): Observable<UpdateBoleta> {
+    return this.http.put<any>(`${environment.api}/boleta/updateBoleta`, data, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
