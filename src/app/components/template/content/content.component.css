@@ -4,3 +4,7 @@
     left: 283px;    
     height: 100vh;
 }
+
+.positionSideBar{
+    position: fixed;
+}

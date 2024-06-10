@@ -12,38 +12,58 @@ export class HomeComponent implements OnInit {
 
   vars = [
     {
-      name: 'Monto Adeudado Mes',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
+      name: 'Gestionar Profesores',
+      link: 'profesores',
+      icon: 'fas fa-chalkboard-teacher',
+      color: 'bg-blue'
     },
     {
-      name: 'Monto Adeudado Total',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
+      name: 'Gestionar Apoderados',
+      link: 'apoderados',
+      icon: 'fas fa-user-friends',
+      color: 'bg-green'
     },
     {
-      name: 'Numero de Morosos',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
+      name: 'Gestionar Estudiantes',
+      link: 'estudiantes',
+      icon: 'fas fa-user-graduate',
+      color: 'bg-yellow'
     },
     {
-      name: 'Curso con mas Morosos',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
+      name: 'Gestionar Cursos',
+      link: 'cursos',
+      icon: 'fas fa-book',
+      color: 'bg-red'
     },
     {
-      name: 'Monto recaudado Mes',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
+      name: 'Gestionar Roles',
+      link: 'roles',
+      icon: 'fas fa-id-badge',
+      color: 'bg-darkblue'
     },
-  ]
+    {
+      name: 'Gestionar Asignaturas',
+      link: 'asignaturas',
+      icon: 'fas fa-book-open',
+      color: 'bg-lightblue'
+    },
+    {
+      name: 'Gestionar Notas',
+      link: 'notas',
+      icon: 'fas fa-clipboard-list',
+      color: 'bg-darkgrey'
+    },
+    {
+      name: 'Gestionar Calendario',
+      link: 'calendario',
+      icon: 'fas fa-calendar-alt',
+      color: 'bg-lightblue'
+    }
+  ];
+  
 
   nameUser: any;
+
   constructor(private admService: InfoAdmService) { }
 
   ngOnInit(): void {
@@ -57,9 +77,31 @@ export class HomeComponent implements OnInit {
         console.error("Error al obtener datos:", error);
       }
     });
+  }
 
-    
-
+  getCardColor(cardName: string): string {
+    switch (cardName) {
+      case 'Gestionar Profesores':
+        return 'bg-blue';
+      case 'Gestionar Apoderados':
+        return 'bg-green';
+      case 'Gestionar Estudiantes':
+        return 'bg-yellow';
+      case 'Gestionar Cursos':
+        return 'bg-red';
+      case 'Gestionar Administrativos':
+        return 'bg-grey';
+      case 'Gestionar Roles':
+        return 'bg-darkblue';
+      case 'Gestionar Asignaturas':
+        return 'bg-lightblue';
+      case 'Gestionar Notas':
+        return 'bg-darkgrey';
+      case 'Gestionar Calendario':
+        return 'bg-orange';
+      default:
+        return 'bg-default';
+    }
   }
 
   loadChart(): void {

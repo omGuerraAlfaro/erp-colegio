@@ -9,9 +9,9 @@ import { BoletasService } from 'src/app/services/boletasService/boletas.service'
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDetalleBoletaComponent } from '../modal-detalle-boleta/modal-detalle-boleta.component';
-
-
-
+import { forkJoin } from 'rxjs';
+import { CursosService } from 'src/app/services/cursoService/cursos.service';
+import { CursoDetalle, CursoEstudianteDetalle } from 'src/app/interfaces/cursoInterface';
 
 @Component({
   selector: 'app-boletas',
@@ -31,54 +31,90 @@ export class BoletasComponent implements OnInit {
 
   vars = [
     {
-      name: 'Monto Adeudado Mes',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
+      name: 'Total Pendiente Mes',
+      mount: 0,
+      count: 0,
+      date: this.getToday(),
+      link: 'pendiente-mes'
     },
     {
-      name: 'Monto Adeudado Total',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
+      name: 'Total Pagado Mes',
+      mount: 0,
+      count: 0,
+      date: this.getToday(),
+      link: 'pagado-mes'
     },
     {
-      name: 'Numero de Morosos',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
+      name: 'Número de Morosos',
+      mount: 0,
+      count: 0,
+      date: this.getToday(),
+      link: 'morosos'
     },
-    {
-      name: 'Curso con mas Morosos',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
-    },
-    {
-      name: 'Monto recaudado Mes',
-      mount: 1000000,
-      date: '2021-01-01',
-      link: 'flujo-efectivo'
-    },
-  ]
+  ];
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   displayedColumns: string[] = ['id', 'rut_apoderado2', 'nombre_apoderado', 'telefono_apoderado', 'correo_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'total', 'acciones'];
   dataSource = new MatTableDataSource<BoletaDetalle>();
 
+  displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'telefono_estudiante', 'genero_estudiante'];
+  dataSource2 = new MatTableDataSource<CursoDetalle>();
+  dataSourceCursos: { [key: string]: { dataSource2: MatTableDataSource<CursoEstudianteDetalle>, nombreCurso: string } } = {};
+
+
   constructor(
     private router: Router,
     public apoderadoService: InfoApoderadoService,
     public estudianteService: EstudianteService,
     public boletasService: BoletasService,
+    private cursosServices: CursosService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.loadChart();
     this.loadBoletas();
+    this.loadData();
+    this.loadDataChart();
+    this.loadCursosConEstudiantes();
     this.dataSource.filterPredicate = this.createFilter();
+  }
+
+  getToday(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = ('0' + (today.getMonth() + 1)).slice(-2);
+    const day = ('0' + today.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+  loadData(): void {
+    const today = this.getToday();
+
+    const estadoPendiente = 1;
+    const estadoPagado = 2;
+
+    forkJoin([
+      this.boletasService.getApoderadosEstadoBoleta(today, estadoPendiente),
+      this.boletasService.getTotalPendienteVencido(today),
+      this.boletasService.getTotalPagadas(today),
+      this.boletasService.getPendientesVencidas(today)
+    ]).subscribe(([apoderadosData, totalPendienteData, totalPagadas, pendientesData]) => {
+
+      const totalPendienteVencido = parseFloat(totalPendienteData.total_pendiente_vencido);
+      const totalPagado = parseFloat(totalPagadas.total_pagado);
+      // console.log(apoderadosData);
+      // console.log(totalPendienteData);
+      // console.log(totalPagadas);
+      // console.log(pendientesData);
+
+      this.vars[0].mount = totalPendienteVencido;
+      this.vars[1].mount = totalPagado;
+      this.vars[2].count = apoderadosData.total;
+
+    }, error => {
+      console.error('Error loading data', error);
+    });
   }
 
   ngAfterViewInit() {
@@ -109,6 +145,37 @@ export class BoletasComponent implements OnInit {
     });
   }
 
+  loadCursosConEstudiantes(): void {
+    this.cursosServices.getInfoCursoConEstudiantes().subscribe({
+      next: (cursos: any) => {
+        if (cursos) {
+          cursos.forEach((curso: any) => {
+            const cursoId = curso.id.toString();
+            const nombreCurso = curso.nombre;
+            const estudiantesArray = curso.estudiantes.map((estudiante: any) => ({
+              id: estudiante.id,
+              nombre_estudiante: `${estudiante.primer_nombre} ${estudiante.segundo_nombre} ${estudiante.primer_apellido} ${estudiante.segundo_apellido}`,
+              rut_estudiante2: `${estudiante.rut}-${estudiante.dv}`,
+              telefono_estudiante: estudiante.telefono_contacto,
+              genero_estudiante: estudiante.genero
+            }));
+            if (estudiantesArray.length) {
+              const dataSource2 = new MatTableDataSource<CursoEstudianteDetalle>(estudiantesArray);
+              this.dataSourceCursos[cursoId] = { dataSource2, nombreCurso };
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching cursos con estudiantes:', error);
+      }
+    });
+  }
+  
+
+  getCursoKeys(): string[] {
+    return Object.keys(this.dataSourceCursos);
+  }
 
   searchTerms = {
     text: '',
@@ -169,7 +236,7 @@ export class BoletasComponent implements OnInit {
   openModal(element: BoletaDetalle): void {
     const dialogRef = this.dialog.open(ModalDetalleBoletaComponent, {
       width: '60%',
-      height: '60%',
+      height: 'auto',
       data: element
     });
 
@@ -184,32 +251,41 @@ export class BoletasComponent implements OnInit {
   }
 
 
-  loadChart(): void {
+  loadDataChart(): void {
+    const fecha = new Date().toISOString().slice(0, 10); // o la fecha que necesites
+    this.boletasService.getTotalPendientePorMes(fecha).subscribe(pendienteData => {
+      this.boletasService.getTotalPagadoPorMes(fecha).subscribe(pagadoData => {
+        this.loadChart(pendienteData, pagadoData);
+      });
+    });
+  }
+  loadChart(pendienteData: any, pagadoData: any): void {
+    const labels = pendienteData.map((item: any) => item.mes);
+    const pendienteValues = pendienteData.map((item: any) => item.total_pendiente_vencido);
+    const pagadoValues = pagadoData.map((item: any) => item.total_pagado);
+    console.log(pendienteValues);
+    console.log(pagadoValues);
+
     const myChart = new Chart('myChart3', {
       type: 'bar',
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'Saldos Caja',
-          data: [65, 59, 80, 81, 56, 55, 40],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }]
+        labels: labels,
+        datasets: [
+          {
+            label: 'Total Pendiente Vencido',
+            data: pendienteValues,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Total Pagado',
+            data: pagadoValues,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }
+        ]
       },
       options: {
         scales: {

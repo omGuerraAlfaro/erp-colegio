@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { CursoDetalle, CursoEstudianteDetalle, ICursoEstudiante } from 'src/app/interfaces/cursoInterface';
@@ -9,14 +9,14 @@ import { CursosService } from 'src/app/services/cursoService/cursos.service';
   templateUrl: './cursos.component.html',
   styleUrls: ['./cursos.component.css']
 })
-export class CursosComponent implements OnInit {
+export class CursosComponent implements OnInit, AfterViewInit {
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatPaginator) paginator2!: MatPaginator;
+  @ViewChild('paginator1') paginator1!: MatPaginator;
+  @ViewChild('paginator2') paginator2!: MatPaginator;
   displayedColumns: string[] = ['id', 'nombre', 'nombre_profesor', 'telefono_profesor', 'correo_profesor', 'rut_profesor2'];
-  displayedColumnsCursos: string[] = ['id', 'nombre', 'rut_estudiante2', 'nombre_estudiante', 'telefono_estudiante', 'genero_estudiante'];
+  displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'telefono_estudiante', 'genero_estudiante'];
   dataSource = new MatTableDataSource<CursoDetalle>();
-  dataSourceCursos: { [key: string]: MatTableDataSource<CursoEstudianteDetalle> } = {};
+  dataSourceCursos: { [key: string]: { dataSource: MatTableDataSource<CursoEstudianteDetalle>, nombreCurso: string } } = {};
 
   constructor(private cursosServices: CursosService) { }
 
@@ -26,44 +26,49 @@ export class CursosComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    // this.dataSourceCursos.paginator = this.paginator2;
+    this.dataSource.paginator = this.paginator1;
   }
 
   loadCursos(): void {
     this.cursosServices.getInfoCurso().subscribe({
       next: (cursos: CursoDetalle[]) => {
         console.log('cursos:', cursos);
-        const modifiedData = cursos.map(curso => {
-          return {
-            ...curso,
-            nombre_profesor: curso.profesorConnection.primer_nombre + ' ' + curso.profesorConnection.primer_apellido,
-            telefono_profesor: curso.profesorConnection.telefono,
-            correo_profesor: curso.profesorConnection.correo_electronico,
-            rut_profesor2: curso.profesorConnection.rut + '-' + curso.profesorConnection.dv,
-          };
-        });
-
+        const modifiedData = cursos.map(curso => ({
+          ...curso,
+          nombre_profesor: curso.profesorConnection.primer_nombre + ' ' + curso.profesorConnection.primer_apellido,
+          telefono_profesor: curso.profesorConnection.telefono,
+          correo_profesor: curso.profesorConnection.correo_electronico,
+          rut_profesor2: curso.profesorConnection.rut + '-' + curso.profesorConnection.dv,
+        }));
         this.dataSource.data = modifiedData;
       },
       error: (error) => {
-        console.error('Error fetching boletas:', error);
+        console.error('Error fetching cursos:', error);
       }
     });
   }
 
   loadCursosConEstudiantes(): void {
     this.cursosServices.getInfoCursoConEstudiantes().subscribe({
-      next: (cursoEstudiante: ICursoEstudiante) => {
-        console.log('cursoEstudiante:', cursoEstudiante);
-        if (cursoEstudiante && cursoEstudiante.cursos) {
-          for (const [cursoId, estudiantes] of Object.entries(cursoEstudiante.cursos)) {
-            console.log('estudiantes:', estudiantes);
-            if (estudiantes) {
-              const dataSource = new MatTableDataSource<CursoEstudianteDetalle>(estudiantes);
-              this.dataSourceCursos[cursoId] = dataSource;
+      next: (cursos: any) => {
+        console.log('cursos:', cursos);
+        if (cursos) {
+          cursos.forEach((curso: any) => {
+            const cursoId = curso.id.toString();
+            const nombreCurso = curso.nombre;
+            const estudiantesArray = curso.estudiantes.map((estudiante: any) => ({
+              id: estudiante.id,
+              nombre_estudiante: `${estudiante.primer_nombre} ${estudiante.segundo_nombre} ${estudiante.primer_apellido} ${estudiante.segundo_apellido}`,
+              rut_estudiante2: `${estudiante.rut}-${estudiante.dv}`,
+              telefono_estudiante: estudiante.telefono_contacto,
+              genero_estudiante: estudiante.genero
+            }));
+            console.log('estudiantes:', estudiantesArray);
+            if (estudiantesArray.length) {
+              const dataSource = new MatTableDataSource<CursoEstudianteDetalle>(estudiantesArray);
+              this.dataSourceCursos[cursoId] = { dataSource, nombreCurso };
             }
-          }
+          });
         }
       },
       error: (error) => {
@@ -71,13 +76,9 @@ export class CursosComponent implements OnInit {
       }
     });
   }
-  
 
   getCursoKeys(): string[] {
     return Object.keys(this.dataSourceCursos);
   }
-  
-  
 
-  
 }

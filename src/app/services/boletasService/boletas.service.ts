@@ -24,8 +24,50 @@ export class BoletasService {
       );
   }
 
+  getApoderadosEstadoBoleta(date: string, estado: number): Observable<any> {
+    return this.http.get<any>(`${environment.api}/boleta/apoderados-estado-boleta/${date}/${estado}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTotalPendienteVencido(date: string): Observable<any> {
+    return this.http.get<any>(`${environment.api}/boleta/total-pendiente-vencido/${date}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTotalPagadas(date: string): Observable<any> {
+    return this.http.get<any>(`${environment.api}/boleta/pagadas/${date}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getPendientesVencidas(date: string): Observable<any> {
+    return this.http.get<any>(`${environment.api}/boleta/pendientes-vencidas/${date}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   editarBoleta(data: UpdateBoleta): Observable<UpdateBoleta> {
     return this.http.put<any>(`${environment.api}/boleta/updateBoleta`, data, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTotalPendientePorMes(date: string): Observable<any> {
+    return this.http.get<any>(`${environment.api}/boleta/total-pendiente-por-mes/${date}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTotalPagadoPorMes(date: string): Observable<any> {
+    return this.http.get<any>(`${environment.api}/boleta/total-pagado-por-mes/${date}`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
