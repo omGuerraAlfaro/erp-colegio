@@ -7,12 +7,9 @@
 }
 
 .posicion {
-    position: absolute;
-    top: 0px;
-    left: 0px;
+    margin-left: 20px; 
     min-height: 100vh;
-    height: auto;
-    width: 164vh;
+    min-width: 100vh;
 }
 
 .cardContenedor {

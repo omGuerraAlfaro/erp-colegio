@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { ILoginResponse, IUser } from 'src/app/interfaces/login.interface';
 import { AuthService } from 'src/app/services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -10,25 +10,25 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-    //para guardar el input vacío
-    field!: string;
-    //inicio sesion
-    existe: any;
-  
-    user = {
-      usuario: '',
-      password: '',
-    };
-  
-    userData!: IUser;
-  constructor(private router: Router, private auth: AuthService) { }
-  
+  field!: string;
+  existe: any;
+
+  user = {
+    usuario: '',
+    password: '',
+  };
+
+  userData!: IUser;
+
+  constructor(private router: Router, private auth: AuthService) {}
+
   ngOnInit(): void {
     localStorage.setItem('ingresado', 'false');
   }
+
   ingresar(): void {
     if (!this.validateModel(this.user)) {
-      // this.presentToast('Falta ingresar ' + this.field, 3000);
+      this.showAlert('Error', 'Falta ingresar ' + this.field, 'error');
       return;
     }
 
@@ -36,19 +36,25 @@ export class LoginComponent implements OnInit {
       next: (loginData: ILoginResponse) => {
         if (loginData && loginData.token) {
           this.userData = loginData.user;
-          console.log(this.userData);
-          const { username, correo_electronico, rut } = this.userData;
+          //console.log(this.userData);
+          const { username, correo_electronico, rut, administrador_id, apoderado_id, profesor_id } = this.userData;
 
-          this.saveUserDataToLocalStorage(username, correo_electronico, rut, loginData.token);
-          this.navigateToProfile(loginData.user);
+          if (apoderado_id != null) {
+            this.showAlert('Acceso Denegado', 'No tienes permisos para ingresar.', 'error');
+            return;
+          }
+
+          if (administrador_id != null || profesor_id != null ) {
+            this.saveUserDataToLocalStorage(username, correo_electronico, rut, loginData.token);
+            this.navigateToProfile(loginData.user);
+          }
         } else {
-          // this.presentToast('El usuario y/o contraseña son inválidos', 3000);
+          this.showAlert('Error', 'El usuario y/o contraseña son inválidos', 'error');
         }
-        // this.menuCtrl.enable(false);
       },
       error: (error) => {
         console.error("Error en el inicio de sesión:", error);
-        // this.presentToast('Error al intentar iniciar sesión. Inténtalo de nuevo.', 3000);
+        this.showAlert('Error', 'Error al intentar iniciar sesión. Inténtalo de nuevo.', 'error');
       }
     });
   }
@@ -71,11 +77,8 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('token', token);
   }
 
-  validateModel(model: any) {
-    //recorro todas las entradas que me entrega el Object entries y obtengo
-    //su clave-valor
+  validateModel(model: any): boolean {
     for (const [key, value] of Object.entries(model)) {
-      //verifico campo vacío
       if (value === '') {
         this.field = key;
         return false;
@@ -84,13 +87,12 @@ export class LoginComponent implements OnInit {
     return true;
   }
 
-  // async presentToast(msg: string, duracion?: number) {
-  //   const toast = await this.toastController.create({
-  //     message: msg,
-  //     duration: duracion ? duracion : 2000,
-  //   });
-  //   toast.present();
-  // }
-
-
+  private showAlert(title: string, text: string, icon: 'success' | 'error' | 'warning' | 'info'): void {
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      confirmButtonText: 'Aceptar'
+    });
+  }
 }
