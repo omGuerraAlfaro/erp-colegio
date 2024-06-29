@@ -12,6 +12,7 @@ import { ModalDetalleBoletaComponent } from '../modal-detalle-boleta/modal-detal
 import { forkJoin } from 'rxjs';
 import { CursosService } from 'src/app/services/cursoService/cursos.service';
 import { CursoDetalle, CursoEstudianteDetalle } from 'src/app/interfaces/cursoInterface';
+import { ModalBoletasEstudianteComponent } from '../modal-boletas-estudiante/modal-boletas-estudiante.component';
 
 @Component({
   selector: 'app-boletas',
@@ -59,7 +60,7 @@ export class BoletasComponent implements OnInit {
   displayedColumns: string[] = ['id', 'rut_apoderado2', 'nombre_apoderado', 'telefono_apoderado', 'correo_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'total', 'acciones'];
   dataSource = new MatTableDataSource<BoletaDetalle>();
 
-  displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'telefono_estudiante', 'genero_estudiante'];
+  displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'telefono_estudiante', 'genero_estudiante', 'acciones'];
   dataSource2 = new MatTableDataSource<CursoDetalle>();
   dataSourceCursos: { [key: string]: { dataSource2: MatTableDataSource<CursoEstudianteDetalle>, nombreCurso: string } } = {};
 
@@ -233,8 +234,25 @@ export class BoletasComponent implements OnInit {
     this.dataSource.filter = filter;
   }
 
-  openModal(element: BoletaDetalle): void {
+  openModalDetalleBoleta(element: BoletaDetalle): void {
     const dialogRef = this.dialog.open(ModalDetalleBoletaComponent, {
+      width: '60%',
+      height: 'auto',
+      data: element
+    });
+
+    dialogRef.componentInstance.boletaEditada.subscribe(() => {
+      this.loadBoletas();
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('El modal se cerró');
+    });
+
+  }
+
+  openModalBoletasEstudiante(element: BoletaDetalle): void {
+    const dialogRef = this.dialog.open(ModalBoletasEstudianteComponent, {
       width: '60%',
       height: 'auto',
       data: element

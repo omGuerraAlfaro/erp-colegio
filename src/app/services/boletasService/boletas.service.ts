@@ -24,6 +24,13 @@ export class BoletasService {
       );
   }
 
+  getBoletasByRutEstudiante(rut: any): Observable<BoletaDetalle[]> {
+    return this.http.get<BoletaDetalle[]>(`${environment.api}/boleta/estudiante/${rut}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getApoderadosEstadoBoleta(date: string, estado: number): Observable<any> {
     return this.http.get<any>(`${environment.api}/boleta/apoderados-estado-boleta/${date}/${estado}`, this.httpOptions)
       .pipe(

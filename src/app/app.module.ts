@@ -35,6 +35,7 @@ import { CursosComponent } from './components/cursos/cursos.component';
 import { BoletasApoderadoComponent } from './components/boletas-apoderado/boletas-apoderado.component';
 import { ModalDetalleBoletaComponent } from './components/modal-detalle-boleta/modal-detalle-boleta.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ModalBoletasEstudianteComponent } from './components/modal-boletas-estudiante/modal-boletas-estudiante.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     FormatNumberPipe,
     CursosComponent,
     BoletasApoderadoComponent,
-    ModalDetalleBoletaComponent
+    ModalDetalleBoletaComponent,
+    ModalBoletasEstudianteComponent
   ],
   imports: [
     BrowserModule,
