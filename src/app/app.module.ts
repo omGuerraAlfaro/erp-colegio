@@ -36,6 +36,8 @@ import { BoletasApoderadoComponent } from './components/boletas-apoderado/boleta
 import { ModalDetalleBoletaComponent } from './components/modal-detalle-boleta/modal-detalle-boleta.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ModalBoletasEstudianteComponent } from './components/modal-boletas-estudiante/modal-boletas-estudiante.component';
+import { MatriculasComponent } from './components/matriculas/matriculas.component';
+import { ModalNuevaMatriculaComponent } from './components/modal-nueva-matricula/modal-nueva-matricula.component';
 
 
 @NgModule({
@@ -53,7 +55,9 @@ import { ModalBoletasEstudianteComponent } from './components/modal-boletas-estu
     CursosComponent,
     BoletasApoderadoComponent,
     ModalDetalleBoletaComponent,
-    ModalBoletasEstudianteComponent
+    ModalBoletasEstudianteComponent,
+    MatriculasComponent,
+    ModalNuevaMatriculaComponent
   ],
   imports: [
     BrowserModule,

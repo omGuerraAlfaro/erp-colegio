@@ -51,3 +51,40 @@ export interface EstudianteConBoletas {
     estudiante: IEstudiante;
     boletas: BoletaDetalle[];
 }
+export interface ApoderadoPostRequest {
+    apoderados: ApoderadoPost[];
+  }
+  
+  export interface ApoderadoPost {
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+    fecha_nacimiento: string;
+    rut: string;
+    dv: string;
+    telefono: string;
+    correo_electronico: string;
+    estado_civil: string;
+    nacionalidad: string;
+    actividad: string;
+    escolaridad: string;
+    estudiantes: IEstudiantePost[];
+  }
+  
+  export interface IEstudiantePost {
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+    fecha_nacimiento: string; 
+    rut: string;
+    dv: string;
+    telefono_contacto: string;
+    genero: string;
+    alergico: string;
+    vive_con: string;
+    enfermedad_cronica: string;
+    cursoId: number; 
+  }
+  

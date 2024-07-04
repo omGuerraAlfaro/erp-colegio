@@ -14,6 +14,7 @@ import { CursosComponent } from './components/cursos/cursos.component';
 import { ColaboradoresComponent } from './components/rrhh/colaboradores/colaboradores.component';
 import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remuneraciones.component';
 import { BoletasApoderadoComponent } from './components/boletas-apoderado/boletas-apoderado.component';
+import { MatriculasComponent } from './components/matriculas/matriculas.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,7 @@ const routes: Routes = [
 
   { path: 'colaboradores', component: ColaboradoresComponent},
   { path: 'remuneraciones', component: RemuneracionesComponent},
+  { path: 'matriculas', component: MatriculasComponent}
 
 ];
 

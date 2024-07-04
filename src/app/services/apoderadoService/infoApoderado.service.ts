@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IApoderado } from 'src/app/interfaces/apoderadoInterface';
-
+import { ApoderadoPostRequest, IApoderado } from 'src/app/interfaces/apoderadoInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +26,13 @@ export class InfoApoderadoService {
 
   getInfoBoletasApoderado(rut: any): Observable<any> {
     return this.http.get<any>(`${environment.api}/boleta/${rut}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  addApoderado(apoderado: ApoderadoPostRequest): Observable<any> {
+    return this.http.post<any>(`${environment.api}/apoderado/array-object`, apoderado, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

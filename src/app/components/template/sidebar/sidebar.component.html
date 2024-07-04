@@ -14,6 +14,20 @@
 
         <li class="mb-1">
             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                data-bs-target="#matriculas-collapse" aria-expanded="false">
+                <img src="../../../assets/icon/book.svg" alt="" class="icon">
+                Matrículas
+            </button>
+            <div class="collapse" id="matriculas-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a class="link-dark rounded" routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                 data-bs-target="#finance-collapse" aria-expanded="false">
                 <img src="../../../assets/icon/clipboard-data.svg" alt="" class="icon">
                 Finanzas

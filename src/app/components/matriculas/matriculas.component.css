@@ -1,0 +1,19 @@
+.color {
+    background-color: #f5f5f5;
+}
+
+.posicion {
+    margin-left: 20px; 
+    min-height: 100vh;
+    min-width: 100vh;
+}
+
+.cabecera {
+    margin-top: 20px;
+}
+
+.cardContenedor {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}

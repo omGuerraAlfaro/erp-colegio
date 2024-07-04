@@ -17,6 +17,13 @@ export class CursosService {
 
   constructor(private http: HttpClient) { }
 
+  getAllCursos(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/curso/all`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getInfoCurso(): Observable<any> {
     return this.http.get<any>(`${environment.api}/curso/`, this.httpOptions)
       .pipe(

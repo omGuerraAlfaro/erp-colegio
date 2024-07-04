@@ -1,0 +1,54 @@
+.close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.mat-dialog-title {
+    position: relative;
+}
+
+.mat-dialog-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Estilos para el título del modal */
+.modal-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-content {
+    max-height: 70vh;
+    /* Ajusta esta altura según sea necesario */
+    overflow-y: auto;
+}
+
+/* Ajuste general del modal */
+.mat-dialog-container {
+    max-width: 80vw;
+    /* Ajusta esta anchura según sea necesario */
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-container {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.dv-input {
+    width: 50px;
+    text-align: center;
+}
