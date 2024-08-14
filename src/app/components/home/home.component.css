@@ -3,9 +3,13 @@
 }
 
 .posicion {
-    margin-left: 20px; 
+    margin-left: 20px;
     min-height: 100vh;
     min-width: 100vh;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    /* flex-direction: column; */
 }
 
 .chart-container {
@@ -27,13 +31,17 @@
 }
 
 .cabecera {
-    margin-top: 20px;
+    margin-top: 5px;
+    text-align: center;
 }
 
 .cardContenedor {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
 .card {

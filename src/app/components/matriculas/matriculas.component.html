@@ -1,29 +1,29 @@
 <div class="color posicion border">
     <div class="container">
-        <div class="cabecera">
-            <h1><b>Libro de Matrículas</b></h1>
+      <div class="cabecera">
+        <h1><b>Libro de Matrículas</b></h1>
+      </div>
+      <hr>
+  
+      <div class="row">
+        <div class="col-4 text-center">
+          <h2>
+            <b>Total Matrículados: </b>{{ totalEstudiantes }}
+          </h2>
         </div>
-        <hr>
-
-        <div class="row">
-            <div class="col-4 text-center">
-                <h2>
-                    <b>Total Matrículados: </b>234
-                </h2>
-            </div>
-            <div class="col-4 text-center">
-                <h2>
-                    <b>Total Hombres: </b>100
-                </h2>
-            </div>
-            <div class="col-4 text-center">
-                <h2>
-                    <b>Total Mujeres: </b>134
-                </h2>
-            </div>
+        <div class="col-4 text-center">
+          <h2>
+            <b>Total Hombres: </b>{{ totalHombres }}
+          </h2>
         </div>
-
-        <button mat-button class="btn btn-warning" (click)="openModalNuevaMatricula()">Nueva Matrícula</button>
-
+        <div class="col-4 text-center">
+          <h2>
+            <b>Total Mujeres: </b>{{ totalMujeres }}
+          </h2>
+        </div>
+      </div>
+  
+      <button mat-button class="btn btn-warning" (click)="openModalNuevaMatricula()">Nueva Matrícula</button>
     </div>
-</div>
+  </div>
+  

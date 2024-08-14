@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   userData!: IUser;
 
-  constructor(private router: Router, private auth: AuthService) {}
+  constructor(private router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
     localStorage.setItem('ingresado', 'false');
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
       next: (loginData: ILoginResponse) => {
         if (loginData && loginData.token) {
           this.userData = loginData.user;
-          //console.log(this.userData);
+          console.log(this.userData);
           const { username, correo_electronico, rut, administrador_id, apoderado_id, profesor_id } = this.userData;
 
           if (apoderado_id != null) {
@@ -44,8 +44,15 @@ export class LoginComponent implements OnInit {
             return;
           }
 
-          if (administrador_id != null || profesor_id != null ) {
-            this.saveUserDataToLocalStorage(username, correo_electronico, rut, loginData.token);
+          var rol = '';
+          if (administrador_id != null || profesor_id != null) {
+            if (administrador_id) {
+              rol = 'administrador'
+            }
+            if (profesor_id) {
+              rol = 'profesor'
+            }
+            this.saveUserDataToLocalStorage(username, correo_electronico, rut, loginData.token, rol);
             this.navigateToProfile(loginData.user);
           }
         } else {
@@ -69,12 +76,15 @@ export class LoginComponent implements OnInit {
     location.reload();
   }
 
-  private saveUserDataToLocalStorage(name_user: string, email_user: string, rut: string, token: string): void {
+  private saveUserDataToLocalStorage(name_user: string, email_user: string, rut: string, token: string, rol: string): void {
+    console.log(rut);
+    
     localStorage.setItem('ingresado', 'true');
     localStorage.setItem('usuario', name_user);
     localStorage.setItem('email', email_user);
     localStorage.setItem('rutAmbiente', rut);
     localStorage.setItem('token', token);
+    localStorage.setItem('rol', rol);
   }
 
   validateModel(model: any): boolean {

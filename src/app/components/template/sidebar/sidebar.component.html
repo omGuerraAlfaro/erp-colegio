@@ -12,7 +12,7 @@
             </button>
         </li>
 
-        <li class="mb-1">
+        <li *ngIf="rolUser === 'administrador'" class="mb-1">
             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                 data-bs-target="#matriculas-collapse" aria-expanded="false">
                 <img src="../../../assets/icon/book.svg" alt="" class="icon">
@@ -20,13 +20,12 @@
             </button>
             <div class="collapse" id="matriculas-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a class="link-dark rounded" routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a>
-                    </li>
+                    <li><a class="link-dark rounded" routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a></li>
                 </ul>
             </div>
         </li>
 
-        <li class="mb-1">
+        <li *ngIf="rolUser === 'administrador'" class="mb-1">
             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                 data-bs-target="#finance-collapse" aria-expanded="false">
                 <img src="../../../assets/icon/clipboard-data.svg" alt="" class="icon">
@@ -34,15 +33,13 @@
             </button>
             <div class="collapse" id="finance-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a class="link-dark rounded" routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a>
-                    </li>
-                    <li><a class="link-dark rounded" routerLink="/boletas-apoderado" routerLinkActive="active">Busqueda
-                            por Apoderado</a></li>
+                    <li><a class="link-dark rounded" routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a></li>
+                    <li><a class="link-dark rounded" routerLink="/boletas-apoderado" routerLinkActive="active">Busqueda por Apoderado</a></li>
                 </ul>
             </div>
         </li>
 
-        <li class="mb-1">
+        <li *ngIf="rolUser === 'profesor'" class="mb-1">
             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                 data-bs-target="#curso-collapse" aria-expanded="false">
                 <img src="../../../assets/icon/people.svg" alt="" class="icon">
@@ -50,26 +47,10 @@
             </button>
             <div class="collapse" id="curso-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a class="link-dark rounded" routerLink="/cursos" routerLinkActive="active">Ver cursos</a></li>
-                    <li><a class="link-dark rounded" routerLink="/cursos-alumnos" routerLinkActive="active">Ver Cursos
-                            con Alumnos</a></li>
+                    <li><a class="link-dark rounded" routerLink="/cursos" routerLinkActive="active">Gestionar Anotaciones</a></li>
                 </ul>
             </div>
         </li>
-
-        <!-- <li class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                data-bs-target="#orders-collapse" aria-expanded="false">
-                <img src="../../../assets/icon/file-earmark-person.svg" alt="" class="icon">
-                Recursos Humanos
-            </button>
-            <div class="collapse" id="orders-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a routerLink="/colaboradores" routerLinkActive="active" class="link-dark rounded">Colaboradores</a></li>
-                    <li><a routerLink="/remuneraciones" routerLinkActive="active" class="link-dark rounded">Remuneraciones</a></li>
-                </ul>
-            </div>
-        </li> -->
     </ul>
     <hr>
     <div class="mB">
@@ -81,19 +62,13 @@
             <img src="../../../assets/img/6.png" alt="" width="50" height="50" class="rounded-circle me-2">
             <div class="datosPerfil">
                 <strong>{{nombreUser}}</strong>
-                <small>Administradora</small>
+                <small>{{rolUser === 'profesor' ? 'Profesor' : 'Administrador'}}</small>
             </div>
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li>
-                <a class="dropdown-item" routerLink="#">Perfil</a>
-            </li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li>
-                <a class="dropdown-item" (click)="logout()">Cerrar Sesión</a>
-            </li>
+            <li><a class="dropdown-item" routerLink="#">Perfil</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" (click)="logout()">Cerrar Sesión</a></li>
         </ul>
     </div>
 </div>

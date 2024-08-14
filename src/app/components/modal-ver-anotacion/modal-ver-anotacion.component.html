@@ -1,0 +1,36 @@
+<h1 mat-dialog-title class="modal-title">
+    Ver Anotaciones
+    <button class="btn-close" (click)="closeModal()"></button>
+</h1>
+<div mat-dialog-content>
+    <div *ngIf="estudiante" class="mb-3 border p-3">
+        <h4><strong>Datos del Estudiante</strong></h4>
+        <p><strong>Nombre:</strong> {{ estudiante.nombre }}</p>
+        <p><strong>RUT:</strong> {{ estudiante.rut }}</p>
+    </div>
+    <div *ngIf="annotations && annotations.length; else noAnnotations">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th class="fecha-column">Fecha de Ingreso</th>
+                    <th>Tipo</th>
+                    <th class="asignatura-column">Asignatura</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let annotation of annotations">
+                    <td>{{ annotation.anotacion_titulo }}</td>
+                    <td>{{ annotation.anotacion_descripcion }}</td>
+                    <td class="text-center">{{ annotation.fecha_ingreso | date: 'dd-MM-yyyy' }}</td>
+                    <td>{{ annotation.es_positiva ? 'Positiva' : 'Negativa' }}</td>
+                    <td>{{ annotation.asignatura?.nombre_asignatura || 'Sin Asignatura' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ng-template #noAnnotations>
+        <h1 class="text-center"><strong>No existen registros de anotaciones.</strong></h1>
+    </ng-template>
+</div>

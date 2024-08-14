@@ -38,6 +38,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ModalBoletasEstudianteComponent } from './components/modal-boletas-estudiante/modal-boletas-estudiante.component';
 import { MatriculasComponent } from './components/matriculas/matriculas.component';
 import { ModalNuevaMatriculaComponent } from './components/modal-nueva-matricula/modal-nueva-matricula.component';
+import { ModalIngresoAnotacionComponent } from './components/modal-ingreso-anotacion/modal-ingreso-anotacion.component';
+import { ModalVerAnotacionComponent } from './components/modal-ver-anotacion/modal-ver-anotacion.component';
 
 
 @NgModule({
@@ -57,7 +59,9 @@ import { ModalNuevaMatriculaComponent } from './components/modal-nueva-matricula
     ModalDetalleBoletaComponent,
     ModalBoletasEstudianteComponent,
     MatriculasComponent,
-    ModalNuevaMatriculaComponent
+    ModalNuevaMatriculaComponent,
+    ModalIngresoAnotacionComponent,
+    ModalVerAnotacionComponent
   ],
   imports: [
     BrowserModule,

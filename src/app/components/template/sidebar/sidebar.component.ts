@@ -14,26 +14,42 @@ import Swal from 'sweetalert2';
 })
 export class SidebarComponent implements OnInit {
 
-  constructor(private router: Router, private auth: AuthService, private datav: VtigerService, private admService: InfoAdmService) { }
+  constructor(
+    private router: Router,
+    private auth: AuthService,
+    private datav: VtigerService,
+    private admService: InfoAdmService
+  ) { }
 
   rut: any;
   nombreUser: any;
-  countVtiger: any;
-  idCategorizados: any[] = [];
-  dataVtiger: any;
+  rolUser: any;
   ngOnInit(): void {
+    this.rolUser = localStorage.getItem('rol');
     this.rut = localStorage.getItem('rutAmbiente');
-    this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
-      next: (data) => {
-        console.log(data);
-        this.nombreUser = data[0].primer_nombre + ' ' + data[0].primer_apellido + ' ' + data[0].segundo_apellido;
-        console.log(this.nombreUser);
-        
-      },
-      error: (error) => {
-        console.error("Error al obtener datos:", error);
-      }
-    });
+    this.rolUser = localStorage.getItem('rol');
+    if(this.rolUser === 'administrador'){
+      this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.nombreUser = data[0].primer_nombre + ' ' + data[0].primer_apellido + ' ' + data[0].segundo_apellido;
+        },
+        error: (error) => {
+          console.error("Error al obtener datos:", error);
+        }
+      });
+    }
+    if(this.rolUser === 'profesor'){
+      this.admService.getInfoProfesor(localStorage.getItem('rutAmbiente')).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido;
+        },
+        error: (error) => {
+          console.error("Error al obtener datos:", error);
+        }
+      });
+    }
   }
 
 
@@ -47,12 +63,8 @@ export class SidebarComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.value) {
+        localStorage.clear();
         localStorage.setItem('ingresado', 'false');
-        localStorage.removeItem('token');
-        localStorage.removeItem('usuario');
-        localStorage.removeItem('rutAmbiente');
-        localStorage.removeItem('rutApoderado');
-        localStorage.removeItem('email');
         this.router.navigate(['/login']);
         location.reload();
       } else if (result.dismiss === Swal.DismissReason.cancel) {

@@ -1,31 +1,29 @@
 <div class="color posicion border">
     <div class="container">
-        <div class="cabecera">
-            <h1><b>Bienvenid@ {{nameUser}}</b></h1>
-            <small>Administración</small>
-        </div>
-        <hr>
-
-        <div class="cardContenedor">
-            <div class="card text-center m-2" *ngFor="let var1 of vars" [ngClass]="var1.color">
-                <div class="card-body">
-                    <div class="card-content">
-                        <h2>{{var1.name}}</h2>
-                    </div>
-                    <div class="card-icon">
-                        <i class="{{var1.icon}}"></i>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a routerLink="/{{var1.link}}">Más información ➔</a>
-                </div>
+      <div class="cabecera">
+        <h1><b>Bienvenid@ {{nameUser}}</b></h1>
+        <!-- <small>Home</small> -->
+      </div>
+      <hr>
+      <div class="cardContenedor">
+        <div class="card text-center m-2" *ngFor="let var1 of filteredVars" [ngClass]="var1.color">
+          <div class="card-body">
+            <div class="card-content">
+              <h2>{{var1.name}}</h2>
             </div>
+            <div class="card-icon">
+              <i class="{{var1.icon}}"></i>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a routerLink="/{{var1.link}}">Más información ➔</a>
+          </div>
         </div>
-        
-        <div class="chart-container m-3">
-            <canvas id="myChart"></canvas>
-            <canvas id="myChart2"></canvas>
-        </div>
-
+      </div>
+      <!-- <div class="chart-container m-3">
+        <canvas id="myChart"></canvas>
+        <canvas id="myChart2"></canvas>
+      </div> -->
     </div>
-</div>
+  </div>
+  

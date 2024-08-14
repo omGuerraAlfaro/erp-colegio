@@ -172,7 +172,7 @@ export class BoletasComponent implements OnInit {
       }
     });
   }
-  
+
 
   getCursoKeys(): string[] {
     return Object.keys(this.dataSourceCursos);
@@ -270,68 +270,76 @@ export class BoletasComponent implements OnInit {
 
 
   loadDataChart(): void {
-    const fecha = new Date().toISOString().slice(0, 10); // o la fecha que necesites
+    const fecha = new Date().toISOString().slice(0, 10);
     this.boletasService.getTotalPendientePorMes(fecha).subscribe(pendienteData => {
-      this.boletasService.getTotalPagadoPorMes(fecha).subscribe(pagadoData => {
-        this.loadChart(pendienteData, pagadoData);
-      });
+        this.boletasService.getTotalPagadoPorMes(fecha).subscribe(pagadoData => {
+            this.loadChart(pendienteData, pagadoData);
+        });
     });
-  }
-  loadChart(pendienteData: any, pagadoData: any): void {
-    const labels = pendienteData.map((item: any) => item.mes);
+}
+
+convertDateToMonthName(dateString: string): string {
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    const options: Intl.DateTimeFormatOptions = { month: 'long' };
+    return date.toLocaleDateString('es-ES', options);
+}
+
+loadChart(pendienteData: any, pagadoData: any): void {
+    const labels = pendienteData.map((item: any) => this.convertDateToMonthName(item.mes));
     const pendienteValues = pendienteData.map((item: any) => item.total_pendiente_vencido);
     const pagadoValues = pagadoData.map((item: any) => item.total_pagado);
-    console.log(pendienteValues);
-    console.log(pagadoValues);
 
     const myChart = new Chart('myChart3', {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Total Pendiente Vencido',
-            data: pendienteValues,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-          },
-          {
-            label: 'Total Pagado',
-            data: pagadoValues,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-          }
-        ]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Total Pendiente Vencido',
+                    data: pendienteValues,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Total Pagado',
+                    data: pagadoValues,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
-      }
     });
 
     //chart 2
     const myChart2 = new Chart('myChart4', {
-      type: 'line',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'Gasto Mensual',
-          data: [14, 12, 13, 11, 12, 13, 14],
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true
-      }
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+                label: 'Gasto Mensual',
+                data: [14, 12, 13, 11, 12, 13, 14],
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true
+        }
     });
-  }
+}
+
+
 
 }

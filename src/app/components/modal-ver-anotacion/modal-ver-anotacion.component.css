@@ -1,0 +1,27 @@
+.table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .table th, .table td {
+    text-align: left;
+    padding: 8px;
+  }
+  
+  .table th.fecha-column {
+    width: 150px;
+  }
+  .table th.asignatura-column {
+    width: 120px;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  .modal-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  

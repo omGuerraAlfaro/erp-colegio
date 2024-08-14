@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment.prod';
 })
 export class EstudianteService {
 
-  httpOptions = {
+  private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     })
@@ -23,8 +23,30 @@ export class EstudianteService {
         catchError(this.handleError)
       );
   }
+
   getInfoEstudiante2(rut: any): Observable<EstudianteConBoletas> {
     return this.http.get<EstudianteConBoletas>(`${environment.api}/estudiante/rut/${rut}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getCountByGenero(): Observable<{ masculinoCount: number; femeninoCount: number }> {
+    return this.http.get<{ masculinoCount: number; femeninoCount: number }>(`${environment.api}/estudiante/count-by-genero`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getAnotaciones(idEstudiante: any): Observable<any> {
+    return this.http.get<any>(`${environment.api}/anotaciones/estudiante/${idEstudiante}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  postNuevaAnotacion(idEstudiante: any, anotacion: any): Observable<any> {
+    return this.http.post<any>(`${environment.api}/anotaciones/crear/${idEstudiante}`, anotacion, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -33,15 +55,12 @@ export class EstudianteService {
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
     console.error(errorMessage);
-    // Aquí podrías implementar una lógica adicional para manejar diferentes tipos de errores.
     return throwError(() => new Error(errorMessage));
   }
-
 
   private currentStudentSubject = new BehaviorSubject<IEstudiante | null>(null);
   currentStudent$ = this.currentStudentSubject.asObservable();
   
-  // Método para actualizar el estudiante actual
   setCurrentStudent(student: IEstudiante) {
     this.currentStudentSubject.next(student);
   }

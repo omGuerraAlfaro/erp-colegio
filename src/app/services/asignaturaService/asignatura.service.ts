@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class InfoAdmService {
+export class AsignaturaService {
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -17,20 +17,13 @@ export class InfoAdmService {
 
   constructor(private http: HttpClient) { }
 
-  getInfoAdm(rut: any): Observable<any> {
-    return this.http.get<any>(`${environment.api}/administrador/${rut}`, this.httpOptions)
+  getAllAsignaturas(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/asignatura/all`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
-  getInfoProfesor(rut: any): Observable<any> {
-    return this.http.get<any>(`${environment.api}/profesor/rut/${rut}`, this.httpOptions)
-      .pipe(
-        tap(response => console.log('Response:', response)),
-        catchError(this.handleError)
-      );
-  }
-  
+
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
