@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { CursosService } from 'src/app/services/cursoService/cursos.service';
 import { CursoEstudianteDetalle } from 'src/app/interfaces/cursoInterface';
@@ -6,13 +6,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalIngresoAnotacionComponent } from '../modal-ingreso-anotacion/modal-ingreso-anotacion.component';
 import { ModalVerAnotacionComponent } from '../modal-ver-anotacion/modal-ver-anotacion.component';
 
-
 @Component({
   selector: 'app-cursos',
   templateUrl: './cursos.component.html',
   styleUrls: ['./cursos.component.css']
 })
-export class CursosComponent implements OnInit, AfterViewInit {
+export class CursosComponent implements OnInit, AfterViewInit, AfterViewChecked {
   displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'ver_anotacion', 'ingresar_anotacion'];
   dataSourceCursos: { [key: string]: { dataSource: MatTableDataSource<CursoEstudianteDetalle>, nombreCurso: string } } = {};
   hasLoadedData = false;
@@ -29,14 +28,20 @@ export class CursosComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.cdr.detectChanges();
       this.initializeTabs();
-    }, 100);
+    }, 1000);
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.hasLoadedData) {
+      this.initializeTabs();
+    }
   }
 
   loadCursosConEstudiantes(): void {
     this.cursosServices.getInfoCursoConEstudiantes().subscribe({
       next: (cursos: any) => {
+        console.log('Datos de cursos:', cursos); // Verifica los datos recibidos
         if (cursos) {
           cursos.forEach((curso: any) => {
             const cursoId = curso.id.toString();
@@ -55,6 +60,9 @@ export class CursosComponent implements OnInit, AfterViewInit {
           });
           this.hasLoadedData = true;
           this.cdr.detectChanges();
+          setTimeout(() => {
+            this.initializeTabs();
+          }, 100);
         }
       },
       error: (error) => {
@@ -65,18 +73,20 @@ export class CursosComponent implements OnInit, AfterViewInit {
 
   initializeTabs(): void {
     const tabElements = document.querySelectorAll('.nav-tabs .nav-link');
-    tabElements.forEach(tab => {
-      const tabEl = tab as HTMLElement;
-      const targetId = tabEl.getAttribute('data-bs-target');
-      if (targetId) {
-        const targetEl = document.querySelector(targetId);
-        if (targetEl) {
-          targetEl.classList.remove('show', 'active');
-        }
-      }
-    });
-
     if (tabElements.length) {
+      tabElements.forEach((tab, index) => {
+        const tabEl = tab as HTMLElement;
+        const targetId = tabEl.getAttribute('data-bs-target');
+        if (targetId) {
+          const targetEl = document.querySelector(targetId);
+          if (targetEl) {
+            targetEl.classList.remove('show', 'active');
+          }
+        }
+        tabEl.classList.remove('active'); // Asegúrate de que no haya pestañas activas por defecto
+      });
+
+      // Activa la primera pestaña y su contenido
       const firstTab = tabElements[0] as HTMLElement;
       firstTab.classList.add('active');
       const firstTabTargetId = firstTab.getAttribute('data-bs-target');
@@ -107,7 +117,6 @@ export class CursosComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('El modal se cerró');
     });
-
   }
 
   openModalVerAnotacion(element: any): void {
@@ -124,7 +133,6 @@ export class CursosComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('El modal se cerró');
     });
-
   }
 }
 

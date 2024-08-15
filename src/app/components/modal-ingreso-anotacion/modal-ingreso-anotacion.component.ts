@@ -5,7 +5,6 @@ import { AsignaturaService } from 'src/app/services/asignaturaService/asignatura
 import { EstudianteService } from 'src/app/services/estudianteService/estudiante.service';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-modal-ingreso-anotacion',
   templateUrl: './modal-ingreso-anotacion.component.html',
@@ -26,26 +25,34 @@ export class ModalIngresoAnotacionComponent implements OnInit {
     this.anotacionForm = this.fb.group({
       anotacion_titulo: ['', Validators.required],
       anotacion_descripcion: ['', Validators.required],
-      es_positiva: [true],
+      es_positiva: [false],
       es_negativa: [false],
+      es_neutra: [false],
       anotacion_estado: [true],
       asignaturaId: [null, Validators.required]
     });
 
+    // Inicializar la información del estudiante
     this.estudiante = {
       nombre: this.data.nombre_estudiante,
       rut: this.data.rut_estudiante2,
       telefono: this.data.telefono_estudiante,
       genero: this.data.genero_estudiante
     };
-    console.log(data);
   }
 
   ngOnInit(): void {
-    this.loadAsignaturas(); // Fetch asignaturas on initialization
+    this.loadAsignaturas();
   }
 
-  // Método para cerrar el modal
+  setTipo(tipo: 'positiva' | 'negativa' | 'neutra'): void {
+    this.anotacionForm.patchValue({
+      es_positiva: tipo === 'positiva',
+      es_negativa: tipo === 'negativa',
+      es_neutra: tipo === 'neutra'
+    });
+  }
+
   closeModal(): void {
     this.dialogRef.close();
   }
@@ -54,8 +61,6 @@ export class ModalIngresoAnotacionComponent implements OnInit {
     if (this.anotacionForm.valid) {
       const anotacionData = this.anotacionForm.value;
       const idEstudiante = this.data.id;
-
-      anotacionData.asignaturaId = Number(anotacionData.asignaturaId);
 
       console.log(anotacionData);
       console.log(idEstudiante);
@@ -91,8 +96,6 @@ export class ModalIngresoAnotacionComponent implements OnInit {
     }
   }
 
-
-
   private loadAsignaturas(): void {
     this.asignaturaService.getAllAsignaturas().subscribe(
       (data: any) => {
@@ -105,12 +108,5 @@ export class ModalIngresoAnotacionComponent implements OnInit {
         console.error('Error al cargar asignaturas', error);
       }
     );
-  }
-
-  setTipo(isPositiva: boolean): void {
-    this.anotacionForm.patchValue({
-      es_positiva: isPositiva,
-      es_negativa: !isPositiva
-    });
   }
 }

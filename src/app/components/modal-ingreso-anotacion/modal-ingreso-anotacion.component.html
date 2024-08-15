@@ -27,14 +27,18 @@
             <div class="col-md-12">
                 <label class="form-label">Tipo de Anotación</label>
                 <div class="form-check">
-                    <input id="positivo" type="radio" formControlName="es_positiva" [value]="true" (change)="setTipo(true)" class="form-check-input">
-                    <label for="positivo" class="form-check-label">Positiva</label>
+                  <input id="positivo" type="radio" [checked]="anotacionForm.get('es_positiva')?.value" (change)="setTipo('positiva')" class="form-check-input">
+                  <label for="positivo" class="form-check-label">Positiva</label>
                 </div>
                 <div class="form-check">
-                    <input id="negativo" type="radio" formControlName="es_positiva" [value]="false" (change)="setTipo(false)" class="form-check-input">
-                    <label for="negativo" class="form-check-label">Negativa</label>
+                  <input id="negativo" type="radio" [checked]="anotacionForm.get('es_negativa')?.value" (change)="setTipo('negativa')" class="form-check-input">
+                  <label for="negativo" class="form-check-label">Negativa</label>
                 </div>
-            </div>
+                <div class="form-check">
+                  <input id="neutro" type="radio" [checked]="anotacionForm.get('es_neutra')?.value" (change)="setTipo('neutra')" class="form-check-input">
+                  <label for="neutro" class="form-check-label">Neutra</label>
+                </div>
+              </div>                      
         </div>                    
         <div class="row mb-3">
             <div class="col-md-12">
