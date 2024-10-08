@@ -15,6 +15,7 @@ import { ColaboradoresComponent } from './components/rrhh/colaboradores/colabora
 import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remuneraciones.component';
 import { BoletasApoderadoComponent } from './components/boletas-apoderado/boletas-apoderado.component';
 import { MatriculasComponent } from './components/matriculas/matriculas.component';
+import { InscripcionMatriculaComponent } from './components/inscripcion-matricula/inscripcion-matricula.component';
 
 
 const routes: Routes = [
@@ -28,7 +29,10 @@ const routes: Routes = [
 
   { path: 'colaboradores', component: ColaboradoresComponent},
   { path: 'remuneraciones', component: RemuneracionesComponent},
-  { path: 'matriculas', component: MatriculasComponent}
+
+  { path: 'matriculas', component: MatriculasComponent},
+  { path: 'bandeja-inscripciones', component: InscripcionMatriculaComponent}
+
 
 ];
 

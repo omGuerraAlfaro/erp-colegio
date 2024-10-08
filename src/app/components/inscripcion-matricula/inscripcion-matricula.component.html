@@ -1,0 +1,98 @@
+<div class="color posicion border">
+    <div class="container">
+      <div class="cabecera">
+        <h1><b>Bandeja de inscripciones para Matrículas</b></h1>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <div class="search-bar">
+            <mat-form-field appearance="fill" style="width: 100%;">
+              <mat-label>BUSQUEDA POR: <b>ID INSCRIPCIÓN</b></mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Buscar...">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-9">
+        </div>
+      </div>
+  
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  
+        <!-- ID Column -->
+        <ng-container matColumnDef="id_inscripcion">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> ID Inscripción </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.id_inscripcion}} </td>
+        </ng-container>
+      
+        <!-- Nombre Alumno Column -->
+        <ng-container matColumnDef="nombre_alumno">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 250px!important;"> Nombre Alumno </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 250px!important;"> {{element.primer_nombre_alumno}} {{element.segundo_nombre_alumno}} {{element.primer_apellido_alumno}}  {{element.segundo_apellido_alumno}} </td>
+        </ng-container>
+
+        <!-- Rut Alumno Column -->
+        <ng-container matColumnDef="rut_alumno">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Rut Alumno </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.rut_alumno}} </td>
+        </ng-container>
+      
+        <!-- Curso Alumno Column -->
+        <ng-container matColumnDef="curso_alumno">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Curso Alumno </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.curso_alumno || 'N/A' }} </td>
+        </ng-container>
+      
+        <!-- Nombre Apoderado Column -->
+        <ng-container matColumnDef="nombre_apoderado">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 250px!important;"> Nombre Apoderado </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 250px!important;"> {{element.primer_nombre_apoderado}} {{element.segundo_nombre_apoderado}} {{element.primer_apellido_apoderado}} {{element.segundo_apellido_apoderado}} </td>
+        </ng-container>
+
+        <!-- Rut Apoderado Column -->
+        <ng-container matColumnDef="rut_apoderado">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Rut Apoderado </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.rut_apoderado}} </td>
+        </ng-container>
+      
+        <!-- Teléfono Apoderado Column -->
+        <ng-container matColumnDef="telefono_apoderado">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Teléfono Apoderado </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.telefono_apoderado}} </td>
+        </ng-container>
+      
+        <!-- Correo Apoderado Column -->
+        <ng-container matColumnDef="correo_apoderado">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Correo Apoderado </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.correo_apoderado}} </td>
+        </ng-container>
+      
+        <!-- Parentesco Apoderado Column -->
+        <ng-container matColumnDef="parentesco_apoderado">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Parentesco </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.parentesco_apoderado}} </td>
+        </ng-container>
+      
+        <!-- Fecha de Matrícula Column -->
+        <ng-container matColumnDef="fecha_matricula_inscripcion">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Fecha Inscripción </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.fecha_matricula_inscripcion | date:'dd/MM/yyyy'}} </td>
+        </ng-container>
+      
+        <!-- Acciones Column -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Acciones </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;">
+            <button mat-button class="btn btn-warning" (click)="terminarFormulario(element.id_inscripcion)">Ver</button>
+          </td>
+        </ng-container>
+      
+        <!-- Header and Row Declarations -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      
+      
+    </div>
+  </div>
+  

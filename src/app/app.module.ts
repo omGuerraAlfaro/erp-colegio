@@ -40,6 +40,11 @@ import { MatriculasComponent } from './components/matriculas/matriculas.componen
 import { ModalNuevaMatriculaComponent } from './components/modal-nueva-matricula/modal-nueva-matricula.component';
 import { ModalIngresoAnotacionComponent } from './components/modal-ingreso-anotacion/modal-ingreso-anotacion.component';
 import { ModalVerAnotacionComponent } from './components/modal-ver-anotacion/modal-ver-anotacion.component';
+import { InscripcionMatriculaComponent } from './components/inscripcion-matricula/inscripcion-matricula.component';
+import { ModalTerminarFormularioMatriculaComponent } from './components/modal-terminar-formulario-matricula/modal-terminar-formulario-matricula.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
 
 
 @NgModule({
@@ -61,7 +66,9 @@ import { ModalVerAnotacionComponent } from './components/modal-ver-anotacion/mod
     MatriculasComponent,
     ModalNuevaMatriculaComponent,
     ModalIngresoAnotacionComponent,
-    ModalVerAnotacionComponent
+    ModalVerAnotacionComponent,
+    InscripcionMatriculaComponent,
+    ModalTerminarFormularioMatriculaComponent
   ],
   imports: [
     BrowserModule,
@@ -76,6 +83,8 @@ import { ModalVerAnotacionComponent } from './components/modal-ver-anotacion/mod
     MatInputModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatNativeDateModule,
+    MatDatepickerModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es' },],
   bootstrap: [AppComponent]

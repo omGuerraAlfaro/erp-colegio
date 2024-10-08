@@ -1,0 +1,101 @@
+<h1 mat-dialog-title class="modal-title">
+    INSCRIPCION: <b>{{ inscripcionForm.get('id_inscripcion')?.value }}</b>
+    <button class="close-button" (click)="closeModal()">X</button>
+</h1>
+<div mat-dialog-content class="modal-content">
+    <form [formGroup]="inscripcionForm" (ngSubmit)="onSubmit()">
+        <div>
+            <h3>Datos del Alumno</h3>
+            <mat-form-field appearance="fill">
+                <mat-label>ID Inscripción</mat-label>
+                <input matInput formControlName="id_inscripcion" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="primer_nombre_alumno" />
+                <input matInput formControlName="segundo_nombre_alumno" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Apellidos</mat-label>
+                <input matInput formControlName="primer_apellido_alumno" />
+                <input matInput formControlName="segundo_apellido_alumno" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>RUT</mat-label>
+                <input matInput formControlName="rut_alumno" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Género</mat-label>
+                <input matInput formControlName="genero_alumno" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de Nacimiento</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento_alumno" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Curso</mat-label>
+                <input matInput formControlName="curso_alumno" />
+            </mat-form-field>
+        </div>
+
+        <div>
+            <h3>Datos del Apoderado</h3>
+            <mat-form-field appearance="fill">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="primer_nombre_apoderado" />
+                <input matInput formControlName="segundo_nombre_apoderado" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Apellidos</mat-label>
+                <input matInput formControlName="primer_apellido_apoderado" />
+                <input matInput formControlName="segundo_apellido_apoderado" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>RUT</mat-label>
+                <input matInput formControlName="rut_apoderado" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Teléfono</mat-label>
+                <input matInput formControlName="telefono_apoderado" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Correo</mat-label>
+                <input matInput formControlName="correo_apoderado" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Parentesco</mat-label>
+                <input matInput formControlName="parentesco_apoderado" />
+            </mat-form-field>
+        </div>
+
+        <div>
+            <h3>Información Adicional</h3>
+            <mat-form-field appearance="fill">
+                <mat-label>Estado Civil</mat-label>
+                <input matInput formControlName="estado_civil" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Profesión/Oficio</mat-label>
+                <input matInput formControlName="profesion_oficio" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Dirección</mat-label>
+                <input matInput formControlName="direccion" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Comuna</mat-label>
+                <input matInput formControlName="comuna" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de Matrícula</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="fecha_matricula_inscripcion" />
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <button mat-raised-button color="primary" type="submit">Actualizar Inscripción</button>
+    </form>
+</div>

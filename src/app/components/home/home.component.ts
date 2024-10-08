@@ -88,7 +88,9 @@ export class HomeComponent implements OnInit {
     if (this.rolUser === 'administrador') {
       this.admService.getInfoAdm(this.rutUser).subscribe({
         next: (data) => {
-          this.nameUser = `${data[0].primer_nombre} ${data[0].primer_apellido} ${data[0].segundo_apellido}`;
+          console.log(data);
+          
+          this.nameUser = `${data.primer_nombre} ${data.primer_apellido} ${data.segundo_apellido}`;
         },
         error: (error) => {
           console.error("Error al obtener datos:", error);

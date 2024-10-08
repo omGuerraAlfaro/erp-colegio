@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit {
       this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
           console.log(data);
-          this.nombreUser = data[0].primer_nombre + ' ' + data[0].primer_apellido + ' ' + data[0].segundo_apellido;
+          this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido + ' ' + data.segundo_apellido;
         },
         error: (error) => {
           console.error("Error al obtener datos:", error);
