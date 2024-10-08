@@ -23,16 +23,20 @@ export class SidebarComponent implements OnInit {
 
   rut: any;
   nombreUser: any;
+  genderUser: any;
   rolUser: any;
   ngOnInit(): void {
     this.rolUser = localStorage.getItem('rol');
     this.rut = localStorage.getItem('rutAmbiente');
     this.rolUser = localStorage.getItem('rol');
+    this.genderUser = localStorage.getItem('genero');
     if(this.rolUser === 'administrador'){
       this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
           console.log(data);
           this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido + ' ' + data.segundo_apellido;
+          console.log(this.genderUser);
+          
         },
         error: (error) => {
           console.error("Error al obtener datos:", error);

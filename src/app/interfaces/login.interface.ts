@@ -11,4 +11,5 @@ export interface IUser {
     apoderado_id?: number; 
     profesor_id?: number;
     administrador_id?: number;
+    genero: string;
 }

@@ -10,13 +10,13 @@
                 <mat-form-field appearance="fill" class="mx-3"
                     style="flex: 1 1 auto; min-width: 150px; max-width: 250px;">
                     <mat-label><b>ID Inscripción</b></mat-label>
-                    <input style="font-size: x-large; color: cadetblue;" matInput formControlName="id_inscripcion" />
+                    <input style="font-size: x-large; color: darkgreen;" matInput formControlName="id_inscripcion" />
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="mx-3">
                     <mat-label><b>Fecha de Inscripción</b></mat-label>
                     <input matInput [matDatepicker]="picker2" formControlName="fecha_matricula_inscripcion"
-                        style="font-size: x-large; color: cadetblue;" />
+                        style="font-size: x-large; color:darkgreen;" />
                     <mat-datepicker-toggle disabled="true" matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker disabled="true" #picker2></mat-datepicker>
                 </mat-form-field>

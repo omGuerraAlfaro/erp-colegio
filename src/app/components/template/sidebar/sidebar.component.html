@@ -60,7 +60,7 @@
     <div class="dropdown">
         <a class="d-flex align-items-center text-black text-decoration-none dropdown-toggle" id="dropdownUser1"
             data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="../../../assets/img/6.png" alt="" width="50" height="50" class="rounded-circle me-2">
+            <img [src]="genderUser === 'F' ? '../../../assets/img/6.png' : '../../../assets/img/5.png'" alt="" width="50" height="50" class="rounded-circle me-2">
             <div class="datosPerfil">
                 <strong>{{nombreUser}}</strong>
                 <small>{{rolUser === 'profesor' ? 'Profesor' : 'Administrador'}}</small>
