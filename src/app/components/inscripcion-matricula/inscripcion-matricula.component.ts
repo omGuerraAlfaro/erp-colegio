@@ -50,7 +50,7 @@ export class InscripcionMatriculaComponent implements OnInit {
     console.log(element);
 
     const dialogRef = this.dialog.open(ModalTerminarFormularioMatriculaComponent, {
-      width: '60%',
+      width: '70%',
       height: 'auto',
       data: element
     });

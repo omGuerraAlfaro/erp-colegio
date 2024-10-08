@@ -23,7 +23,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
   ) {
     console.log(data);
     this.inscripcionForm = this.fb.group({
-      id_inscripcion: [''],
+      id_inscripcion: [{ value: '', disabled: true }],
       primer_nombre_alumno: [''],
       segundo_nombre_alumno: [''],
       primer_apellido_alumno: [''],
@@ -44,7 +44,19 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       profesion_oficio: [''],
       direccion: [''],
       comuna: [''],
-      fecha_matricula_inscripcion: ['']
+      primer_nombre_apoderado_suplente: [''],
+      segundo_nombre_apoderado_suplente: [''],
+      primer_apellido_apoderado_suplente: [''],
+      segundo_apellido_apoderado_suplente: [''],
+      rut_apoderado_suplente: [''],
+      telefono_apoderado_suplente: [''],
+      correo_apoderado_suplente: [''],
+      parentesco_apoderado_suplente: [''],
+      estado_civil_suplente: [''],
+      profesion_oficio_suplente: [''],
+      direccion_suplente: [''],
+      comuna_suplente: [''],
+      fecha_matricula_inscripcion: [{ value: '', disabled: true }],
     });
   }
 
