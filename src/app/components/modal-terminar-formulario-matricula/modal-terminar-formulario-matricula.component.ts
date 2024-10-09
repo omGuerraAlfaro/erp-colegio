@@ -34,9 +34,9 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       genero_alumno: ['', [Validators.required]],
       fecha_nacimiento_alumno: ['', [Validators.required]],
       curso_alumno: ['', [Validators.required]],
-      enfermedad_cronica_alumno: ['', [Validators.required]],
-      alergia_alimento_alumno: ['', [Validators.required]],
-      alergia_medicamento_alumno: ['', [Validators.required]],
+      enfermedad_cronica_alumno: [''],
+      alergia_alimento_alumno: [''],
+      alergia_medicamento_alumno: [''],
       prevision_alumno: ['', [Validators.required]],
       consultorio_clinica_alumno: ['', [Validators.required]],
       es_pae: [false],
@@ -81,19 +81,15 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       next: (data: IInscripcionMatricula) => {
         const { fecha_matricula_inscripcion, fecha_nacimiento_alumno } = data;
 
-        // Create a new Date object and add one day
         const fechaMatricula = new Date(fecha_matricula_inscripcion);
         fechaMatricula.setDate(fechaMatricula.getDate() + 1);
         const fechaNacimiento = new Date(fecha_nacimiento_alumno);
         fechaNacimiento.setDate(fechaNacimiento.getDate() + 1);
 
-        // Update the data object with the new date
-        data.fecha_matricula_inscripcion = fechaMatricula.toISOString(); // or any format you need
-        data.fecha_nacimiento_alumno = fechaNacimiento.toISOString(); // or any format you need
+        data.fecha_matricula_inscripcion = fechaMatricula.toISOString();
+        data.fecha_nacimiento_alumno = fechaNacimiento.toISOString();
 
-        // Patch the form with the updated data
         this.inscripcionForm.patchValue(data);
-        this.inscripcionData = data;
       },
       error: (error: any) => {
         console.error('Error fetching inscripciones:', error);
@@ -106,6 +102,20 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
   onSubmit() {
     if (this.inscripcionForm.valid) {
       console.log("VALIDO");
+      console.log(this.inscripcionForm.value);
+
+      const {
+        enfermedad_cronica_alumno,
+        alergia_alimento_alumno,
+        alergia_medicamento_alumno
+      } = this.inscripcionForm.value;
+
+      this.inscripcionForm.patchValue({
+        enfermedad_cronica_alumno: enfermedad_cronica_alumno || 'No',
+        alergia_alimento_alumno: alergia_alimento_alumno || 'No',
+        alergia_medicamento_alumno: alergia_medicamento_alumno || 'No'
+      });
+
       console.log(this.inscripcionForm.value);
 
 
