@@ -7,13 +7,13 @@
         <div style="display: flex; justify-content: flex-start;">
             <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; min-width: 150px; max-width: 250px;">
                 <mat-label><b>ID Inscripción</b></mat-label>
-                <input style="font-size: x-large; color: darkgreen;" matInput formControlName="id_inscripcion" />
+                <input style="font-size: x-large; color:rgb(16, 95, 170);" matInput formControlName="id_inscripcion" />
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label><b>Fecha de Inscripción</b></mat-label>
                 <input matInput [matDatepicker]="picker2" formControlName="fecha_matricula_inscripcion"
-                    style="font-size: x-large; color:darkgreen;" />
+                    style="font-size: x-large; color:rgb(16, 95, 170);" />
                 <mat-datepicker-toggle disabled="true" matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker disabled="true" #picker2></mat-datepicker>
             </mat-form-field>
@@ -322,10 +322,9 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <mat-dialog-actions>
-            <button (click)="dialogRef.close()">Cancelar</button>
-            <button color="btn btn-primary" type="submit">Ingresar Matricula</button>
-            <!-- <button mat-button (click)="submitForm()">Aceptar</button> -->
+        <mat-dialog-actions class="d-flex justify-content-center">
+            <button class="mx-2 boton" (click)="dialogRef.close()">Cancelar</button>
+            <button class="mx-2 boton" type="submit">Ingresar Matricula</button>
         </mat-dialog-actions>
     </form>
 </mat-dialog-content>
