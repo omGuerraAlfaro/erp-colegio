@@ -107,7 +107,10 @@
             </mat-form-field>
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Previsión</mat-label>
-                <input matInput formControlName="prevision_alumno" />
+                <mat-select formControlName="prevision_alumno">
+                    <mat-option value="Fonasa">Fonasa</mat-option>
+                    <mat-option value="Isapre">Isapre</mat-option>
+                </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Consultorio o Clínica</mat-label>

@@ -76,21 +76,32 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
     this.loadInscripciones();
 
   }
-
   loadInscripciones() {
     this.inscripcionService.getInscripcion(this.data).subscribe({
       next: (data: IInscripcionMatricula) => {
-        // console.log('Inscripciones fetched successfully:', data);
-        this.inscripcionData = data;
-        this.inscripcionForm.patchValue(data);
-        //this.inscripciones = data;
+        const { fecha_matricula_inscripcion, fecha_nacimiento_alumno } = data;
 
+        // Create a new Date object and add one day
+        const fechaMatricula = new Date(fecha_matricula_inscripcion);
+        fechaMatricula.setDate(fechaMatricula.getDate() + 1);
+        const fechaNacimiento = new Date(fecha_nacimiento_alumno);
+        fechaNacimiento.setDate(fechaNacimiento.getDate() + 1);
+
+        // Update the data object with the new date
+        data.fecha_matricula_inscripcion = fechaMatricula.toISOString(); // or any format you need
+        data.fecha_nacimiento_alumno = fechaNacimiento.toISOString(); // or any format you need
+
+        // Patch the form with the updated data
+        this.inscripcionForm.patchValue(data);
+        this.inscripcionData = data;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error fetching inscripciones:', error);
       }
     });
   }
+
+
 
   onSubmit() {
     if (this.inscripcionForm.valid) {

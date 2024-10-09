@@ -7,7 +7,7 @@ export interface IInscripcionMatricula {
   segundo_apellido_alumno?: string; 
   rut_alumno: string;
   genero_alumno?: string; 
-  fecha_nacimiento_alumno?: Date; 
+  fecha_nacimiento_alumno: any; 
   curso_alumno?: string; 
   primer_nombre_apoderado: string;
   segundo_nombre_apoderado?: string; 
@@ -21,5 +21,5 @@ export interface IInscripcionMatricula {
   profesion_oficio: string;
   direccion: string;
   comuna: string;
-  fecha_matricula_inscripcion?: Date; 
+  fecha_matricula_inscripcion?: any; 
 }
