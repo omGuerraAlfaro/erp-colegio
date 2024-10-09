@@ -42,8 +42,10 @@ import { ModalIngresoAnotacionComponent } from './components/modal-ingreso-anota
 import { ModalVerAnotacionComponent } from './components/modal-ver-anotacion/modal-ver-anotacion.component';
 import { InscripcionMatriculaComponent } from './components/inscripcion-matricula/inscripcion-matricula.component';
 import { ModalTerminarFormularioMatriculaComponent } from './components/modal-terminar-formulario-matricula/modal-terminar-formulario-matricula.component';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -84,7 +86,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatCheckboxModule,
     MatDialogModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatButtonModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es' },],
   bootstrap: [AppComponent]

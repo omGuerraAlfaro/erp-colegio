@@ -2,175 +2,319 @@
     <b>Inscripción</b>
     <button class="close-button" (click)="closeModal()">X</button>
 </h1>
-<div mat-dialog-content class="modal-content">
+<mat-dialog-content class="modal-content">
     <form [formGroup]="inscripcionForm" class="bg-light p-5" (ngSubmit)="onSubmit()">
 
-        <div>
-            <div style="display: flex; justify-content: flex-start;">
-                <mat-form-field appearance="fill" class="mx-3"
-                    style="flex: 1 1 auto; min-width: 150px; max-width: 250px;">
-                    <mat-label><b>ID Inscripción</b></mat-label>
-                    <input style="font-size: x-large; color: darkgreen;" matInput formControlName="id_inscripcion" />
-                </mat-form-field>
 
-                <mat-form-field appearance="fill" class="mx-3">
-                    <mat-label><b>Fecha de Inscripción</b></mat-label>
-                    <input matInput [matDatepicker]="picker2" formControlName="fecha_matricula_inscripcion"
-                        style="font-size: x-large; color:darkgreen;" />
-                    <mat-datepicker-toggle disabled="true" matSuffix [for]="picker2"></mat-datepicker-toggle>
-                    <mat-datepicker disabled="true" #picker2></mat-datepicker>
-                </mat-form-field>
-            </div>
-            <br>
+        <div style="display: flex; justify-content: flex-start;">
+            <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; min-width: 150px; max-width: 250px;">
+                <mat-label><b>ID Inscripción</b></mat-label>
+                <input style="font-size: x-large; color: darkgreen;" matInput formControlName="id_inscripcion" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label><b>Fecha de Inscripción</b></mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="fecha_matricula_inscripcion"
+                    style="font-size: x-large; color:darkgreen;" />
+                <mat-datepicker-toggle disabled="true" matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker disabled="true" #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <br>
+
+        <div class="back rounded">
             <div class="d-flex flex-column mb-3">
                 <h3><b>Datos del Alumno</b></h3>
                 <small style="color: darkgoldenrod;"><b>Nota: </b>Revisar o editar datos del Alumno</small>
             </div>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Primer Nombre</mat-label>
                 <input matInput formControlName="primer_nombre_alumno" />
+                <mat-error *ngIf="inscripcionForm.get('primer_nombre_alumno')?.hasError('minlength')">
+                    El primer nombre debe tener al menos 3 caracteres
+                </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Segundo Nombre</mat-label>
                 <input matInput formControlName="segundo_nombre_alumno" />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Primer Apellido</mat-label>
                 <input matInput formControlName="primer_apellido_alumno" />
+                <mat-error *ngIf="inscripcionForm.get('primer_apellido_alumno')?.hasError('minlength')">
+                    El primer nombre debe tener al menos 3 caracteres
+                </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Segundo Apellido</mat-label>
                 <input matInput formControlName="segundo_apellido_alumno" />
+                <mat-error *ngIf="inscripcionForm.get('segundo_apellido_alumno')?.hasError('minlength')">
+                    El primer nombre debe tener al menos 3 caracteres
+                </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>RUT</mat-label>
                 <input matInput formControlName="rut_alumno" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('rut_alumno')?.hasError('invalidRut') && (inscripcionForm.get('rut_alumno')?.touched || inscripcionForm.get('rut_alumno')?.dirty)">
+                    El RUT ingresado no es válido
+                </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Género</mat-label>
-                <input matInput formControlName="genero_alumno" />
+                <mat-select formControlName="genero_alumno">
+                    <mat-option value="Femenino">Femenino</mat-option>
+                    <mat-option value="Masculino">Masculino</mat-option>
+                </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3" style="flex: 1 1 auto; min-width: 150px; max-width: 200px;">
+            <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; min-width: 150px; max-width: 200px;">
                 <mat-label>Fecha de Nacimiento</mat-label>
                 <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento_alumno" />
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Curso</mat-label>
-                <input matInput formControlName="curso_alumno" />
+                <mat-select formControlName="curso_alumno">
+                    <mat-option value="1">Pre-Kinder</mat-option>
+                    <mat-option value="2">Kinder</mat-option>
+                    <mat-option value="3">Primero Básico</mat-option>
+                    <mat-option value="4">Segundo Básico</mat-option>
+                    <mat-option value="5">Tercero Básico</mat-option>
+                    <mat-option value="6">Cuarto Básico</mat-option>
+                    <mat-option value="7">Quinto Básico</mat-option>
+                    <mat-option value="8">Sexto Básico</mat-option>
+                    <mat-option value="9">Septimo Básico</mat-option>
+                    <mat-option value="10">Octavo Básico</mat-option>
+                </mat-select>
             </mat-form-field>
+
+            <hr>
+
+            <div class="d-flex flex-column mb-3">
+                <h3><b>Datos Adicionales del Alumno</b></h3>
+                <small style="color: red;"><b>Nota: </b>Ingresar datos adicionales del Alumno</small>
+            </div>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Enfermedad Crónica</mat-label>
+                <input matInput formControlName="enfermedad_cronica_alumno" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Alergia a Alimentos</mat-label>
+                <input matInput formControlName="alergia_alimento_alumno" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Alergia a Medicamentos</mat-label>
+                <input matInput formControlName="alergia_medicamento_alumno" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Previsión</mat-label>
+                <input matInput formControlName="prevision_alumno" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Consultorio o Clínica</mat-label>
+                <mat-select formControlName="consultorio_clinica_alumno">
+                    <mat-option value="Consultorio">Consultorio</mat-option>
+                    <mat-option value="Clinica">Clínica</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div class="d-flex flex-column mb-3 mx-2">
+                <h4><b>Confirmaciones</b></h4>
+                <mat-checkbox formControlName="es_pae">Es Pae</mat-checkbox>
+                <mat-checkbox formControlName="eximir_religion">Eximir de Religión</mat-checkbox>
+                <mat-checkbox formControlName="autorizacion_fotografias">Autorización para Fotografías</mat-checkbox>
+                <mat-checkbox formControlName="apto_educacion_fisica">Apto para Educación Física</mat-checkbox>
+                <mat-form-field appearance="fill" class="mt-3">
+                    <mat-label>Observaciones</mat-label>
+                    <textarea matInput formControlName="observaciones_alumno" rows="5"></textarea>
+                </mat-form-field>
+
+            </div>
         </div>
-        <hr>
-        <div class="d-flex flex-column mb-3">
-            <h3><b>Datos del Apoderado</b></h3>
-            <small style="color: darkgoldenrod;"><b>Nota: </b>Revisar o editar datos del Apoderado</small>
-        </div>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Primer Nombre</mat-label>
-            <input matInput formControlName="primer_nombre_apoderado" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Segundo Nombre</mat-label>
-            <input matInput formControlName="segundo_nombre_apoderado" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Primer pellido</mat-label>
-            <input matInput formControlName="primer_apellido_apoderado" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Segundo pellido</mat-label>
-            <input matInput formControlName="segundo_apellido_apoderado" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>RUT</mat-label>
-            <input matInput formControlName="rut_apoderado" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Teléfono</mat-label>
-            <input matInput formControlName="telefono_apoderado" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Correo</mat-label>
-            <input matInput formControlName="correo_apoderado" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Parentesco</mat-label>
-            <input matInput formControlName="parentesco_apoderado" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Estado Civil</mat-label>
-            <input matInput formControlName="estado_civil" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Profesión/Oficio</mat-label>
-            <input matInput formControlName="profesion_oficio" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3" style="flex: 1 1 auto; max-width: 500px;">
-            <mat-label>Dirección</mat-label>
-            <input width="100px" matInput formControlName="direccion" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-3">
-            <mat-label>Comuna</mat-label>
-            <input matInput formControlName="comuna" />
-        </mat-form-field>
 
         <hr>
-        <div>
+
+        <div class="back rounded">
+
+            <div class="d-flex flex-column mb-3">
+                <h3><b>Datos del Apoderado</b></h3>
+                <small style="color: darkgoldenrod;"><b>Nota: </b>Revisar o editar datos del Apoderado</small>
+            </div>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Primer Nombre</mat-label>
+                <input matInput formControlName="primer_nombre_apoderado" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('primer_nombre_apoderado')?.hasError('minlength') && (inscripcionForm.get('primer_nombre_apoderado')?.touched || inscripcionForm.get('primer_nombre_apoderado')?.dirty)">
+                    El primer nombre debe tener al menos 3 caracteres
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Segundo Nombre</mat-label>
+                <input matInput formControlName="segundo_nombre_apoderado" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Primer pellido</mat-label>
+                <input matInput formControlName="primer_apellido_apoderado" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('primer_apellido_apoderado')?.hasError('minlength') && (inscripcionForm.get('primer_apellido_apoderado')?.touched || inscripcionForm.get('primer_apellido_apoderado')?.dirty)">
+                    El primer apellido debe tener al menos 3 caracteres
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Segundo pellido</mat-label>
+                <input matInput formControlName="segundo_apellido_apoderado" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('segundo_apellido_apoderado')?.hasError('minlength') && (inscripcionForm.get('segundo_apellido_apoderado')?.touched || inscripcionForm.get('segundo_apellido_apoderado')?.dirty)">
+                    El segundo apellido debe tener al menos 3 caracteres
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>RUT</mat-label>
+                <input matInput formControlName="rut_apoderado" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('rut_apoderado')?.hasError('invalidRut') && (inscripcionForm.get('rut_apoderado')?.touched || inscripcionForm.get('rut_apoderado')?.dirty)">
+                    El RUT ingresado no es válido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Teléfono</mat-label>
+                <input matInput formControlName="telefono_apoderado" placeholder="Ej: 999999999" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('telefono_apoderado')?.hasError('pattern') && (inscripcionForm.get('telefono_apoderado')?.touched || inscripcionForm.get('telefono_apoderado')?.dirty)">
+                    El teléfono debe tener un formato válido (9 dígitos)
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Correo</mat-label>
+                <input matInput formControlName="correo_apoderado" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Parentesco</mat-label>
+                <mat-select formControlName="parentesco_apoderado">
+                    <mat-option value="Madre">Madre</mat-option>
+                    <mat-option value="Padre">Padre</mat-option>
+                    <mat-option value="Abuela">Abuela</mat-option>
+                    <mat-option value="Abuelo">Abuelo</mat-option>
+                    <mat-option value="Otro">Otro</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Estado Civil</mat-label>
+                <mat-select formControlName="estado_civil">
+                    <mat-option value="Soltero/a">Soltero/a</mat-option>
+                    <mat-option value="Casado/a">Casado/a</mat-option>
+                    <mat-option value="Viudo/a">Viudo/a</mat-option>
+                    <mat-option value="Separado/a">Separado/a</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Profesión/Oficio</mat-label>
+                <input matInput formControlName="profesion_oficio" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; max-width: 500px;">
+                <mat-label>Dirección</mat-label>
+                <input width="100px" matInput formControlName="direccion" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mx-2">
+                <mat-label>Comuna</mat-label>
+                <mat-select formControlName="comuna">
+                    <mat-option value="Los Andes">Los Andes</mat-option>
+                    <mat-option value="San Esteban">San Esteban</mat-option>
+                    <mat-option value="Calle Larga">Calle Larga</mat-option>
+                    <mat-option value="Rinconada">Rinconada</mat-option>
+                    <mat-option value="San Felipe">San Felipe</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <hr>
+
+        <div class="back rounded">
             <div class="d-flex flex-column mb-3">
                 <h3><b>Datos del Apoderado Suplente</b></h3>
                 <small style="color: red;"><b>Nota: </b>Ingresar Datos del Apoderado Suplente</small>
             </div>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Primer Nombre</mat-label>
                 <input matInput formControlName="primer_nombre_apoderado_suplente" />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Segundo Nombre</mat-label>
                 <input matInput formControlName="segundo_nombre_apoderado_suplente" />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Primer pellido</mat-label>
                 <input matInput formControlName="primer_apellido_apoderado_suplente" />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Segundo pellido</mat-label>
                 <input matInput formControlName="segundo_apellido_apoderado_suplente" />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>RUT</mat-label>
                 <input matInput formControlName="rut_apoderado_suplente" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('rut_apoderado_suplente')?.hasError('invalidRut') && (inscripcionForm.get('rut_apoderado_suplente')?.touched || inscripcionForm.get('rut_apoderado_suplente')?.dirty)">
+                    El RUT ingresado no es válido
+                </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Teléfono</mat-label>
-                <input matInput formControlName="telefono_apoderado_suplente" />
+                <input matInput formControlName="telefono_apoderado_suplente" placeholder="Ej: 999999999" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('telefono_apoderado_suplente')?.hasError('pattern') && (inscripcionForm.get('telefono_apoderado_suplente')?.touched || inscripcionForm.get('telefono_apoderado_suplente')?.dirty)">
+                    El teléfono debe tener un formato válido (9 dígitos)
+                </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Correo</mat-label>
                 <input matInput formControlName="correo_apoderado_suplente" />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Parentesco</mat-label>
-                <input matInput formControlName="parentesco_apoderado_suplente" />
+                <mat-select formControlName="parentesco_apoderado_suplente">
+                    <mat-option value="Madre">Madre</mat-option>
+                    <mat-option value="Padre">Padre</mat-option>
+                    <mat-option value="Abuela">Abuela</mat-option>
+                    <mat-option value="Abuelo">Abuelo</mat-option>
+                    <mat-option value="Otro">Otro</mat-option>
+                </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Estado Civil</mat-label>
-                <input matInput formControlName="estado_civil_suplente" />
+                <mat-select formControlName="estado_civil_suplente">
+                    <mat-option value="Soltero/a">Soltero/a</mat-option>
+                    <mat-option value="Casado/a">Casado/a</mat-option>
+                    <mat-option value="Viudo/a">Viudo/a</mat-option>
+                    <mat-option value="Separado/a">Separado/a</mat-option>
+                </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Profesión/Oficio</mat-label>
                 <input matInput formControlName="profesion_oficio_suplente" />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3" style="flex: 1 1 auto; max-width: 500px;">
+            <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; max-width: 500px;">
                 <mat-label>Dirección</mat-label>
                 <input width="100px" matInput formControlName="direccion_suplente" />
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mx-3">
+            <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Comuna</mat-label>
-                <input matInput formControlName="comuna_suplente" />
+                <mat-select formControlName="comuna_suplente">
+                    <mat-option value="Los Andes">Los Andes</mat-option>
+                    <mat-option value="San Esteban">San Esteban</mat-option>
+                    <mat-option value="Calle Larga">Calle Larga</mat-option>
+                    <mat-option value="Rinconada">Rinconada</mat-option>
+                    <mat-option value="San Felipe">San Felipe</mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
-
-        <button mat-raised-button color="primary" type="submit">Actualizar Inscripción</button>
     </form>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button (click)="dialogRef.close()">Cancelar</button>
+    <button color="btn btn-primary" type="submit">Ingresar Matricula</button>
+    <!-- <button mat-button (click)="submitForm()">Aceptar</button> -->
+</mat-dialog-actions>
