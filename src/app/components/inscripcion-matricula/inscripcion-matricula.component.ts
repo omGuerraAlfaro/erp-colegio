@@ -71,5 +71,22 @@ export class InscripcionMatriculaComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
+  getCursoAlumnoLabel(curso: number): string {
+    const cursoLabels: { [key: string]: string } = {
+      '1': 'Pre-kinder',
+      '2': 'Kinder',
+      '3': 'Primero Básico',
+      '4': 'Segundo Básico',
+      '5': 'Tercero Básico',
+      '6': 'Cuarto Básico',
+      '7': 'Quinto Básico',
+      '8': 'Sexto Básico',
+      '9': 'Séptimo Básico',
+      '10': 'Octavo Básico'
+    };
+    
+    return cursoLabels[curso.toString()] || 'N/A';
+  }
+
 
 }

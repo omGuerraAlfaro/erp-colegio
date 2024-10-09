@@ -40,7 +40,7 @@
         <!-- Curso Alumno Column -->
         <ng-container matColumnDef="curso_alumno">
           <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Curso Alumno </th>
-          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{element.curso_alumno || 'N/A' }} </td>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;"> {{getCursoAlumnoLabel(element.curso_alumno)}} </td>
         </ng-container>
       
         <!-- Nombre Apoderado Column -->
