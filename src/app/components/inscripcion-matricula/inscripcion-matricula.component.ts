@@ -36,7 +36,7 @@ export class InscripcionMatriculaComponent implements OnInit {
     this.inscripcionService.getInscripciones().subscribe({
       next: (data: IInscripcionMatricula[]) => {
         console.log('Inscripciones fetched successfully:', data);
-        this.dataSource.data = data;
+        this.dataSource.data = data.reverse();
         //this.inscripciones = data;
 
       },

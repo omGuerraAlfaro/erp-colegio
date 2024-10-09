@@ -4,8 +4,6 @@
 </h1>
 <mat-dialog-content class="modal-content">
     <form [formGroup]="inscripcionForm" class="bg-light p-5" (ngSubmit)="onSubmit()">
-
-
         <div style="display: flex; justify-content: flex-start;">
             <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; min-width: 150px; max-width: 250px;">
                 <mat-label><b>ID Inscripción</b></mat-label>
@@ -23,9 +21,9 @@
         <br>
 
         <div class="back rounded">
-            <div class="d-flex flex-column mb-3">
+            <div class="d-flex flex-column mb-3 mx-2">
                 <h3><b>Datos del Alumno</b></h3>
-                <small style="color: darkgoldenrod;"><b>Nota: </b>Revisar o editar datos del Alumno</small>
+                <small style="color: red;"><b>Nota: </b>Revisar y editar datos del Alumno</small>
             </div>
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Primer Nombre</mat-label>
@@ -91,7 +89,7 @@
 
             <hr>
 
-            <div class="d-flex flex-column mb-3">
+            <div class="d-flex flex-column mb-3 mx-2">
                 <h3><b>Datos Adicionales del Alumno</b></h3>
                 <small style="color: red;"><b>Nota: </b>Ingresar datos adicionales del Alumno</small>
             </div>
@@ -121,6 +119,8 @@
 
             <div class="d-flex flex-column mb-3 mx-2">
                 <h4><b>Confirmaciones</b></h4>
+                <small class="mb-2" style="color: red;"><b>Nota: </b>Ten en cuenta que las siguientes opciones no son
+                    obligatorias: validar con apoderado.</small>
                 <mat-checkbox formControlName="es_pae">Es Pae</mat-checkbox>
                 <mat-checkbox formControlName="eximir_religion">Eximir de Religión</mat-checkbox>
                 <mat-checkbox formControlName="autorizacion_fotografias">Autorización para Fotografías</mat-checkbox>
@@ -137,9 +137,9 @@
 
         <div class="back rounded">
 
-            <div class="d-flex flex-column mb-3">
+            <div class="d-flex flex-column mb-3 mx-2">
                 <h3><b>Datos del Apoderado</b></h3>
-                <small style="color: darkgoldenrod;"><b>Nota: </b>Revisar o editar datos del Apoderado</small>
+                <small style="color: red;"><b>Nota: </b>Revisar y editar datos del Apoderado</small>
             </div>
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Primer Nombre</mat-label>
@@ -189,6 +189,10 @@
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Correo</mat-label>
                 <input matInput formControlName="correo_apoderado" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('correo_apoderado')?.hasError('pattern') && (inscripcionForm.get('correo_apoderado')?.touched || inscripcionForm.get('correo_apoderado')?.dirty)">
+                    El correo debe tener un formato válido.
+                </mat-error>
             </mat-form-field>
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Parentesco</mat-label>
@@ -232,7 +236,7 @@
         <hr>
 
         <div class="back rounded">
-            <div class="d-flex flex-column mb-3">
+            <div class="d-flex flex-column mb-3 mx-2">
                 <h3><b>Datos del Apoderado Suplente</b></h3>
                 <small style="color: red;"><b>Nota: </b>Ingresar Datos del Apoderado Suplente</small>
             </div>
@@ -272,6 +276,10 @@
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Correo</mat-label>
                 <input matInput formControlName="correo_apoderado_suplente" />
+                <mat-error
+                    *ngIf="inscripcionForm.get('correo_apoderado_suplente')?.hasError('pattern') && (inscripcionForm.get('correo_apoderado_suplente')?.touched || inscripcionForm.get('correo_apoderado_suplente')?.dirty)">
+                    El correo debe tener un formato válido.
+                </mat-error>
             </mat-form-field>
             <mat-form-field appearance="fill" class="mx-2">
                 <mat-label>Parentesco</mat-label>
@@ -311,10 +319,10 @@
                 </mat-select>
             </mat-form-field>
         </div>
+        <mat-dialog-actions>
+            <button (click)="dialogRef.close()">Cancelar</button>
+            <button color="btn btn-primary" type="submit">Ingresar Matricula</button>
+            <!-- <button mat-button (click)="submitForm()">Aceptar</button> -->
+        </mat-dialog-actions>
     </form>
 </mat-dialog-content>
-<mat-dialog-actions>
-    <button (click)="dialogRef.close()">Cancelar</button>
-    <button color="btn btn-primary" type="submit">Ingresar Matricula</button>
-    <!-- <button mat-button (click)="submitForm()">Aceptar</button> -->
-</mat-dialog-actions>

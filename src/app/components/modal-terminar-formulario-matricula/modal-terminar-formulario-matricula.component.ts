@@ -50,7 +50,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       segundo_apellido_apoderado: ['', [Validators.required, Validators.minLength(3)]],
       rut_apoderado: ['', [Validators.required, rutValidator()]],
       telefono_apoderado: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
-      correo_apoderado: ['', [Validators.required]],
+      correo_apoderado: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       parentesco_apoderado: ['', [Validators.required]],
       estado_civil: ['', [Validators.required]],
       profesion_oficio: ['', [Validators.required]],
@@ -62,7 +62,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       segundo_apellido_apoderado_suplente: ['', [Validators.required, Validators.minLength(3)]],
       rut_apoderado_suplente: ['', [Validators.required, rutValidator()]],
       telefono_apoderado_suplente: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
-      correo_apoderado_suplente: ['', [Validators.required]],
+      correo_apoderado_suplente: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       parentesco_apoderado_suplente: ['', [Validators.required]],
       estado_civil_suplente: ['', [Validators.required]],
       profesion_oficio_suplente: ['', [Validators.required]],
@@ -80,7 +80,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
   loadInscripciones() {
     this.inscripcionService.getInscripcion(this.data).subscribe({
       next: (data: IInscripcionMatricula) => {
-        console.log('Inscripciones fetched successfully:', data);
+        // console.log('Inscripciones fetched successfully:', data);
         this.inscripcionData = data;
         this.inscripcionForm.patchValue(data);
         //this.inscripciones = data;
@@ -95,6 +95,8 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
   onSubmit() {
     if (this.inscripcionForm.valid) {
       console.log("VALIDO");
+      console.log(this.inscripcionForm.value);
+
 
       // Handle form submission
       // this.inscripcionService.updateInscripcion(this.inscripcionForm.value).subscribe({
