@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { IInscripcionMatricula } from 'src/app/interfaces/inscripcionInterface';
@@ -26,24 +26,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
     this.inscripcionForm = this.fb.group({
       id_inscripcion: [{ value: '', disabled: true }],
       fecha_matricula_inscripcion: [{ value: '', disabled: true }],
-      primer_nombre_alumno: ['', [Validators.required, Validators.minLength(3)]],
-      segundo_nombre_alumno: [''],
-      primer_apellido_alumno: ['', [Validators.required, Validators.minLength(3)]],
-      segundo_apellido_alumno: ['', [Validators.required, Validators.minLength(3)]],
-      rut_alumno: ['', [Validators.required, rutValidator()]],
-      genero_alumno: ['', [Validators.required]],
-      fecha_nacimiento_alumno: ['', [Validators.required]],
-      curso_alumno: ['', [Validators.required]],
-      enfermedad_cronica_alumno: [''],
-      alergia_alimento_alumno: [''],
-      alergia_medicamento_alumno: [''],
-      prevision_alumno: ['', [Validators.required]],
-      consultorio_clinica_alumno: ['', [Validators.required]],
-      es_pae: [false],
-      eximir_religion: [false],
-      autorizacion_fotografias: [false],
-      apto_educacion_fisica: [false],
-      observaciones_alumno: [''],
+      estudiantes: this.fb.array([this.createEstudianteGroup()]),
       primer_nombre_apoderado: ['', [Validators.required, Validators.minLength(3)]],
       segundo_nombre_apoderado: [''],
       primer_apellido_apoderado: ['', [Validators.required, Validators.minLength(3)]],
@@ -53,6 +36,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       correo_apoderado: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       parentesco_apoderado: ['', [Validators.required]],
       estado_civil: ['', [Validators.required]],
+      // escolaridad: ['', [Validators.required]],
       profesion_oficio: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
       comuna: ['', [Validators.required]],
@@ -69,34 +53,100 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       direccion_suplente: ['', [Validators.required]],
       comuna_suplente: ['', [Validators.required]],
     });
+  }
+  get estudiantes(): FormArray {
+    return this.inscripcionForm.get('estudiantes') as FormArray;
+  }
 
+  createEstudianteGroup(): FormGroup {
+    const estudianteGroup = this.fb.group({
+      primer_nombre: ['', [Validators.required, Validators.minLength(3)]],
+      segundo_nombre: [''],
+      primer_apellido: ['', [Validators.required, Validators.minLength(3)]],
+      segundo_apellido: ['', [Validators.required, Validators.minLength(3)]],
+      rut: ['', [Validators.required, rutValidator()]],
+      genero: ['', [Validators.required]],
+      fecha_nacimiento: ['', [Validators.required]],
+      cursoId: ['', [Validators.required]],
+      vive_con: ['', [Validators.required]],
+      nacionalidad_alumno: ['', [Validators.required]],
+      enfermedad_cronica: [''],
+      alergico_alimento: [''],
+      alergico_medicamentos: [''],
+      prevision: ['', [Validators.required]],
+      consultorio_clinica: ['', [Validators.required]],
+      es_pae: [false],
+      eximir_religion: [false],
+      autorizacion_fotografias: [false],
+      apto_educacion_fisica: [false],
+      observaciones: [''],
+    });
+
+    return estudianteGroup;
+  }
+
+  addEstudiante(): void {
+    this.estudiantes.push(this.createEstudianteGroup());
+  }
+
+  removeEstudiante(index: number): void {
+    this.estudiantes.removeAt(index);
   }
 
   ngOnInit(): void {
     this.loadInscripciones();
-
   }
+
   loadInscripciones() {
     this.inscripcionService.getInscripcion(this.data).subscribe({
       next: (data: IInscripcionMatricula) => {
-        const { fecha_matricula_inscripcion, fecha_nacimiento_alumno } = data;
-
-        const fechaMatricula = new Date(fecha_matricula_inscripcion);
+        // Formatear las fechas adecuadamente
+        const fechaMatricula = new Date(data.fecha_matricula_inscripcion);
         fechaMatricula.setDate(fechaMatricula.getDate() + 1);
-        const fechaNacimiento = new Date(fecha_nacimiento_alumno);
-        fechaNacimiento.setDate(fechaNacimiento.getDate() + 1);
-
         data.fecha_matricula_inscripcion = fechaMatricula.toISOString();
+
+        const fechaNacimiento = new Date(data.fecha_nacimiento_alumno);
+        fechaNacimiento.setDate(fechaNacimiento.getDate() + 1);
         data.fecha_nacimiento_alumno = fechaNacimiento.toISOString();
 
-        this.inscripcionForm.patchValue(data);
+        // Aplicar patchValue para asignar los valores al formulario
+        this.inscripcionForm.patchValue({
+          id_inscripcion: data.id_inscripcion,
+          fecha_matricula_inscripcion: data.fecha_matricula_inscripcion,
+          primer_nombre_apoderado: data.primer_nombre_apoderado,
+          segundo_nombre_apoderado: data.segundo_nombre_apoderado,
+          primer_apellido_apoderado: data.primer_apellido_apoderado,
+          segundo_apellido_apoderado: data.segundo_apellido_apoderado,
+          rut_apoderado: data.rut_apoderado,
+          telefono_apoderado: data.telefono_apoderado,
+          correo_apoderado: data.correo_apoderado,
+          parentesco_apoderado: data.parentesco_apoderado,
+          estado_civil: data.estado_civil,
+          profesion_oficio: data.profesion_oficio,
+          direccion: data.direccion,
+          comuna: data.comuna,
+          // Ahora se llena el grupo del estudiante
+          estudiantes: [{
+            primer_nombre_alumno: data.primer_nombre_alumno,
+            segundo_nombre_alumno: data.segundo_nombre_alumno,
+            primer_apellido_alumno: data.primer_apellido_alumno,
+            segundo_apellido_alumno: data.segundo_apellido_alumno,
+            rut_alumno: data.rut_alumno,
+            genero_alumno: data.genero_alumno,
+            fecha_nacimiento_alumno: data.fecha_nacimiento_alumno,
+            curso_alumno: data.curso_alumno,
+            vive_con: '',
+            nacionalidad_alumno: '',
+            prevision_alumno: '',
+            consultorio_clinica_alumno: '',
+          }]
+        });
       },
       error: (error: any) => {
         console.error('Error fetching inscripciones:', error);
       }
     });
   }
-
 
 
   onSubmit() {
@@ -119,6 +169,17 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       console.log(this.inscripcionForm.value);
 
 
+
+
+      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
+      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
+      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
+      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
+      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
+
+
+
+
       // Handle form submission
       // this.inscripcionService.updateInscripcion(this.inscripcionForm.value).subscribe({
       //   next: () => {
@@ -131,6 +192,8 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       // });
     }
   }
+
+
   closeModal(): void {
     this.dialogRef.close();
   }
