@@ -1,75 +1,93 @@
-<div class="p-3 bg-light border" style="width: 280px; height: 100vh;">
-    <a class="d-flex align-items-center pb-3 mb-3 link-dark">
-        <img class="logo" src="../assets/img/logo.png" alt="">
-    </a>
-    <ul class="list-unstyled ps-0">
-        <strong><small>Menu</small></strong>
-        <li class="mb-1">
-            <button routerLink="/home" routerLinkActive="active"
-                class="btn btn-toggle-inicio align-items-center rounded" aria-expanded="true">
-                <img src="../../../assets/icon/house.svg" alt="" class="icon">
-                Inicio
-            </button>
-        </li>
+<mat-toolbar>
+    <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>Intranet Colegio Andes Chile</span>
+</mat-toolbar>
 
-        <li *ngIf="rolUser === 'administrador'" class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                data-bs-target="#matriculas-collapse" aria-expanded="false">
-                <img src="../../../assets/icon/book.svg" alt="" class="icon">
-                Matrículas
-            </button>
-            <div class="collapse" id="matriculas-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a class="link-dark rounded" routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a></li>
-                    <li><a class="link-dark rounded" routerLink="/bandeja-inscripciones" routerLinkActive="active">Bandeja de inscripciones</a></li>
-                </ul>
-            </div>
-        </li>
-
-        <li *ngIf="rolUser === 'administrador'" class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                data-bs-target="#finance-collapse" aria-expanded="false">
-                <img src="../../../assets/icon/clipboard-data.svg" alt="" class="icon">
-                Finanzas
-            </button>
-            <div class="collapse" id="finance-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a class="link-dark rounded" routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a></li>
-                    <li><a class="link-dark rounded" routerLink="/crear-boletas-apoderado" routerLinkActive="active">Mantenedor Boletas Apoderado</a></li>
-                </ul>
-            </div>
-        </li>
-
-        <li *ngIf="rolUser === 'profesor'" class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                data-bs-target="#curso-collapse" aria-expanded="false">
-                <img src="../../../assets/icon/people.svg" alt="" class="icon">
-                Cursos
-            </button>
-            <div class="collapse" id="curso-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a class="link-dark rounded" routerLink="/cursos" routerLinkActive="active">Gestionar Anotaciones</a></li>
-                </ul>
-            </div>
-        </li>
-    </ul>
-    <hr>
-    <div class="mB">
-        <strong><small>Perfil</small></strong>
-    </div>
-    <div class="dropdown">
-        <a class="d-flex align-items-center text-black text-decoration-none dropdown-toggle" id="dropdownUser1"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            <img [src]="genderUser === 'F' ? '../../../assets/img/6.png' : '../../../assets/img/5.png'" alt="" width="50" height="50" class="rounded-circle me-2">
-            <div class="datosPerfil">
-                <strong>{{nombreUser}}</strong>
-                <small>{{rolUser === 'profesor' ? 'Profesor' : 'Administrador'}}</small>
-            </div>
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side" class="sidenav" [style.width]="'280px'">
+        <a mat-list-item routerLink="/home" routerLinkActive="active" class="link-dark">
+            <img src="../assets/img/logo.png" alt="" class="logo">
         </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" routerLink="#">Perfil</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" (click)="logout()">Cerrar Sesión</a></li>
-        </ul>
-    </div>
-</div>
+        <mat-nav-list>
+            <mat-list-item class="mb-1" mat-button>
+                <a mat-list-item routerLink="/home" routerLinkActive="active" class="link-dark">
+                    <i class="fas fa-home icon"></i>
+                    <span>Inicio</span>
+                </a>
+            </mat-list-item>
+        </mat-nav-list>
+
+        <mat-nav-list>
+            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleMatriculas()">
+                <i class="fas fa-book icon"></i>
+                <span>Matrículas</span>
+                <mat-icon class="expand-icon" aria-hidden="true">{{ isMatriculasOpen ? 'expand_less' : 'expand_more'
+                    }}</mat-icon>
+            </mat-list-item>
+            <mat-nav-list *ngIf="isMatriculasOpen && rolUser === 'administrador'">
+                <a mat-list-item routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a>
+                <a mat-list-item routerLink="/bandeja-inscripciones" routerLinkActive="active">Bandeja de
+                    inscripciones</a>
+            </mat-nav-list>
+
+            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleFinanzas()">
+                <i class="fas fa-chart-line icon"></i>
+                <span>Finanzas</span>
+                <mat-icon class="expand-icon" aria-hidden="true">{{ isFinanzasOpen ? 'expand_less' : 'expand_more'
+                    }}</mat-icon>
+            </mat-list-item>
+            <mat-nav-list *ngIf="isFinanzasOpen && rolUser === 'administrador'">
+                <a mat-list-item routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a>
+                <a mat-list-item routerLink="/crear-boletas-apoderado" routerLinkActive="active">Mantenedor Boletas
+                    Apoderado</a>
+            </mat-nav-list>
+
+            <mat-list-item *ngIf="isProfesorOpen && rolUser === 'profesor'" class="mb-1" mat-button
+                (click)="toggleProfesor()">
+                <i class="fas fa-users icon"></i>
+                <span>Cursos</span>
+                <mat-icon class="expand-icon" aria-hidden="true">{{ isProfesorOpen ? 'expand_less' : 'expand_more'
+                    }}</mat-icon>
+            </mat-list-item>
+            <mat-nav-list *ngIf="rolUser === 'profesor'">
+                <a mat-list-item routerLink="/cursos" routerLinkActive="active">Gestionar Anotaciones</a>
+            </mat-nav-list>
+        </mat-nav-list>
+        <hr>
+        <div class="mB">
+            <strong><small>Perfil</small></strong>
+        </div>
+        <div class="dropdown">
+            <a mat-list-item class="d-flex align-items-center text-black text-decoration-none"
+                (click)="sidenav.toggle()">
+                <img [src]="genderUser === 'F' ? '../../../assets/img/6.png' : '../../../assets/img/5.png'" alt=""
+                    width="50" height="50" class="rounded-circle me-2">
+                <div class="datosPerfil">
+                    <strong>{{nombreUser}}</strong>
+                    <small>{{rolUser === 'profesor' ? 'Profesor' : 'Administrador'}}</small>
+                </div>
+            </a>
+            <mat-menu #userMenu="matMenu">
+                <button mat-menu-item routerLink="#">Perfil</button>
+                <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
+            </mat-menu>
+        </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+        <ng-container *ngIf="isLogged; else isNotLogged">
+
+            <router-outlet></router-outlet>
+
+        </ng-container>
+
+        <ng-template #isNotLogged>
+            <app-login></app-login>
+        </ng-template>
+
+    </mat-sidenav-content>
+    
+</mat-sidenav-container>

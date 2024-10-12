@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { InfoAdmService } from 'src/app/services/administradorService/infoAdm.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -14,12 +14,33 @@ import Swal from 'sweetalert2';
 })
 export class SidebarComponent implements OnInit {
 
+  isLogged = false;
+  before: any;
+  isMatriculasOpen = false;
+  isFinanzasOpen = false;
+  isProfesorOpen = false;
   constructor(
-    private router: Router,
     private auth: AuthService,
     private datav: VtigerService,
-    private admService: InfoAdmService
-  ) { }
+    private admService: InfoAdmService,
+    private router: Router,
+    private activeroute: ActivatedRoute
+  ) {
+    this.isLogged = localStorage.getItem('usuario') !== null ? true : false;
+
+    this.activeroute.queryParams.subscribe(params => {
+      if (this.isLogged && this.router.getCurrentNavigation()?.extras.state) {
+        this.before = this.router.getCurrentNavigation()?.extras.state;
+        const url = this.before.url;
+        this.router.navigate(['/' + url]);
+      } else if (this.isLogged) {
+        this.router.navigate(['/home']);
+      } else {
+        this.router.navigate(['/login']);
+      }
+    });
+
+  }
 
   rut: any;
   nombreUser: any;
@@ -30,20 +51,20 @@ export class SidebarComponent implements OnInit {
     this.rut = localStorage.getItem('rutAmbiente');
     this.rolUser = localStorage.getItem('rol');
     this.genderUser = localStorage.getItem('genero');
-    if(this.rolUser === 'administrador'){
+    if (this.rolUser === 'administrador') {
       this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
           console.log(data);
           this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido + ' ' + data.segundo_apellido;
           console.log(this.genderUser);
-          
+
         },
         error: (error) => {
           console.error("Error al obtener datos:", error);
         }
       });
     }
-    if(this.rolUser === 'profesor'){
+    if (this.rolUser === 'profesor') {
       this.admService.getInfoProfesor(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
           console.log(data);
@@ -76,6 +97,17 @@ export class SidebarComponent implements OnInit {
     });
   }
 
+  toggleMatriculas() {
+    this.isMatriculasOpen = !this.isMatriculasOpen;
+  }
+
+  toggleFinanzas() {
+    this.isFinanzasOpen = !this.isFinanzasOpen;
+  }
+
+  toggleProfesor() {
+    this.isProfesorOpen = !this.isProfesorOpen;
+  }
 
 
 

@@ -1,122 +1,55 @@
-small {
-    font-size: 0.8rem;
-    font-style: italic;
+.sidenav {
+    background-color: #f8f9fa; /* Light background for the sidebar */
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Scrollable if content overflows */
 }
 
-.btn-toggle {
-    display: inline-flex;
-    align-items: center;
-    padding: .25rem .5rem;
-    font-weight: 600;
-    color: rgba(0, 0, 0, .65);
-    background-color: transparent;
-    border: 0;
+.link-dark {
+    color: #343a40; /* Dark color for links */
 }
 
-.btn-toggle-inicio {
-    display: inline-flex;
-    align-items: center;
-    padding: .25rem .5rem;
-    font-weight: 600;
-    color: rgba(0, 0, 0, .65);
-    background-color: transparent;
-    border: 0;
-}
-
-.btn-toggle-inicio:hover,
-.btn-toggle-inicio:focus {
-    color: rgba(0, 0, 0, .85);
-    background-color: #d2f4ea;
-}
-
-.btn-toggle-inicio::before {
-    width: 1.25em;
-    line-height: 0;
-    content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
-    transition: transform .35s ease;
-    transform-origin: .5em 50%;
-}
-
-
-.btn-toggle-inicio:hover,
-.btn-toggle-inicio:focus {
-    color: rgba(0, 0, 0, .85);
-    background-color: #8f8f8f;
-}
-
-.btn-toggle::before {
-    width: 1.25em;
-    line-height: 0;
-    content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
-    transition: transform .35s ease;
-    transform-origin: .5em 50%;
-}
-
-.btn-toggle[aria-expanded="true"] {
-    color: rgba(0, 0, 0, .85);
-}
-
-.btn-toggle[aria-expanded="true"]::before {
-    transform: rotate(90deg);
-}
-
-.btn-toggle-nav a {
-    display: inline-flex;
-    padding: .1875rem .5rem;
-    margin-top: .125rem;
-    margin-left: 1.25rem;
-    text-decoration: none;
-}
-
-.btn-toggle-nav a:hover,
-.btn-toggle-nav a:focus {
-    background-color: #8f8f8f;
-}
-
-.scrollarea {
-    overflow-y: auto;
-}
-
-.fw-semibold {
-    font-weight: 600;
-}
-
-.lh-tight {
-    line-height: 1.25;
+.link-dark:hover {
+    background-color: #e9ecef; /* Highlight on hover */
 }
 
 .logo {
-    width: 40% !important;
-    height: 40% !important;
-    margin: 0 auto;
+    width: 30%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Center logo */
 }
 
-.datosPerfil{
-    display: flex;
-    flex-direction: column;
+.icon {
+    width: 24px; /* Icon size */
+    height: 24px;
+    margin-right: 10px;
 }
 
-.mB{
-    margin-bottom: 1rem;
+.expand-icon {
+    margin-left: auto; /* Align expand icon to the right */
 }
 
-.icon{
-    font-size: 1.5rem;
-    margin-right: .3rem;
+.mB {
+    margin-bottom: 10px; /* Spacing for the profile section */
 }
 
-.active{
-    background-color: #8f8f8f;
+.datosPerfil {
+    flex: 1; /* Allow profile details to expand */
 }
 
-.badge{
-    font-size: xx-small;
+.dropdown {
+    cursor: pointer; /* Pointer cursor for dropdown */
 }
 
-.dropdown-item{
-    cursor: pointer;
+.active {
+    color: #1976d2; /* Change this to your desired color */
+    font-weight: bold; /* Optional: to make the active link bold */
 }
 
-.dropdown{
-    cursor: pointer;
+/* Media query for responsive design */
+@media (max-width: 768px) {
+    .sidenav {
+        width: 200px; /* Smaller width on mobile */
+    }
 }
