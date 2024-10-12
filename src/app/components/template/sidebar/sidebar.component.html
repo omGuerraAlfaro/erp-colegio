@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar *ngIf="isLogged;">
     <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
     </button>
@@ -10,6 +10,8 @@
         <a mat-list-item routerLink="/home" routerLinkActive="active" class="link-dark">
             <img src="../assets/img/logo.png" alt="" class="logo">
         </a>
+
+        <!-- Menú de navegación -->
         <mat-nav-list>
             <mat-list-item class="mb-1" mat-button>
                 <a mat-list-item routerLink="/home" routerLinkActive="active" class="link-dark">
@@ -17,9 +19,7 @@
                     <span>Inicio</span>
                 </a>
             </mat-list-item>
-        </mat-nav-list>
 
-        <mat-nav-list>
             <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleMatriculas()">
                 <i class="fas fa-book icon"></i>
                 <span>Matrículas</span>
@@ -55,39 +55,46 @@
                 <a mat-list-item routerLink="/cursos" routerLinkActive="active">Gestionar Anotaciones</a>
             </mat-nav-list>
         </mat-nav-list>
+
+        <!-- Sección de perfil dentro del nav -->
         <hr>
-        <div class="mB">
+
+        <div class="perfil">
             <strong><small>Perfil</small></strong>
-        </div>
-        <div class="dropdown">
-            <a mat-list-item class="d-flex align-items-center text-black text-decoration-none"
-                (click)="sidenav.toggle()">
-                <img [src]="genderUser === 'F' ? '../../../assets/img/6.png' : '../../../assets/img/5.png'" alt=""
-                    width="50" height="50" class="rounded-circle me-2">
-                <div class="datosPerfil">
-                    <strong>{{nombreUser}}</strong>
-                    <small>{{rolUser === 'profesor' ? 'Profesor' : 'Administrador'}}</small>
+            <div class="perfil-container d-flex flex-column align-items-start">
+                <div class="dropdown d-flex align-items-center mt-2">
+
+                    <!-- Imagen de perfil -->
+                    <img [src]="genderUser === 'F' ? '../../../assets/img/6.png' : '../../../assets/img/5.png'" alt=""
+                        width="50" height="50" class="rounded-circle me-2">
+
+                    <a mat-list-item class="d-flex align-items-center text-black text-decoration-none"
+                        [matMenuTriggerFor]="userMenu">
+                        <!-- Datos del perfil -->
+                        <div class="datosPerfil d-flex flex-column ms-2">
+                            <strong>{{nombreUser}}</strong>
+                            <small>{{rolUser === 'profesor' ? 'Profesor' : 'Administrador'}}</small>
+                        </div>
+                    </a>
+                    <!-- Menú desplegable -->
+                    <mat-menu #userMenu="matMenu">
+                        <button mat-menu-item routerLink="#">Perfil</button>
+                        <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
+                    </mat-menu>
                 </div>
-            </a>
-            <mat-menu #userMenu="matMenu">
-                <button mat-menu-item routerLink="#">Perfil</button>
-                <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
-            </mat-menu>
+            </div>
         </div>
+
+
     </mat-sidenav>
 
     <mat-sidenav-content>
-
         <ng-container *ngIf="isLogged; else isNotLogged">
-
             <router-outlet></router-outlet>
-
         </ng-container>
 
         <ng-template #isNotLogged>
             <app-login></app-login>
         </ng-template>
-
     </mat-sidenav-content>
-    
 </mat-sidenav-container>

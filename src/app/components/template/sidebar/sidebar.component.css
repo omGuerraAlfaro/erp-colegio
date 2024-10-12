@@ -1,55 +1,51 @@
 .sidenav {
-    background-color: #f8f9fa; /* Light background for the sidebar */
+    background-color: #f8f9fa;
+    /* Light background for the sidebar */
     height: 100%;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    overflow-y: auto; /* Scrollable if content overflows */
+    overflow-y: auto;
+    /* Scrollable if content overflows */
 }
 
 .link-dark {
-    color: #343a40; /* Dark color for links */
+    color: #343a40;
 }
 
 .link-dark:hover {
-    background-color: #e9ecef; /* Highlight on hover */
+    background-color: #e9ecef;
 }
 
 .logo {
     width: 30%;
     height: auto;
     display: block;
-    margin: 0 auto; /* Center logo */
+    margin: 0 auto;
 }
 
 .icon {
-    width: 24px; /* Icon size */
+    width: 24px;
     height: 24px;
     margin-right: 10px;
 }
 
-.expand-icon {
-    margin-left: auto; /* Align expand icon to the right */
-}
-
-.mB {
-    margin-bottom: 10px; /* Spacing for the profile section */
-}
-
-.datosPerfil {
-    flex: 1; /* Allow profile details to expand */
-}
 
 .dropdown {
-    cursor: pointer; /* Pointer cursor for dropdown */
+    cursor: pointer;
 }
 
 .active {
-    color: #1976d2; /* Change this to your desired color */
-    font-weight: bold; /* Optional: to make the active link bold */
+    background-color: #e9ecef;
+    color: #328dc3;
+    font-weight: bold;
 }
 
-/* Media query for responsive design */
+.perfil{
+    margin-left: 25px;
+}
+
 @media (max-width: 768px) {
     .sidenav {
-        width: 200px; /* Smaller width on mobile */
+        width: 200px;
+
     }
 }

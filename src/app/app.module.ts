@@ -105,7 +105,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatSidenavModule,
     MatListModule,
     MatToolbarModule,
-    MatMenuModule
+    MatMenuModule,
+    
 
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es' },],
