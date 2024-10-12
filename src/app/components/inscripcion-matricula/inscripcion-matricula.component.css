@@ -1,3 +1,16 @@
+.color {
+    background-color: #f5f5f5;
+}
+
+.posicion {
+    margin-left: 2px; 
+    min-height: 100vh;
+    min-width: 100vh;
+}
+
+.cabecera {
+    margin-top: 20px;
+}
 .boton {
     display: inline-block;
     padding: 2px 2px;

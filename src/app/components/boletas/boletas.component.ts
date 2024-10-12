@@ -138,6 +138,9 @@ export class BoletasComponent implements OnInit {
             fecha_vencimiento: formattedFechaVencimiento,
           };
         });
+
+        console.log('Modified Data:', modifiedData);
+
         this.dataSource.data = modifiedData;
       },
       error: (error) => {
