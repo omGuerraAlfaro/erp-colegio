@@ -33,6 +33,8 @@ export class ModalDetalleBoletaComponent implements OnInit {
     this.estudianteService.getInfoEstudiante(this.data.rut_estudiante).subscribe({
       next: (dataEstudiante: IEstudiante) => {
         this.estudiante = dataEstudiante;
+        console.log(this.estudiante);
+        
       },
       error: (error) => {
         console.error('Error fetching boletas:', error);

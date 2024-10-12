@@ -22,15 +22,15 @@ export interface IApoderado {
 
 export interface IEstudiante {
     id: number;
-    primer_nombre: string;
-    segundo_nombre: string;
-    primer_apellido: string;
-    segundo_apellido: string;
-    fecha_nacimiento: Date;
+    primer_nombre_alumno: string;
+    segundo_nombre_alumno: string;
+    primer_apellido_alumno: string;
+    segundo_apellido_alumno: string;
+    fecha_nacimiento_alumno: Date;
     rut: string;
     dv: string;
     telefono_contacto: string;
-    genero: string;
+    genero_alumno: string;
     alergico: string;
     vive_con: string;
     enfermedad_cronica: string;

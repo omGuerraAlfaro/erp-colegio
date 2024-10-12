@@ -38,8 +38,8 @@
                     <td>{{ data.nombre_apoderado }}</td>
                 </tr>
                 <tr>
-                    <td><strong>Teléfono:</strong></td>
-                    <td>{{ data.telefono_apoderado }}</td>
+                    <td><strong>Rut Apoderado:</strong></td>
+                    <td>{{ data.rut_apoderado2 }}</td>
                 </tr>
                 <tr>
                     <td><strong>Correo:</strong></td>
@@ -60,8 +60,8 @@
                 <ng-container *ngIf="estudiante">
                     <tr>
                         <td><strong>Nombre Completo:</strong></td>
-                        <td>{{ estudiante.primer_nombre }} {{ estudiante.segundo_nombre }} {{
-                            estudiante.primer_apellido }} {{ estudiante.segundo_apellido }}</td>
+                        <td>{{ estudiante.primer_nombre_alumno }} {{ estudiante.segundo_nombre_alumno }} {{
+                            estudiante.primer_apellido_alumno }} {{ estudiante.segundo_apellido_alumno }}</td>
                     </tr>
                     <tr>
                         <td><strong>RUT:</strong></td>
@@ -69,11 +69,12 @@
                     </tr>
                     <tr>
                         <td><strong>Fecha de Nacimiento:</strong></td>
-                        <td>{{ estudiante.fecha_nacimiento | date: 'dd MMM yyyy' }}</td>
+                        <td>{{ estudiante.fecha_nacimiento_alumno | date: 'dd MMM yyyy' }}</td>
                     </tr>
                     <tr>
                         <td><strong>Género:</strong></td>
-                        <td>{{ estudiante.genero }}</td>
+                        <td>{{ estudiante.genero_alumno === 'F' ? 'Femenino' : estudiante.genero_alumno === 'M' ?
+                            'Masculino' : estudiante.genero_alumno }}</td>
                     </tr>
                 </ng-container>
             </tbody>
@@ -102,5 +103,6 @@
 </div>
 
 <div mat-dialog-actions class="button-container">
-    <button class="btn btn-primary mx-1" color="primary" (click)="editarBoleta(this.data.id, this.data.pago_id)">Editar Estado Boleta</button>
+    <button class="btn btn-primary mx-1" color="primary" (click)="editarBoleta(this.data.id, this.data.pago_id)">Editar
+        Estado Boleta</button>
 </div>

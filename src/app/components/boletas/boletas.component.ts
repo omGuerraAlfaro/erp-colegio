@@ -60,7 +60,7 @@ export class BoletasComponent implements OnInit {
   displayedColumns: string[] = ['id', 'rut_apoderado2', 'nombre_apoderado', 'telefono_apoderado', 'correo_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'total', 'acciones'];
   dataSource = new MatTableDataSource<BoletaDetalle>();
 
-  displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'telefono_estudiante', 'genero_estudiante', 'acciones'];
+  displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'genero_estudiante', 'acciones'];
   dataSource2 = new MatTableDataSource<CursoDetalle>();
   dataSourceCursos: { [key: string]: { dataSource2: MatTableDataSource<CursoEstudianteDetalle>, nombreCurso: string } } = {};
 
@@ -131,9 +131,9 @@ export class BoletasComponent implements OnInit {
           const formattedFechaVencimiento = fechaVencimiento.toISOString().split('T')[0];
           return {
             ...boleta,
-            nombre_apoderado: boleta.apoderado.primer_nombre + ' ' + boleta.apoderado.primer_apellido,
-            telefono_apoderado: boleta.apoderado.telefono,
-            correo_apoderado: boleta.apoderado.correo_electronico,
+            nombre_apoderado: boleta.apoderado.primer_nombre_apoderado + ' ' + boleta.apoderado.primer_apellido_apoderado,
+            telefono_apoderado: boleta.apoderado.telefono_apoderado,
+            correo_apoderado: boleta.apoderado.correo_apoderado,
             rut_apoderado2: boleta.apoderado.rut + '-' + boleta.apoderado.dv,
             fecha_vencimiento: formattedFechaVencimiento,
           };
@@ -155,10 +155,10 @@ export class BoletasComponent implements OnInit {
             const nombreCurso = curso.nombre;
             const estudiantesArray = curso.estudiantes.map((estudiante: any) => ({
               id: estudiante.id,
-              nombre_estudiante: `${estudiante.primer_nombre} ${estudiante.segundo_nombre} ${estudiante.primer_apellido} ${estudiante.segundo_apellido}`,
+              nombre_estudiante: `${estudiante.primer_nombre_alumno} ${estudiante.segundo_nombre_alumno} ${estudiante.primer_apellido_alumno} ${estudiante.segundo_apellido_alumno}`,
               rut_estudiante2: `${estudiante.rut}-${estudiante.dv}`,
-              telefono_estudiante: estudiante.telefono_contacto,
-              genero_estudiante: estudiante.genero
+              // telefono_estudiante: estudiante.telefono_contacto,
+              genero_estudiante: estudiante.genero_alumno
             }));
             if (estudiantesArray.length) {
               const dataSource2 = new MatTableDataSource<CursoEstudianteDetalle>(estudiantesArray);
