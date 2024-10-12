@@ -29,7 +29,7 @@ export class ModalIngresoAnotacionComponent implements OnInit {
       es_negativa: [false],
       es_neutra: [false],
       anotacion_estado: [true],
-      asignaturaId: [null]
+      asignaturaId: [null, Validators.required]
     });
 
     // Inicializar la información del estudiante
@@ -62,13 +62,9 @@ export class ModalIngresoAnotacionComponent implements OnInit {
       const anotacionData = this.anotacionForm.value;
       const idEstudiante = this.data.id;
 
-      console.log(anotacionData.asignaturaId);
       if (anotacionData.asignaturaId != null) {
         anotacionData.asignaturaId = Number(anotacionData.asignaturaId);
       }
-
-      console.log(anotacionData);
-      console.log(idEstudiante);
 
       this.estudianteService.postNuevaAnotacion(idEstudiante, anotacionData)
         .subscribe(

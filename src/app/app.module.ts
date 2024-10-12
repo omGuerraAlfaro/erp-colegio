@@ -32,7 +32,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CursosComponent } from './components/cursos/cursos.component';
-import { BoletasApoderadoComponent } from './components/boletas-apoderado/boletas-apoderado.component';
 import { ModalDetalleBoletaComponent } from './components/modal-detalle-boleta/modal-detalle-boleta.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ModalBoletasEstudianteComponent } from './components/modal-boletas-estudiante/modal-boletas-estudiante.component';
@@ -46,6 +45,11 @@ import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatDividerModule} from '@angular/material/divider';
 
 
 
@@ -62,7 +66,6 @@ import { MatButtonModule } from '@angular/material/button';
     RutFormatPipe,
     FormatNumberPipe,
     CursosComponent,
-    BoletasApoderadoComponent,
     ModalDetalleBoletaComponent,
     ModalBoletasEstudianteComponent,
     MatriculasComponent,
@@ -89,7 +92,12 @@ import { MatButtonModule } from '@angular/material/button';
     MatDatepickerModule,
     MatSelectModule,
     MatOptionModule,
-    MatButtonModule
+    MatButtonModule,
+    MatRadioModule,
+    MatIconModule,
+    MatTabsModule,
+    MatProgressSpinnerModule,
+    MatDividerModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es' },],
   bootstrap: [AppComponent]

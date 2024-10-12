@@ -13,9 +13,9 @@ import { CursosComponent } from './components/cursos/cursos.component';
 //recursos humanos
 import { ColaboradoresComponent } from './components/rrhh/colaboradores/colaboradores.component';
 import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remuneraciones.component';
-import { BoletasApoderadoComponent } from './components/boletas-apoderado/boletas-apoderado.component';
 import { MatriculasComponent } from './components/matriculas/matriculas.component';
 import { InscripcionMatriculaComponent } from './components/inscripcion-matricula/inscripcion-matricula.component';
+import { CrearBoletasApoderadoComponent } from './components/crear-boletas-apoderado/crear-boletas-apoderado.component';
 
 
 const routes: Routes = [
@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, /* canActivate: [AuthGuard] */ },
 
   { path: 'boletas', component: BoletasComponent },
-  { path: 'boletas-apoderado', component: BoletasApoderadoComponent },
+  { path: 'crear-boletas-apoderado', component: CrearBoletasApoderadoComponent },
   { path: 'cursos', component: CursosComponent },
 
   { path: 'colaboradores', component: ColaboradoresComponent},

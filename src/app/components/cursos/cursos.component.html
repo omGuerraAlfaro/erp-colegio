@@ -1,32 +1,22 @@
 <div class="color posicion border">
   <div class="container-fluid mt-3">
     <h1><b>Gestión de Anotaciones</b></h1>
-    <hr>
+    <mat-divider></mat-divider>
 
     <!-- Cargando datos -->
-    <div *ngIf="!hasLoadedData">Cargando Datos...</div>
+    <div *ngIf="!hasLoadedData" class="loading-spinner">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      <p>Cargando Datos...</p>
+    </div>
 
     <!-- Contenido después de cargar los datos -->
     <div *ngIf="hasLoadedData">
       <!-- Pestañas de cursos -->
-      <ul class="nav nav-tabs container" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation" *ngFor="let cursoId of getCursoKeys(); let i = index">
-          <button class="nav-link" [class.active]="i === 0" [id]="'tab-' + cursoId"
-            data-bs-toggle="tab" [attr.data-bs-target]="'#content-' + cursoId" type="button"
-            role="tab" [attr.aria-controls]="'content-' + cursoId" [attr.aria-selected]="i === 0 ? 'true' : 'false'">
-            <span class="linkColor">{{ dataSourceCursos[cursoId].nombreCurso }}</span>
-          </button>
-        </li>
-      </ul>
-
-      <!-- Contenido de las pestañas -->
-      <div class="tab-content container filters" id="myTabContent">
-        <div *ngFor="let cursoId of getCursoKeys(); let i = index" class="tab-pane fade"
-          [class.show.active]="i === 0" [id]="'content-' + cursoId" role="tabpanel"
-          [attr.aria-labelledby]="'tab-' + cursoId">
+      <mat-tab-group>
+        <mat-tab *ngFor="let cursoId of getCursoKeys()" [label]="dataSourceCursos[cursoId].nombreCurso">
           <div class="mat-elevation-z8 mt-3">
-            <table mat-table [dataSource]="dataSourceCursos[cursoId].dataSource" class="full-width">
-              
+            <table mat-table [dataSource]="dataSourceCursos[cursoId].dataSource" class="mat-elevation-z8 full-width">
+
               <!-- Columna ID Estudiante -->
               <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>#</th>
@@ -49,7 +39,8 @@
               <ng-container matColumnDef="ver_anotacion">
                 <th mat-header-cell *matHeaderCellDef class="text-center">Ver</th>
                 <td mat-cell *matCellDef="let element" class="text-center">
-                  <button class="btn btn-warning" (click)="openModalVerAnotacion(element)">Ver Anotaciones</button>
+                  <button mat-raised-button color="accent" (click)="openModalVerAnotacion(element)">Ver
+                    Anotaciones</button>
                 </td>
               </ng-container>
 
@@ -57,7 +48,8 @@
               <ng-container matColumnDef="ingresar_anotacion">
                 <th mat-header-cell *matHeaderCellDef class="text-center">Ingreso</th>
                 <td mat-cell *matCellDef="let element" class="text-center">
-                  <button class="btn btn-primary" (click)="openModalIngresoAnotacion(element)">Ingresar Anotación</button>
+                  <button mat-raised-button color="primary" (click)="openModalIngresoAnotacion(element)">Ingresar
+                    Anotación</button>
                 </td>
               </ng-container>
 
@@ -66,8 +58,9 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumnsCursos;"></tr>
             </table>
           </div>
-        </div>
-      </div>
+        </mat-tab>
+      </mat-tab-group>
     </div>
   </div>
+
 </div>

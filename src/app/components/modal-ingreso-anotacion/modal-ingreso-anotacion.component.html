@@ -1,56 +1,70 @@
 <h1 mat-dialog-title class="modal-title d-flex justify-content-between align-items-center">
-    Ingresar Nueva Anotación
-    <button class="btn-close" (click)="closeModal()"></button>
-</h1>
-<div mat-dialog-content class="modal-content">
+    <b>Ingresar Nueva Anotación</b>
+    <button mat-icon-button (click)="closeModal()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h1>
+  <div mat-dialog-content class="modal-content pb-5">
     <div *ngIf="estudiante" class="mb-3 border p-3">
-        <h4><strong>Datos del Estudiante</strong></h4>
-        <p><strong>Nombre:</strong> {{ estudiante.nombre }}</p>
-        <p><strong>RUT:</strong> {{ estudiante.rut }}</p>
+      <h4><strong>Datos del Estudiante</strong></h4>
+      <p><strong>Nombre:</strong> {{ estudiante.nombre }}</p>
+      <p><strong>RUT:</strong> {{ estudiante.rut }}</p>
     </div>
     <form [formGroup]="anotacionForm" (ngSubmit)="onSubmit()">
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <label for="titulo" class="form-label">Título de la Anotación</label>
-                <input id="titulo" formControlName="anotacion_titulo" class="form-control"
-                    placeholder="Ingrese el título">
-            </div>
+      <div class="row mb-3">
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Título de la Anotación</mat-label>
+          <input matInput formControlName="anotacion_titulo" placeholder="Ingrese el título">
+          <mat-error *ngIf="anotacionForm.get('anotacion_titulo')?.hasError('required')">
+            El título es obligatorio.
+          </mat-error>
+        </mat-form-field>
+      </div>
+  
+      <div class="row mb-3">
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput formControlName="anotacion_descripcion" rows="4" placeholder="Ingrese una descripción"></textarea>
+          <mat-error *ngIf="anotacionForm.get('anotacion_descripcion')?.hasError('required')">
+            La descripción es obligatoria.
+          </mat-error>
+        </mat-form-field>
+      </div>
+  
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label class="form-label">Tipo de Anotación</label>
+          <mat-radio-group aria-label="Tipo de anotación">
+            <mat-radio-button class="mx-3" value="positiva" (change)="setTipo('positiva')" [checked]="anotacionForm.get('es_positiva')?.value">
+              Positiva
+            </mat-radio-button>
+            <mat-radio-button class="mx-3" value="negativa" (change)="setTipo('negativa')" [checked]="anotacionForm.get('es_negativa')?.value">
+              Negativa
+            </mat-radio-button>
+            <mat-radio-button class="mx-3" value="neutra" (change)="setTipo('neutra')" [checked]="anotacionForm.get('es_neutra')?.value">
+              Neutra
+            </mat-radio-button>
+          </mat-radio-group>
         </div>
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <label for="descripcion" class="form-label">Descripción</label>
-                <textarea id="descripcion" formControlName="anotacion_descripcion" class="form-control" rows="4"
-                    placeholder="Ingrese una descripción"></textarea>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <label class="form-label">Tipo de Anotación</label>
-                <div class="form-check">
-                  <input id="positivo" type="radio" [checked]="anotacionForm.get('es_positiva')?.value" (change)="setTipo('positiva')" class="form-check-input">
-                  <label for="positivo" class="form-check-label">Positiva</label>
-                </div>
-                <div class="form-check">
-                  <input id="negativo" type="radio" [checked]="anotacionForm.get('es_negativa')?.value" (change)="setTipo('negativa')" class="form-check-input">
-                  <label for="negativo" class="form-check-label">Negativa</label>
-                </div>
-                <div class="form-check">
-                  <input id="neutro" type="radio" [checked]="anotacionForm.get('es_neutra')?.value" (change)="setTipo('neutra')" class="form-check-input">
-                  <label for="neutro" class="form-check-label">Neutra</label>
-                </div>
-              </div>                      
-        </div>                    
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <label for="asignatura" class="form-label">Asignatura</label>
-                <select id="asignatura" formControlName="asignaturaId" class="form-control">
-                    <option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">{{asignatura.nombre}}
-                    </option>
-                </select>
-            </div>
-        </div>
-        <div mat-dialog-actions class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">Crear Anotación</button>
-        </div>
+      </div>
+  
+      <div class="row mb-3">
+        <mat-form-field appearance="fill" class="col-md-12">
+          <mat-label>Asignatura</mat-label>
+          <mat-select formControlName="asignaturaId">
+            <mat-option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">
+              {{ asignatura.nombre }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="anotacionForm.get('asignaturaId')?.hasError('required')">
+            La asignatura es obligatoria.
+          </mat-error>
+        </mat-form-field>
+      </div>
+  
+      <div mat-dialog-actions class="d-flex justify-content-end">
+        <button mat-raised-button color="primary" type="submit">Crear Anotación</button>
+      </div>
     </form>
-</div>
+  </div>
+  

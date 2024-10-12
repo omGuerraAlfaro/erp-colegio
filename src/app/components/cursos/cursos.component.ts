@@ -15,12 +15,13 @@ export class CursosComponent implements OnInit, AfterViewInit, AfterViewChecked 
   displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'ver_anotacion', 'ingresar_anotacion'];
   dataSourceCursos: { [key: string]: { dataSource: MatTableDataSource<CursoEstudianteDetalle>, nombreCurso: string } } = {};
   hasLoadedData = false;
+  activeTabId: string | null = null;  // Store the active tab ID
 
   constructor(
     private cursosServices: CursosService,
     private cdr: ChangeDetectorRef,
     public dialog: MatDialog
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadCursosConEstudiantes();
@@ -29,40 +30,38 @@ export class CursosComponent implements OnInit, AfterViewInit, AfterViewChecked 
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.initializeTabs();
+      this.restoreActiveTab();  // Restore active tab after initializing
     }, 1000);
   }
 
   ngAfterViewChecked(): void {
     if (this.hasLoadedData) {
-      this.initializeTabs();
+      this.restoreActiveTab(); // Restore active tab
     }
   }
 
   loadCursosConEstudiantes(): void {
     this.cursosServices.getInfoCursoConEstudiantes().subscribe({
       next: (cursos: any) => {
-        console.log('Datos de cursos:', cursos); // Verifica los datos recibidos
         if (cursos) {
           cursos.forEach((curso: any) => {
             const cursoId = curso.id.toString();
-            const nombreCurso = curso.nombre;
             const estudiantesArray = curso.estudiantes.map((estudiante: any) => ({
               id: estudiante.id,
-              nombre_estudiante: `${estudiante.primer_nombre} ${estudiante.segundo_nombre} ${estudiante.primer_apellido} ${estudiante.segundo_apellido}`,
+              nombre_estudiante: `${estudiante.primer_nombre_alumno} ${estudiante.segundo_nombre_alumno} ${estudiante.primer_apellido_alumno} ${estudiante.segundo_apellido_alumno}`,
               rut_estudiante2: `${estudiante.rut}-${estudiante.dv}`,
               telefono_estudiante: estudiante.telefono_contacto,
               genero_estudiante: estudiante.genero
             }));
             if (estudiantesArray.length) {
-              const dataSource = new MatTableDataSource<CursoEstudianteDetalle>(estudiantesArray);
-              this.dataSourceCursos[cursoId] = { dataSource, nombreCurso };
+              this.dataSourceCursos[cursoId] = { 
+                dataSource: new MatTableDataSource<CursoEstudianteDetalle>(estudiantesArray), 
+                nombreCurso: curso.nombre 
+              };
             }
           });
           this.hasLoadedData = true;
           this.cdr.detectChanges();
-          setTimeout(() => {
-            this.initializeTabs();
-          }, 100);
         }
       },
       error: (error) => {
@@ -73,93 +72,70 @@ export class CursosComponent implements OnInit, AfterViewInit, AfterViewChecked 
 
   initializeTabs(): void {
     const tabElements = document.querySelectorAll('.nav-tabs .nav-link');
-    if (tabElements.length) {
-      tabElements.forEach((tab, index) => {
-        const tabEl = tab as HTMLElement;
-        const targetId = tabEl.getAttribute('data-bs-target');
-        if (targetId) {
-          const targetEl = document.querySelector(targetId);
-          if (targetEl) {
-            targetEl.classList.remove('show', 'active');
-          }
-        }
-        tabEl.classList.remove('active'); // Asegúrate de que no haya pestañas activas por defecto
-      });
-
-      // Activa la primera pestaña y su contenido
-      const firstTab = tabElements[0] as HTMLElement;
-      firstTab.classList.add('active');
-      const firstTabTargetId = firstTab.getAttribute('data-bs-target');
-      if (firstTabTargetId) {
-        const firstTabContent = document.querySelector(firstTabTargetId);
-        if (firstTabContent) {
-          firstTabContent.classList.add('show', 'active');
-        }
+    tabElements.forEach((tab) => {
+      const targetId = (tab as HTMLElement).getAttribute('data-bs-target');
+      if (targetId) {
+        const targetEl = document.querySelector(targetId);
+        targetEl?.classList.remove('show', 'active');
       }
+      (tab as HTMLElement).classList.remove('active');
+    });
+  }
+
+  restoreActiveTab(): void {
+    const tabElements = document.querySelectorAll('.nav-tabs .nav-link');
+    let activeTab: HTMLElement | null = this.activeTabId 
+      ? document.querySelector(`[data-bs-target="${this.activeTabId}"]`) as HTMLElement
+      : null;
+
+    // Fallback to the first tab if no active tab found
+    if (!activeTab) {
+      activeTab = tabElements[0] as HTMLElement; // Default to first tab
     }
+
+    if (activeTab) {
+      activeTab.classList.add('active');
+      const targetId = activeTab.getAttribute('data-bs-target');
+      const tabContent = targetId ? document.querySelector(targetId) : null;
+      tabContent?.classList.add('show', 'active');
+    }
+  }
+
+  setActiveTab(tabId: string): void {
+    this.activeTabId = tabId;
+  }
+
+  openModalIngresoAnotacion(element: any): void {
+    this.setActiveTab(this.getActiveTabId());  // Save active tab before opening modal
+    const dialogRef = this.dialog.open(ModalIngresoAnotacionComponent, {
+      width: '60%',
+      height: 'auto',
+      data: element
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('El modal se cerró');
+    });
+  }
+
+  openModalVerAnotacion(element: any): void {
+    this.setActiveTab(this.getActiveTabId());
+    const dialogRef = this.dialog.open(ModalVerAnotacionComponent, {
+      position: { top: '50px' },
+      width: '80%',
+      height: 'auto',
+      data: element
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('El modal se cerró');
+    });
   }
 
   getCursoKeys(): string[] {
     return Object.keys(this.dataSourceCursos);
   }
 
-  openModalIngresoAnotacion(element: any): void {
-    const dialogRef = this.dialog.open(ModalIngresoAnotacionComponent, {
-      width: '60%',
-      height: 'auto',
-      data: element
-    });
-
-    // dialogRef.componentInstance.boletaEditada.subscribe(() => {
-    //   this.loadBoletas();
-    // });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('El modal se cerró');
-    });
-  }
-
-  openModalVerAnotacion(element: any): void {
-    const dialogRef = this.dialog.open(ModalVerAnotacionComponent, {
-      width: '80%',
-      height: 'auto',
-      data: element
-    });
-
-    // dialogRef.componentInstance.boletaEditada.subscribe(() => {
-    //   this.loadBoletas();
-    // });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('El modal se cerró');
-    });
+  getActiveTabId(): string {
+    const activeTab = document.querySelector('.nav-tabs .nav-link.active') as HTMLElement;
+    return activeTab?.getAttribute('data-bs-target') || '';
   }
 }
-
-// @ViewChild('paginator1') paginator1!: MatPaginator;
-// @ViewChild('paginator2') paginator2!: MatPaginator;
-// displayedColumns: string[] = ['id', 'nombre', 'nombre_profesor', 'telefono_profesor', 'correo_profesor', 'rut_profesor2'];
-// dataSource = new MatTableDataSource<CursoDetalle>();
-
-// ngAfterViewInit() {
-//   this.dataSource.paginator = this.paginator1;
-// }
-
-// loadCursos(): void {
-//   this.cursosServices.getInfoCurso().subscribe({
-//     next: (cursos: CursoDetalle[]) => {
-//       console.log('cursos:', cursos);
-//       const modifiedData = cursos.map(curso => ({
-//         ...curso,
-//         nombre_profesor: curso.profesorConnection.primer_nombre + ' ' + curso.profesorConnection.primer_apellido,
-//         telefono_profesor: curso.profesorConnection.telefono,
-//         correo_profesor: curso.profesorConnection.correo_electronico,
-//         rut_profesor2: curso.profesorConnection.rut + '-' + curso.profesorConnection.dv,
-//       }));
-//       this.dataSource.data = modifiedData;
-//     },
-//     error: (error) => {
-//       console.error('Error fetching cursos:', error);
-//     }
-//   });
-// }
