@@ -60,29 +60,50 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
 
   createEstudianteGroup(): FormGroup {
     const estudianteGroup = this.fb.group({
-      primer_nombre: ['', [Validators.required, Validators.minLength(3)]],
-      segundo_nombre: [''],
-      primer_apellido: ['', [Validators.required, Validators.minLength(3)]],
-      segundo_apellido: ['', [Validators.required, Validators.minLength(3)]],
-      rut: ['', [Validators.required, rutValidator()]],
-      genero: ['', [Validators.required]],
-      fecha_nacimiento: ['', [Validators.required]],
+      primer_nombre_alumno: ['', [Validators.required, Validators.minLength(3)]],
+      segundo_nombre_alumno: [''],
+      primer_apellido_alumno: ['', [Validators.required, Validators.minLength(3)]],
+      segundo_apellido_alumno: ['', [Validators.required, Validators.minLength(3)]],
+      rut_alumno: ['', [Validators.required, rutValidator()]],
+      genero_alumno: ['', [Validators.required]],
+      fecha_nacimiento_alumno: ['', [Validators.required]],
       cursoId: ['', [Validators.required]],
       vive_con: ['', [Validators.required]],
       nacionalidad_alumno: ['', [Validators.required]],
-      enfermedad_cronica: [''],
-      alergico_alimento: [''],
-      alergico_medicamentos: [''],
-      prevision: ['', [Validators.required]],
-      consultorio_clinica: ['', [Validators.required]],
+      enfermedad_cronica_alumno: [''],
+      alergico_alimento_alumno: [''],
+      alergico_medicamentos_alumno: [''],
+      prevision_alumno: ['', [Validators.required]],
+      consultorio_clinica_alumno: ['', [Validators.required]],
       es_pae: [false],
       eximir_religion: [false],
       autorizacion_fotografias: [false],
       apto_educacion_fisica: [false],
-      observaciones: [''],
+      observaciones_alumno: [''],
     });
-
+    estudianteGroup.get('fecha_nacimiento_alumno')?.valueChanges.subscribe(value => {
+      if (value) {
+        const formattedDate = this.formatDate(value);
+        estudianteGroup.get('fecha_nacimiento_alumno')?.setValue(formattedDate, { emitEvent: false });
+      }
+    });
     return estudianteGroup;
+  }
+
+  formatDate(date: string): string {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) {
+      month = '0' + month;
+    }
+    if (day.length < 2) {
+      day = '0' + day;
+    }
+
+    return [year, month, day].join('-');
   }
 
   addEstudiante(): void {
@@ -134,7 +155,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
             rut_alumno: data.rut_alumno,
             genero_alumno: data.genero_alumno,
             fecha_nacimiento_alumno: data.fecha_nacimiento_alumno,
-            curso_alumno: data.curso_alumno,
+            cursoId: data.curso_alumno,
             vive_con: '',
             nacionalidad_alumno: '',
             prevision_alumno: '',
@@ -148,50 +169,73 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
     });
   }
 
+  // Función para dividir el RUT en cuerpo y dígito verificador (DV)
+  splitRut(rut: string): { rut: string, dv: string } {
+    const [rutBody, dv] = rut.split('-'); // Divide el RUT por el guion
+    return { rut: rutBody, dv: dv.toUpperCase() }; // Retorna el cuerpo y el DV en mayúscula
+  }
 
   onSubmit() {
+    console.log("No VALIDO");
+
     if (this.inscripcionForm.valid) {
       console.log("VALIDO");
-      console.log(this.inscripcionForm.value);
 
-      const {
-        enfermedad_cronica_alumno,
-        alergia_alimento_alumno,
-        alergia_medicamento_alumno
-      } = this.inscripcionForm.value;
+      // Obtener los valores del formulario al inicio
+      const formValue = this.inscripcionForm.value;
 
+      console.log(formValue);
+
+      // Separar el RUT y el DV de apoderado y suplente
+      const rutApoderado = this.splitRut(formValue.rut_apoderado);
+      const rutApoderadoSuplente = this.splitRut(formValue.rut_apoderado_suplente);
+
+      // Desestructurar el rut_apoderado para excluirlo y mantener el resto
+      const { rut_apoderado, ...restApoderado } = formValue;
+
+      // Actualizar el formulario con el RUT del apoderado como `rut`
       this.inscripcionForm.patchValue({
-        enfermedad_cronica_alumno: enfermedad_cronica_alumno || 'No',
-        alergia_alimento_alumno: alergia_alimento_alumno || 'No',
-        alergia_medicamento_alumno: alergia_medicamento_alumno || 'No'
+        rut: rutApoderado.rut, // Asignar RUT del apoderado a `rut`
+        rut_apoderado_suplente: rutApoderadoSuplente.rut,
       });
 
-      console.log(this.inscripcionForm.value);
+      // Recorrer el array de estudiantes y formatear cada RUT, eliminando `rut_alumno`
+      const estudiantesFormateados = formValue.estudiantes.map((estudiante: any) => {
 
+        const { rut, dv } = this.splitRut(estudiante.rut_alumno);
+        const { rut_alumno, ...rest } = estudiante;
 
+        return {
+          ...rest,
+          rut,
+          dv
+        };
+      });
 
+      const formattedData = {
+        ...restApoderado,
+        rut: rutApoderado.rut,
+        dv: rutApoderado.dv,
+        dv_apoderado_suplente: rutApoderadoSuplente.dv,
+        estudiantes: estudiantesFormateados
+      };
 
-      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
-      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
-      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
-      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
-      //********************************** FORMATEAR RUTS ALUMNO APODERADO Y SUPLENTE. */
+      console.log("Datos a enviar:", formattedData);
 
+      this.inscripcionService.postNuevaMatricula(formattedData).subscribe({
+        next: () => {
+          console.log("INSERT OK");
 
-
-
-      // Handle form submission
-      // this.inscripcionService.updateInscripcion(this.inscripcionForm.value).subscribe({
-      //   next: () => {
-      //     this.inscripcionOK.emit();  // Emit event on successful update
-      //     this.closeModal();
-      //   },
-      //   error: (error) => {
-      //     console.error('Error updating inscripción:', error);
-      //   }
-      // });
+          this.inscripcionOK.emit();
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
     }
   }
+
 
 
   closeModal(): void {

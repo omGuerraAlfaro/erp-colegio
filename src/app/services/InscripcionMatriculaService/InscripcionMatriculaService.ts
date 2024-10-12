@@ -26,12 +26,18 @@ export class InscripcionMatriculaService {
   }
 
   getInscripcion(id_inscripcion: string): Observable<IInscripcionMatricula> {
-    return this.http.get<IInscripcionMatricula>(`${environment.api}/inscripcion-matricula/`+ id_inscripcion, this.httpOptions)
+    return this.http.get<IInscripcionMatricula>(`${environment.api}/inscripcion-matricula/` + id_inscripcion, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
+  postNuevaMatricula(matricula: IInscripcionMatricula): Observable<IInscripcionMatricula> {
+    return this.http.post<IInscripcionMatricula>(`${environment.api}/inscripcion-matricula/crear-matricula`, matricula, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
     console.error(errorMessage);
