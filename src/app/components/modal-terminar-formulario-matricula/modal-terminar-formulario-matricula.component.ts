@@ -203,12 +203,15 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       const estudiantesFormateados = formValue.estudiantes.map((estudiante: any) => {
 
         const { rut, dv } = this.splitRut(estudiante.rut_alumno);
-        const { rut_alumno, ...rest } = estudiante;
+        const { rut_alumno, genero_alumno, ...rest } = estudiante;
+
+        const genero = genero_alumno === 'Femenino' ? 'F' : genero_alumno === 'Masculino' ? 'M' : genero_alumno;
 
         return {
           ...rest,
           rut,
-          dv
+          dv,
+          genero_alumno: genero
         };
       });
 
