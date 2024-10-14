@@ -5,6 +5,9 @@
 .full-width.mat-table {
     width: 100% !important;
 }
+.cabecera {
+    margin-top: 20px;
+}
 
 .posicion {
     margin-left: 2px; 

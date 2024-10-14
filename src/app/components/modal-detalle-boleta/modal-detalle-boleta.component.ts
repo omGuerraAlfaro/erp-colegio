@@ -30,7 +30,10 @@ export class ModalDetalleBoletaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.estudianteService.getInfoEstudiante(this.data.rut_estudiante).subscribe({
+    console.log(this.data);
+    const rutParts = this.data.rut_estudiante.split('-')[0];
+
+    this.estudianteService.getInfoEstudiante(rutParts).subscribe({
       next: (dataEstudiante: IEstudiante) => {
         this.estudiante = dataEstudiante;
         console.log(this.estudiante);

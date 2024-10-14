@@ -15,6 +15,7 @@ export class ModalBoletasEstudianteComponent implements OnInit {
 
   boleta!: BoletaDetalle[];
   displayedColumns: string[] = ['id', 'detalle', 'fecha_vencimiento', 'total', 'estado', 'actions'];
+  nameEstudent='';
 
   constructor(
     public dialogRef: MatDialogRef<ModalBoletasEstudianteComponent>,
@@ -23,6 +24,7 @@ export class ModalBoletasEstudianteComponent implements OnInit {
     private readonly boletasService: BoletasService
   ) { 
     console.log(data);
+
   }
 
   ngOnInit() {
@@ -30,14 +32,21 @@ export class ModalBoletasEstudianteComponent implements OnInit {
   }
 
   loadBoletas() {
-    const rutParts = this.data.rut_estudiante2.split('-');
-    const rutSinDv = rutParts[0];
-    this.boletasService.getBoletasByRutEstudiante(rutSinDv).subscribe({
+    const rutParts = this.data.rut_estudiante;
+    this.boletasService.getBoletasByRutEstudiante(rutParts).subscribe({
       next: (dataBoleta: BoletaDetalle[]) => {
         this.boleta = dataBoleta.map(boleta => ({
           ...boleta,
           fecha_vencimiento: this.formatFechaVencimiento(boleta.fecha_vencimiento)
         }));
+      },
+      error: (error) => {
+        console.error('Error fetching boletas:', error);
+      }
+    });
+    this.estudianteService.getInfoEstudiante(rutParts).subscribe({
+      next: (data) => {
+        this.nameEstudent = data.primer_nombre_alumno + ' ' + data.primer_apellido_alumno;
       },
       error: (error) => {
         console.error('Error fetching boletas:', error);

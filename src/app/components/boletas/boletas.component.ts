@@ -156,10 +156,12 @@ export class BoletasComponent implements OnInit {
           cursos.forEach((curso: any) => {
             const cursoId = curso.id.toString();
             const nombreCurso = curso.nombre;
+            console.log(curso.estudiantes);
+            
             const estudiantesArray = curso.estudiantes.map((estudiante: any) => ({
               id: estudiante.id,
               nombre_estudiante: `${estudiante.primer_nombre_alumno} ${estudiante.segundo_nombre_alumno} ${estudiante.primer_apellido_alumno} ${estudiante.segundo_apellido_alumno}`,
-              rut_estudiante2: `${estudiante.rut}-${estudiante.dv}`,
+              rut_estudiante: `${estudiante.rut}-${estudiante.dv}`,
               // telefono_estudiante: estudiante.telefono_contacto,
               genero_estudiante: estudiante.genero_alumno
             }));

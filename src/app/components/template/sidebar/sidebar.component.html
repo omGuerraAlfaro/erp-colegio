@@ -1,5 +1,5 @@
-<mat-toolbar *ngIf="isLogged;">
-    <button mat-icon-button (click)="sidenav.toggle()">
+<mat-toolbar style="background-color: rgb(82, 126, 197);" *ngIf="isLogged;">
+    <button mat-icon-button (click)="sidenav.toggle()" class="sidenavBotton">
         <mat-icon>menu</mat-icon>
     </button>
     <span>Intranet Colegio Andes Chile</span>
@@ -8,7 +8,7 @@
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" class="sidenav" [style.width]="'280px'">
         <a mat-list-item routerLink="/home" routerLinkActive="active" class="link-dark">
-            <img src="../assets/img/logo.png" alt="" class="logo">
+            <img src="../assets/img/logo.png" alt="" class="logo mt-5">
         </a>
 
         <!-- Menú de navegación -->
