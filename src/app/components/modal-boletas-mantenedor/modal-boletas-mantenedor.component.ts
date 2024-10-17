@@ -5,6 +5,9 @@ import { BoletasService } from 'src/app/services/boletasService/boletas.service'
 import { InfoApoderadoService } from 'src/app/services/apoderadoService/infoApoderado.service';
 import { BoletaDetalle } from 'src/app/interfaces/boletaInterface';
 import Swal from 'sweetalert2';
+import { EditBoletaComponent } from './edit-boleta/edit-boleta.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { CreateBoletaComponent } from './create-boleta/create-boleta.component';
 
 @Component({
   selector: 'app-modal-boletas-mantenedor',
@@ -12,16 +15,9 @@ import Swal from 'sweetalert2';
   styleUrls: ['./modal-boletas-mantenedor.component.css']
 })
 export class ModalBoletasMantenedorComponent implements OnInit {
-editarBoleta(arg0: any) {
-throw new Error('Method not implemented.');
-}
-verBoletas(arg0: any) {
-throw new Error('Method not implemented.');
-}
+  displayedColumns: string[] = ['id', 'detalle', 'total', 'fecha_vencimiento', 'estado_boleta', 'acciones'];
+  dataSource: { [key: number]: MatTableDataSource<BoletaDetalle> } = {}; // Updated to store grouped data
 
-  displayedColumns: string[] = ['id', 'rut_apoderado', 'rut_estudiante', 'detalle', 'total', 'acciones'];
-  dataSource!: MatTableDataSource<BoletaDetalle>;
-  
   // Variable global para almacenar datos del apoderado
   apoderado: any;
 
@@ -29,15 +25,15 @@ throw new Error('Method not implemented.');
     private boletaService: BoletasService,
     private apoderadoService: InfoApoderadoService,
     private dialogRef: MatDialogRef<ModalBoletasMantenedorComponent>,
+    private bottomSheet: MatBottomSheet,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.boletaService.getBoletasByRutApoderado(this.data).subscribe({
       next: (boletas: BoletaDetalle[]) => {
         console.log(boletas);
-        
-        this.dataSource = new MatTableDataSource(boletas);
+        this.groupBoletasByEstudiante(boletas); // Grouping boletas
       },
       error: (error) => {
         console.error('Error fetching boletas:', error);
@@ -48,7 +44,6 @@ throw new Error('Method not implemented.');
       next: (apoderado: any) => {
         this.apoderado = apoderado; // Guardar datos del apoderado
         console.log(apoderado);
-        
       },
       error: (error) => {
         console.error('Error fetching apoderado:', error);
@@ -56,48 +51,79 @@ throw new Error('Method not implemented.');
     });
   }
 
+  groupBoletasByEstudiante(boletas: BoletaDetalle[]) {
+    this.dataSource = boletas.reduce((acc, boleta) => {
+      if (!acc[boleta.estudiante_id]) {
+        acc[boleta.estudiante_id] = new MatTableDataSource();
+      }
+      if (!acc[boleta.estudiante_id].data) {
+        acc[boleta.estudiante_id].data = [];
+      }
+      acc[boleta.estudiante_id].data.push(boleta);
+      return acc;
+    }, {} as { [key: number]: MatTableDataSource<BoletaDetalle> });
+  }
+
   closeModal(): void {
     this.dialogRef.close();
   }
+
+  editarBoleta(element: any) {
+    const bottomSheetRef = this.bottomSheet.open(EditBoletaComponent, {
+      data: element // Pasa el elemento a editar
+    });
+
+    bottomSheetRef.afterDismissed().subscribe((result) => {
+      console.log(result);
+      if (result) {
+        this.ngOnInit();
+      }
+    });
+  }
+
+  crearBoletas() {
+    const bottomSheetRef = this.bottomSheet.open(CreateBoletaComponent, {
+      data: this.apoderado
+    });
+
+    bottomSheetRef.afterDismissed().subscribe((result) => {
+      if (result) {
+        this.ngOnInit();
+      }
+    });
+  }
+
+  editarBoleta2(element: any): void {
+    // Cambia el estado de la boleta
+    const nuevoEstado = !element.estado_boleta;
+
+    const boletaActualizada = {
+      ...element,
+      estado_boleta: nuevoEstado
+    };
+
+    this.boletaService.editarBoletaAll(boletaActualizada.id, boletaActualizada).subscribe({
+      next: (response) => {
+        console.log('Estado de Boleta modificada con éxito:', response);
+        Swal.fire({
+          title: 'Éxito',
+          text: 'El estado de la boleta ha sido modificado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        });
+
+        this.ngOnInit();
+      },
+      error: (error) => {
+        console.error('Error al editar la boleta:', error);
+
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo editar la boleta. Inténtalo de nuevo más tarde.',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        });
+      }
+    });
+  }
 }
-
-
-  // onSubmit(): void {
-  //   if (this.anotacionForm.valid) {
-  //     const anotacionData = this.anotacionForm.value;
-  //     const idEstudiante = this.data.id;
-
-  //     if (anotacionData.asignaturaId != null) {
-  //       anotacionData.asignaturaId = Number(anotacionData.asignaturaId);
-  //     }
-
-  //     this.estudianteService.postNuevaAnotacion(idEstudiante, anotacionData)
-  //       .subscribe(
-  //         response => {
-  //           Swal.fire({
-  //             title: 'Éxito!',
-  //             text: 'La anotación se ha creado correctamente.',
-  //             icon: 'success',
-  //             confirmButtonText: 'OK'
-  //           }).then(() => {
-  //             this.dialogRef.close();
-  //           });
-  //         },
-  //         error => {
-  //           Swal.fire({
-  //             title: 'Error!',
-  //             text: 'Hubo un problema al crear la anotación.',
-  //             icon: 'error',
-  //             confirmButtonText: 'OK'
-  //           });
-  //         }
-  //       );
-  //   } else {
-  //     Swal.fire({
-  //       title: 'Formulario incompleto',
-  //       text: 'Por favor, complete todos los campos requeridos.',
-  //       icon: 'warning',
-  //       confirmButtonText: 'OK'
-  //     });
-  //   }
-  // }

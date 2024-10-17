@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
-import { BoletaDetalle, IBoleta, UpdateBoleta } from 'src/app/interfaces/boletaInterface';
+import { BoletaDetalle, IBoleta, UpdateBoleta, UpdateBoletaDto } from 'src/app/interfaces/boletaInterface';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -72,6 +72,13 @@ export class BoletasService {
       );
   }
 
+  editarBoletaAll(id: number, data: UpdateBoletaDto): Observable<UpdateBoletaDto> {
+    return this.http.put<UpdateBoletaDto>(`${environment.api}/boleta/${id}`, data, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getTotalPendientePorMes(date: string): Observable<any> {
     return this.http.get<any>(`${environment.api}/boleta/total-pendiente-por-mes/${date}`, this.httpOptions)
       .pipe(
@@ -81,6 +88,13 @@ export class BoletasService {
 
   getTotalPagadoPorMes(date: string): Observable<any> {
     return this.http.get<any>(`${environment.api}/boleta/total-pagado-por-mes/${date}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  createAnnualBoletasForApoderadoByRut(rut: string, crearBoletaDto: { valor_matricula: number, valor_mensualidad: number }): Observable<any> {
+    return this.http.post<any>(`${environment.api}/boleta/crear-boletas-apoderado/${rut}`, crearBoletaDto, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

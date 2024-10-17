@@ -1,0 +1,25 @@
+<mat-nav-list>
+    <h3 style="text-align: center; font-size: 24px; margin-bottom: 16px;">Editar Boleta</h3>
+    <form [formGroup]="boletaForm" (ngSubmit)="editarBoleta()">
+        
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Detalle</mat-label>
+            <input matInput formControlName="detalle" class="input-large">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Fecha Vencimiento</mat-label>
+            <input matInput type="date" formControlName="fecha_vencimiento" class="input-large">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Total</mat-label>
+            <input matInput formControlName="total" type="number" class="input-large">
+        </mat-form-field>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 16px; margin-bottom: 15px;">
+            <button type="submit" mat-raised-button color="primary">Guardar</button>
+            <button type="button" mat-button (click)="cerrar()">Cancelar</button>
+        </div>
+    </form>
+</mat-nav-list>

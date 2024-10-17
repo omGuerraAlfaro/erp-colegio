@@ -12,6 +12,7 @@ export interface BoletaDetalle {
   total: string;
   descuento: string;
   nota: string;
+  estudiante_id: number;
 }
 
 export interface IBoleta {
@@ -25,4 +26,17 @@ export interface UpdateBoleta {
   idBoleta: number;
   estado: number;
   idPago: string;
+}
+
+export interface UpdateBoletaDto {
+  apoderado_id?: number;
+  estudiante_id?: number;
+  rut_estudiante?: string;
+  rut_apoderado?: string;
+  pago_id?: string;
+  estado_id?: number;
+  detalle?: string;
+  fecha_vencimiento?: Date;
+  total?: number;
+  estado_boleta?: boolean;
 }

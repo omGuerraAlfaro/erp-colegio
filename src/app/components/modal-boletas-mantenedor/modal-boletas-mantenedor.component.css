@@ -90,3 +90,30 @@ mat-cell {
     transform: translateY(1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
+.boton3 {
+    display: inline-block;
+    padding: 15px 30px;
+    margin-top: 2px;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #007bff; /* Azul */
+    border: none;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.boton3:hover {
+    background-color: #339af0; /* Azul más claro */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.boton3:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}

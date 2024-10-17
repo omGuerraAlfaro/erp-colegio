@@ -1,0 +1,9 @@
+.full-width {
+    width: 100%; /* Asegura que el campo ocupe todo el ancho */
+    margin-bottom: 16px; /* Espacio entre campos */
+}
+
+.input-large {
+    font-size: 16px; /* Aumenta el tamaño de la fuente en los campos */
+    padding: 12px; /* Espaciado interno en los campos */
+}
