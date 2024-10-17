@@ -1,9 +1,10 @@
 <mat-toolbar style="background-color: rgb(82, 126, 197);" *ngIf="isLogged;">
     <button mat-icon-button (click)="sidenav.toggle()" class="sidenavBotton">
-        <mat-icon>menu</mat-icon>
+        <mat-icon style="color: white;">menu</mat-icon>
     </button>
-    <span>Intranet Colegio Andes Chile</span>
+    <span style="color: white; font-weight: bold;">Intranet Colegio Andes Chile</span>
 </mat-toolbar>
+
 
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" class="sidenav" [style.width]="'280px'">
@@ -13,12 +14,12 @@
 
         <!-- Menú de navegación -->
         <mat-nav-list>
-            <mat-list-item class="mb-1" mat-button>
+            <mat-nav-list class="mb-1" mat-button>
                 <a mat-list-item routerLink="/home" routerLinkActive="active" class="link-dark">
                     <i class="fas fa-home icon"></i>
                     <span>Inicio</span>
                 </a>
-            </mat-list-item>
+            </mat-nav-list>
 
             <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleMatriculas()">
                 <i class="fas fa-book icon"></i>
@@ -29,7 +30,7 @@
             <mat-nav-list *ngIf="isMatriculasOpen && rolUser === 'administrador'">
                 <a mat-list-item routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a>
                 <a mat-list-item routerLink="/bandeja-inscripciones" routerLinkActive="active">Bandeja de
-                    inscripciones</a>
+                    Inscripciones</a>
             </mat-nav-list>
 
             <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleFinanzas()">
@@ -40,8 +41,7 @@
             </mat-list-item>
             <mat-nav-list *ngIf="isFinanzasOpen && rolUser === 'administrador'">
                 <a mat-list-item routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a>
-                <a mat-list-item routerLink="/crear-boletas-apoderado" routerLinkActive="active">Mantenedor Boletas
-                    Apoderado</a>
+                <a mat-list-item routerLink="/boletas-mantenedor" routerLinkActive="active">Mantenedor Boletas</a>
             </mat-nav-list>
 
             <mat-list-item *ngIf="isProfesorOpen && rolUser === 'profesor'" class="mb-1" mat-button

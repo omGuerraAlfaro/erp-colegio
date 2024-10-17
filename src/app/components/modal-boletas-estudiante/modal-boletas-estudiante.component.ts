@@ -32,13 +32,15 @@ export class ModalBoletasEstudianteComponent implements OnInit {
   }
 
   loadBoletas() {
-    const rutParts = this.data.rut_estudiante;
+    const rutParts = this.data.rut_estudiante.split('-')[0];
     this.boletasService.getBoletasByRutEstudiante(rutParts).subscribe({
       next: (dataBoleta: BoletaDetalle[]) => {
         this.boleta = dataBoleta.map(boleta => ({
           ...boleta,
           fecha_vencimiento: this.formatFechaVencimiento(boleta.fecha_vencimiento)
         }));
+        console.log(this.boleta);
+        
       },
       error: (error) => {
         console.error('Error fetching boletas:', error);
@@ -46,6 +48,8 @@ export class ModalBoletasEstudianteComponent implements OnInit {
     });
     this.estudianteService.getInfoEstudiante(rutParts).subscribe({
       next: (data) => {
+        console.log(data);
+        
         this.nameEstudent = data.primer_nombre_alumno + ' ' + data.primer_apellido_alumno;
       },
       error: (error) => {

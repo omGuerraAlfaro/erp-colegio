@@ -15,7 +15,7 @@ import { ColaboradoresComponent } from './components/rrhh/colaboradores/colabora
 import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remuneraciones.component';
 import { MatriculasComponent } from './components/matriculas/matriculas.component';
 import { InscripcionMatriculaComponent } from './components/inscripcion-matricula/inscripcion-matricula.component';
-import { CrearBoletasApoderadoComponent } from './components/crear-boletas-apoderado/crear-boletas-apoderado.component';
+import { BoletasMantenedorComponent } from './components/boletas-mantenedor/boletas-mantenedor.component';
 
 
 const routes: Routes = [
@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, /* canActivate: [AuthGuard] */ },
 
   { path: 'boletas', component: BoletasComponent },
-  { path: 'crear-boletas-apoderado', component: CrearBoletasApoderadoComponent },
+  { path: 'boletas-mantenedor', component: BoletasMantenedorComponent },
   { path: 'cursos', component: CursosComponent },
 
   { path: 'colaboradores', component: ColaboradoresComponent},

@@ -1,0 +1,92 @@
+.apoderado-card {
+    margin-bottom: 20px;
+}
+
+.apoderado-info p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.estudiantes-title {
+    margin: 20px 0 10px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.estudiantes-table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+mat-header-cell,
+mat-cell {
+    padding: 8px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.table-container {
+    max-height: 800px;
+    /* Ajusta la altura máxima según lo que necesites */
+    overflow-y: auto;
+    /* Habilita el scroll vertical si el contenido excede la altura */
+}
+
+.boton {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-top: 2px;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #ff4757;
+    border: none;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.boton:hover {
+    background-color: #ff6b81;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.boton:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.boton2 {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-top: 2px;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #007bff; /* Azul */
+    border: none;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.boton2:hover {
+    background-color: #339af0; /* Azul más claro */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.boton2:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}

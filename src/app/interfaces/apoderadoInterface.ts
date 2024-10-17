@@ -88,3 +88,20 @@ export interface ApoderadoPostRequest {
     cursoId: number; 
   }
   
+  export interface IApoderado2 {
+    id: number;
+    primer_nombre_apoderado: string;
+    segundo_nombre_apoderado: string;
+    primer_apellido_apoderado: string;
+    segundo_apellido_apoderado: string;
+    rut: string;
+    dv: string;
+    telefono_apoderado: string;
+    correo_apoderado: string;
+    estado_civil: string;
+    nacionalidad: string | null;
+    profesion_oficio: string;
+    parentesco_apoderado: string;
+    direccion: string;
+    comuna: string;
+  }

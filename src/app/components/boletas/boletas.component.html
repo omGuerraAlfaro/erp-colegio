@@ -152,7 +152,7 @@
 
       <!-- Detalle Boletas por Alumno Tab -->
       <mat-tab label="Detalle Boletas por Alumno">
-        <div *ngFor="let cursoId of getCursoKeys()" class="curso-container">
+        <div *ngFor="let cursoId of getCursoKeys()" class="w-100">
           <h3 class="mt-5"><b>Curso: {{ dataSourceCursos[cursoId].nombreCurso }}</b></h3>
 
           <table mat-table [dataSource]="dataSourceCursos[cursoId].dataSource2" class="full-width">
@@ -163,8 +163,8 @@
             </ng-container>
 
             <ng-container matColumnDef="nombre_estudiante">
-              <th mat-header-cell *matHeaderCellDef> Nombre Estudiante </th>
-              <td mat-cell *matCellDef="let element"> {{element.nombre_estudiante}} </td>
+              <th mat-header-cell *matHeaderCellDef style="width: 500px;"> Nombre Estudiante </th>
+              <td mat-cell *matCellDef="let element" style="width: 500px;"> {{element.nombre_estudiante}} </td>
             </ng-container>
 
             <ng-container matColumnDef="rut_estudiante2">
@@ -181,9 +181,9 @@
             </ng-container>
 
             <ng-container matColumnDef="acciones">
-              <th mat-header-cell *matHeaderCellDef> Acciones </th>
-              <td mat-cell *matCellDef="let element">
-                <button class="btn btn-primary" (click)="openModalDetalleBoleta(element)">Ver Boletas</button>
+              <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                <button class="boton" (click)="openModalDetalleBoleta(element)">Ver Boletas</button>
               </td>
             </ng-container>
 

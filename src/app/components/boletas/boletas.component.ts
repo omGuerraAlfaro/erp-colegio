@@ -240,7 +240,7 @@ export class BoletasComponent implements OnInit {
   }
 
   openModalDetalleBoleta(element: BoletaDetalle): void {
-    const dialogRef = this.dialog.open(ModalDetalleBoletaComponent, {
+    const dialogRef = this.dialog.open( ModalBoletasEstudianteComponent, {
       width: '60%',
       height: 'auto',
       data: element
@@ -257,7 +257,7 @@ export class BoletasComponent implements OnInit {
   }
 
   openModalBoletasEstudiante(element: BoletaDetalle): void {
-    const dialogRef = this.dialog.open(ModalBoletasEstudianteComponent, {
+    const dialogRef = this.dialog.open(ModalDetalleBoletaComponent, {
       width: '60%',
       height: 'auto',
       data: element

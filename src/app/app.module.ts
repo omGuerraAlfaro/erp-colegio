@@ -48,12 +48,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatDividerModule} from '@angular/material/divider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { BoletasMantenedorComponent } from './components/boletas-mantenedor/boletas-mantenedor.component';
+import { ModalBoletasMantenedorComponent } from './components/modal-boletas-mantenedor/modal-boletas-mantenedor.component';
 
 
 
@@ -77,7 +80,9 @@ import { MatMenuModule } from '@angular/material/menu';
     ModalIngresoAnotacionComponent,
     ModalVerAnotacionComponent,
     InscripcionMatriculaComponent,
-    ModalTerminarFormularioMatriculaComponent
+    ModalTerminarFormularioMatriculaComponent,
+    BoletasMantenedorComponent,
+    ModalBoletasMantenedorComponent
   ],
   imports: [
     BrowserModule,
@@ -106,6 +111,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatListModule,
     MatToolbarModule,
     MatMenuModule,
+    MatCardModule
     
 
   ],

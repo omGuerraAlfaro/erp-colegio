@@ -7,7 +7,7 @@
 }
 
 .posicion {
-    margin-left: 20px; 
+    margin-left: 2px; 
     min-height: 100vh;
     min-width: 100vh;
 }
@@ -126,8 +126,28 @@
     margin-top: 20px;
 }
 
-.posicion {
-    margin-left: 20px; 
-    min-height: 100vh;
-    min-width: 100vh;
+.boton {
+    display: inline-block;
+    padding: 2px 2px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #ff4757;
+    border: none;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.boton:hover {
+    background-color: #ff6b81;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.boton:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
