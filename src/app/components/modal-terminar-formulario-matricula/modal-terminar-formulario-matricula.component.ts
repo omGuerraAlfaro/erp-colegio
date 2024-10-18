@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IInscripcionMatricula } from 'src/app/interfaces/inscripcionInterface';
 import { InscripcionMatriculaService } from 'src/app/services/InscripcionMatriculaService/InscripcionMatriculaService';
 import { rutValidator } from './validator';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-terminar-formulario-matricula',
@@ -226,16 +227,66 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       console.log("Datos a enviar:", formattedData);
 
       this.inscripcionService.postNuevaMatricula(formattedData).subscribe({
-        next: () => {
+        next: (data: any) => {
           console.log("INSERT OK");
+          console.log(data);
 
+          // Extraer datos
+          const usuario = data.usuario[0];
+          const apoderado = data.apoderado;
+          const apoderadoSuplente = data.apoderadoSuplente;
+          const estudiantes = data.estudiantes.map((est: any) => `${est.primer_nombre_alumno} ${est.segundo_nombre_alumno} ${est.primer_apellido_alumno} ${est.segundo_apellido_alumno}`).join(', ');
+
+          // Levantar SweetAlert
+          Swal.fire({
+            title: 'Matrícula Creada',
+            html: `
+              <div style="text-align: left;">
+                <p><strong style="color: #2c3e50;">Usuario Creado:</strong> ${usuario.username}</p>
+                <p><strong style="color: #2c3e50;">Correo Electrónico:</strong> ${usuario.correo_electronico}</p>
+                <p><strong style="color: #2c3e50;">Apoderado:</strong> 
+                  ${apoderado.primer_nombre_apoderado} ${apoderado.segundo_nombre_apoderado} 
+                  ${apoderado.primer_apellido_apoderado} ${apoderado.segundo_apellido_apoderado}
+                </p>
+                <p><strong style="color: #2c3e50;">Apoderado Suplente:</strong> 
+                  ${apoderadoSuplente.primer_nombre_apoderado_suplente} 
+                  ${apoderadoSuplente.segundo_nombre_apoderado_suplente} 
+                  ${apoderadoSuplente.primer_apellido_apoderado_suplente} 
+                  ${apoderadoSuplente.segundo_apellido_apoderado_suplente}
+                </p>
+                <p><strong style="color: #2c3e50;">Estudiantes Matriculados:</strong></p>
+                <ul style="list-style-type: disc; padding-left: 20px;">
+                  ${data.estudiantes.map((est:any) => `
+                    <li>${est.primer_nombre_alumno} ${est.segundo_nombre_alumno} 
+                        ${est.primer_apellido_alumno} ${est.segundo_apellido_alumno}
+                    </li>
+                  `).join('')}
+                </ul>
+                <p style="color: #16a085;">Se ha enviado un correo con los detalles de acceso a la aplicación del colegio Andes Chile.</p>
+              </div>
+            `,
+
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          });
+
+          // Emitir el evento y cerrar el modal
           this.inscripcionOK.emit();
           this.closeModal();
         },
         error: (error) => {
           console.error(error);
+
+          // Mostrar alerta en caso de error
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un error al procesar la matrícula. Por favor, inténtalo nuevamente.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
         }
       });
+
     }
   }
 
