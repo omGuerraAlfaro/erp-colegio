@@ -29,12 +29,39 @@ export class BoletasMantenedorComponent implements OnInit {
         console.log(apoderados);
         this.dataSource = new MatTableDataSource(apoderados);
         this.dataSource.paginator = this.paginator; // Conectar el paginador con la tabla
+        this.dataSource.filterPredicate = this.createFilter();
+
       },
       error: (error) => {
         console.error('Error fetching apoderados:', error);
       }
     });
   }
+
+  searchTerms = {
+    text: ''
+  };
+  createFilter(): (data: IApoderado2, filter: string) => boolean {
+    let filterFunction = function (data: IApoderado2, filter: string): boolean {
+      const searchTerm = filter.toLowerCase();
+      // Check if the RUT matches the search term
+      return data.rut.toLowerCase().includes(searchTerm);
+    };
+    return filterFunction;
+  }
+  
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchTerms.text = filterValue.trim().toLowerCase(); // You may not need `searchTerms.text` if only filtering by RUT
+    this.updateFilter();
+  }
+  
+  updateFilter(): void {
+    // Use only the text search term for filtering by RUT
+    const filter = this.searchTerms.text; // Simplified filter value
+    this.dataSource.filter = filter;
+  }
+  
 
   verBoletas(rut: string): void {
     console.log("VER BOLETAS " + rut);

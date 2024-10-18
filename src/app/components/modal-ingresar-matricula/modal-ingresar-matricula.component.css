@@ -18,10 +18,9 @@
     height: 100%;
 }
 
-/* Estilos para el título del modal */
 .modal-title {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
 }
 
@@ -48,7 +47,34 @@
     justify-content: center;
 }
 
-.dv-input {
-    width: 50px;
+.back {
+    background-color: rgb(223, 223, 223);
+    margin: 5px;
+    padding: 30px;
+}
+
+.boton {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #ff4757;
+    border: none;
+    border-radius: 50px;
     text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.boton:hover {
+    background-color: #ff6b81;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.boton:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }

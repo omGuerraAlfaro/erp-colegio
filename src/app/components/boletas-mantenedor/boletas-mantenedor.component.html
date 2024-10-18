@@ -1,83 +1,98 @@
 <div class="color posicion border">
-    <div class="container-fluid mt-3">
-      <h1><b>Mantenedor Boletas</b></h1>
-      <hr>
-      
-      <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" class="mat-table w-100">
-      
-          <!-- ID Column -->
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef> ID </th>
-            <td mat-cell *matCellDef="let apoderado"> {{ apoderado.id }} </td>
-          </ng-container>
-      
-          <!-- Nombre Completo Column -->
-          <ng-container matColumnDef="nombreCompleto">
-            <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
-            <td mat-cell *matCellDef="let apoderado">
-              {{ apoderado.primer_nombre_apoderado }} {{ apoderado.segundo_nombre_apoderado }} 
-              {{ apoderado.primer_apellido_apoderado }} {{ apoderado.segundo_apellido_apoderado }}
-            </td>
-          </ng-container>
-      
-          <!-- RUT Column -->
-          <ng-container matColumnDef="rut">
-            <th mat-header-cell *matHeaderCellDef> RUT </th>
-            <td mat-cell *matCellDef="let apoderado"> {{ apoderado.rut }}-{{ apoderado.dv }} </td>
-          </ng-container>
-      
-          <!-- Teléfono Column -->
-          <ng-container matColumnDef="telefono">
-            <th mat-header-cell *matHeaderCellDef> Teléfono </th>
-            <td mat-cell *matCellDef="let apoderado"> {{ apoderado.telefono_apoderado }} </td>
-          </ng-container>
-      
-          <!-- Correo Column -->
-          <ng-container matColumnDef="correo">
-            <th mat-header-cell *matHeaderCellDef> Correo </th>
-            <td mat-cell *matCellDef="let apoderado"> {{ apoderado.correo_apoderado }} </td>
-          </ng-container>
-      
-          <!-- Estado Civil Column -->
-          <ng-container matColumnDef="estado_civil">
-            <th mat-header-cell *matHeaderCellDef> Estado Civil </th>
-            <td mat-cell *matCellDef="let apoderado"> {{ apoderado.estado_civil }} </td>
-          </ng-container>
-      
-          <!-- Profesión Column -->
-          <ng-container matColumnDef="profesion">
-            <th mat-header-cell *matHeaderCellDef> Profesión </th>
-            <td mat-cell *matCellDef="let apoderado"> {{ apoderado.profesion_oficio }} </td>
-          </ng-container>
-      
-          <!-- Dirección Column -->
-          <ng-container matColumnDef="direccion">
-            <th mat-header-cell *matHeaderCellDef> Dirección </th>
-            <td mat-cell *matCellDef="let apoderado"> {{ apoderado.direccion }} </td>
-          </ng-container>
-      
-          <!-- Comuna Column -->
-          <ng-container matColumnDef="comuna">
-            <th mat-header-cell *matHeaderCellDef> Comuna </th>
-            <td mat-cell *matCellDef="let apoderado"> {{ apoderado.comuna }} </td>
-          </ng-container>
+  <div class="container-fluid mt-3">
+    <h1><b>Mantenedor Boletas</b></h1>
+    <hr>
 
-          <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Acciones </th>
-            <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;">
-              <button mat-button class="boton" (click)="verBoletas(element.rut)">Ver</button>
-            </td>
-          </ng-container>
-      
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    <div class="row">
+      <div class="col-3">
+        <div class="search-bar">
+          <mat-form-field appearance="fill" style="width: 100%;">
+            <mat-label>BUSQUEDA POR: <b>RUT APODERADO</b></mat-label>
+            <input style="font-size: x-large;" matInput (keyup)="applyFilter($event)" placeholder="Buscar...">
+          </mat-form-field>
+        </div>
       </div>
-      
-  
-  
+      <div class="col-9">
+
+      </div>
     </div>
+
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-table w-100">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let apoderado"> {{ apoderado.id }} </td>
+        </ng-container>
+
+        <!-- Nombre Completo Column -->
+        <ng-container matColumnDef="nombreCompleto">
+          <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+          <td mat-cell *matCellDef="let apoderado">
+            {{ apoderado.primer_nombre_apoderado }} {{ apoderado.segundo_nombre_apoderado }}
+            {{ apoderado.primer_apellido_apoderado }} {{ apoderado.segundo_apellido_apoderado }}
+          </td>
+        </ng-container>
+
+        <!-- RUT Column -->
+        <ng-container matColumnDef="rut">
+          <th mat-header-cell *matHeaderCellDef> RUT </th>
+          <td mat-cell *matCellDef="let apoderado"> {{ apoderado.rut }}-{{ apoderado.dv }} </td>
+        </ng-container>
+
+        <!-- Teléfono Column -->
+        <ng-container matColumnDef="telefono">
+          <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+          <td mat-cell *matCellDef="let apoderado"> {{ apoderado.telefono_apoderado }} </td>
+        </ng-container>
+
+        <!-- Correo Column -->
+        <ng-container matColumnDef="correo">
+          <th mat-header-cell *matHeaderCellDef> Correo </th>
+          <td mat-cell *matCellDef="let apoderado"> {{ apoderado.correo_apoderado }} </td>
+        </ng-container>
+
+        <!-- Estado Civil Column -->
+        <ng-container matColumnDef="estado_civil">
+          <th mat-header-cell *matHeaderCellDef> Estado Civil </th>
+          <td mat-cell *matCellDef="let apoderado"> {{ apoderado.estado_civil }} </td>
+        </ng-container>
+
+        <!-- Profesión Column -->
+        <ng-container matColumnDef="profesion">
+          <th mat-header-cell *matHeaderCellDef> Profesión </th>
+          <td mat-cell *matCellDef="let apoderado"> {{ apoderado.profesion_oficio }} </td>
+        </ng-container>
+
+        <!-- Dirección Column -->
+        <ng-container matColumnDef="direccion">
+          <th mat-header-cell *matHeaderCellDef> Dirección </th>
+          <td mat-cell *matCellDef="let apoderado"> {{ apoderado.direccion }} </td>
+        </ng-container>
+
+        <!-- Comuna Column -->
+        <ng-container matColumnDef="comuna">
+          <th mat-header-cell *matHeaderCellDef> Comuna </th>
+          <td mat-cell *matCellDef="let apoderado"> {{ apoderado.comuna }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="text-center" style="width: 100px!important;"> Acciones </th>
+          <td mat-cell *matCellDef="let element" class="text-center" style="width: 100px!important;">
+            <button mat-button class="boton" (click)="verBoletas(element.rut)">Ver</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[15, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
+
+  </div>
 </div>

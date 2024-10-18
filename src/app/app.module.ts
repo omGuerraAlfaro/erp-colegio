@@ -36,7 +36,6 @@ import { ModalDetalleBoletaComponent } from './components/modal-detalle-boleta/m
 import { MatDialogModule } from '@angular/material/dialog';
 import { ModalBoletasEstudianteComponent } from './components/modal-boletas-estudiante/modal-boletas-estudiante.component';
 import { MatriculasComponent } from './components/matriculas/matriculas.component';
-import { ModalNuevaMatriculaComponent } from './components/modal-nueva-matricula/modal-nueva-matricula.component';
 import { ModalIngresoAnotacionComponent } from './components/modal-ingreso-anotacion/modal-ingreso-anotacion.component';
 import { ModalVerAnotacionComponent } from './components/modal-ver-anotacion/modal-ver-anotacion.component';
 import { InscripcionMatriculaComponent } from './components/inscripcion-matricula/inscripcion-matricula.component';
@@ -61,6 +60,7 @@ import { BoletasMantenedorComponent } from './components/boletas-mantenedor/bole
 import { ModalBoletasMantenedorComponent } from './components/modal-boletas-mantenedor/modal-boletas-mantenedor.component';
 import { EditBoletaComponent } from './components/modal-boletas-mantenedor/edit-boleta/edit-boleta.component';
 import { CreateBoletaComponent } from './components/modal-boletas-mantenedor/create-boleta/create-boleta.component';
+import { ModalIngresarMatriculaComponent } from './components/modal-ingresar-matricula/modal-ingresar-matricula.component';
 
 
 
@@ -80,7 +80,6 @@ import { CreateBoletaComponent } from './components/modal-boletas-mantenedor/cre
     ModalDetalleBoletaComponent,
     ModalBoletasEstudianteComponent,
     MatriculasComponent,
-    ModalNuevaMatriculaComponent,
     ModalIngresoAnotacionComponent,
     ModalVerAnotacionComponent,
     InscripcionMatriculaComponent,
@@ -88,7 +87,8 @@ import { CreateBoletaComponent } from './components/modal-boletas-mantenedor/cre
     BoletasMantenedorComponent,
     ModalBoletasMantenedorComponent,
     EditBoletaComponent,
-    CreateBoletaComponent
+    CreateBoletaComponent,
+    ModalIngresarMatriculaComponent
   ],
   imports: [
     BrowserModule,

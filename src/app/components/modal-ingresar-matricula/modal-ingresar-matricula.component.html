@@ -1,25 +1,9 @@
 <h1 mat-dialog-title class="modal-title">
-    <b>Inscripción</b>
+    <b>Ingreso Nueva Matricula</b>
     <button class="close-button" (click)="closeModal()">X</button>
 </h1>
 <mat-dialog-content class="modal-content">
     <form [formGroup]="inscripcionForm" class="bg-light p-5" (ngSubmit)="onSubmit()">
-        <div style="display: flex; justify-content: flex-start;">
-            <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; min-width: 150px; max-width: 250px;">
-                <mat-label><b>ID Inscripción</b></mat-label>
-                <input style="font-size: x-large; color:rgb(16, 95, 170);" matInput formControlName="id_inscripcion" />
-            </mat-form-field>
-
-            <mat-form-field appearance="fill" class="mx-2">
-                <mat-label><b>Fecha de Inscripción</b></mat-label>
-                <input matInput [matDatepicker]="picker2" formControlName="fecha_matricula_inscripcion"
-                    style="font-size: x-large; color:rgb(16, 95, 170);" />
-                <mat-datepicker-toggle disabled="true" matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker disabled="true" #picker2></mat-datepicker>
-            </mat-form-field>
-        </div>
-        <br>
-        
         <div formArrayName="estudiantes" class="back rounded">
             <div *ngFor="let estudiante of estudiantes.controls; let i=index" [formGroupName]="i">
                 <hr *ngIf="i > 0">

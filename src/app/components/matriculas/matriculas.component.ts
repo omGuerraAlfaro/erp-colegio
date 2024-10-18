@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EstudianteService } from 'src/app/services/estudianteService/estudiante.service';
-import { ModalNuevaMatriculaComponent } from '../modal-nueva-matricula/modal-nueva-matricula.component';
+import { ModalIngresarMatriculaComponent } from '../modal-ingresar-matricula/modal-ingresar-matricula.component';
 
 @Component({
   selector: 'app-matriculas',
@@ -24,18 +24,18 @@ export class MatriculasComponent implements OnInit {
   }
 
   openModalNuevaMatricula() {
-    const dialogRef = this.dialog.open(ModalNuevaMatriculaComponent, {
-      width: '80%',
+    const dialogRef = this.dialog.open(ModalIngresarMatriculaComponent, {
+      width: '70%',
       height: 'auto',
-      data: null // por parametro
     });
 
-    dialogRef.componentInstance.matriculaAgregada.subscribe(() => {
-      // handle matricula agregada event
+    dialogRef.componentInstance.inscripcionOK.subscribe(() => {
+      // this.loadInscripciones();
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('El modal se cerró');
     });
+
   }
 }

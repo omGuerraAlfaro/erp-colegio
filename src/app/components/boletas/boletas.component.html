@@ -145,14 +145,14 @@
         </mat-table>
 
 
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[11, 22, 30]" showFirstLastButtons></mat-paginator>
 
 
       </mat-tab>
 
       <!-- Detalle Boletas por Alumno Tab -->
       <mat-tab label="Detalle Boletas por Alumno">
-        <div *ngFor="let cursoId of getCursoKeys()" class="w-100">
+        <div *ngFor="let cursoId of getCursoKeys()" class="w-100 mb-5">
           <h3 class="mt-5"><b>Curso: {{ dataSourceCursos[cursoId].nombreCurso }}</b></h3>
 
           <table mat-table [dataSource]="dataSourceCursos[cursoId].dataSource2" class="full-width">
