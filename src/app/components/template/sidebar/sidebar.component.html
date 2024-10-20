@@ -41,7 +41,16 @@
             </mat-list-item>
             <mat-nav-list *ngIf="isFinanzasOpen && rolUser === 'administrador'">
                 <a mat-list-item routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a>
-                <a mat-list-item routerLink="/boletas-mantenedor" routerLinkActive="active">Mantenedor Boletas</a>
+            </mat-nav-list>
+
+            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleAdm()">
+                <i class="fas fa-cog icon"></i>
+                <span>Administración</span>
+                <mat-icon class="expand-icon" aria-hidden="true">{{ isAdministacionOpen ? 'expand_less' : 'expand_more'
+                    }}</mat-icon>
+            </mat-list-item>
+            <mat-nav-list *ngIf="isAdministacionOpen && rolUser === 'administrador'">
+                <a mat-list-item routerLink="/boletas-mantenedor" routerLinkActive="active">Mantenedor Boletas y Contrato</a>
             </mat-nav-list>
 
             <mat-list-item *ngIf="isProfesorOpen && rolUser === 'profesor'" class="mb-1" mat-button

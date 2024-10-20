@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { EditBoletaComponent } from './edit-boleta/edit-boleta.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CreateBoletaComponent } from './create-boleta/create-boleta.component';
+import { PdfgeneratorService } from 'src/app/services/pdfGeneratorService/pdfgenerator.service';
 
 @Component({
   selector: 'app-modal-boletas-mantenedor',
@@ -24,6 +25,7 @@ export class ModalBoletasMantenedorComponent implements OnInit {
   constructor(
     private boletaService: BoletasService,
     private apoderadoService: InfoApoderadoService,
+    private pdfService: PdfgeneratorService,
     private dialogRef: MatDialogRef<ModalBoletasMantenedorComponent>,
     private bottomSheet: MatBottomSheet,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -126,4 +128,96 @@ export class ModalBoletasMantenedorComponent implements OnInit {
       }
     });
   }
+
+  
+  async generarContrato() {
+    const datosMatriculaPrueba = {
+      estudiantes: [
+        {
+          primer_nombre_alumno: "Lucía",
+          segundo_nombre_alumno: "Isabel",
+          primer_apellido_alumno: "Fernández",
+          segundo_apellido_alumno: "González",
+          rut: "98765432",
+          dv: "K",
+          genero_alumno: "Femenino",
+          fecha_nacimiento_alumno: "2011-04-10",
+          cursoId: "2",
+          vive_con: "Madre",
+          edad_marzo: "8",
+          nacionalidad_alumno: "Chilena",
+          enfermedad_cronica_alumno: "Ninguna",
+          alergia_alimento_alumno: "Ninguna",
+          alergia_medicamento_alumno: "Ninguna",
+          prevision_alumno: "Isapre",
+          consultorio_clinica_alumno: "Clínica Santa María",
+          es_pae: false,
+          eximir_religion: false,
+          autorizacion_fotografias: true,
+          apto_educacion_fisica: true,
+          observaciones_alumno: "Excelente desempeño en clase."
+        }
+      ],
+      primer_nombre_apoderado: "José",
+      segundo_nombre_apoderado: "Luis",
+      primer_apellido_apoderado: "Martínez",
+      segundo_apellido_apoderado: "Pérez",
+      rut: "12345678",
+      dv: "5",
+      telefono_apoderado: "987654321",
+      correo_apoderado: "jose.martinez@example.com",
+      parentesco_apoderado: "Padre",
+      estado_civil: "Divorciado",
+      profesion_oficio: "Abogado",
+      direccion: "Avenida Siempre Viva 742",
+      comuna: "Santiago",
+      primer_nombre_apoderado_suplente: "Ana",
+      segundo_nombre_apoderado_suplente: "Beatriz",
+      primer_apellido_apoderado_suplente: "López",
+      segundo_apellido_apoderado_suplente: "González",
+      rut_apoderado_suplente: "87654321",
+      dv_apoderado_suplente: "9",
+      telefono_apoderado_suplente: "912345678",
+      correo_apoderado_suplente: "ana.lopez@example.com",
+      parentesco_apoderado_suplente: "Madre",
+      estado_civil_suplente: "Casada",
+      profesion_oficio_suplente: "Enfermera",
+      direccion_suplente: "Calle Falsa 123",
+      comuna_suplente: "Santiago",
+      valor_matricula: 50000,
+      valor_mensualidad: 30000
+    };
+    console.log("aaaaaaaa");
+  
+    try {
+      // Suscribirse al observable para obtener el Blob
+      this.pdfService.getPdfContrato(datosMatriculaPrueba).subscribe({
+        next: (blob) => {
+          // Crear una URL para el blob
+          const url = window.URL.createObjectURL(blob);
+          
+          // Abrir el PDF en una nueva pestaña
+          window.open(url);
+  
+          // O, si prefieres, puedes crear un enlace de descarga
+          // const link = document.createElement('a');
+          // link.href = url;
+          // link.download = 'contrato.pdf'; // nombre del archivo
+          // document.body.appendChild(link);
+          // link.click();
+          // document.body.removeChild(link);
+  
+          // // Liberar la URL del blob
+          // window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+          console.error('Error al generar el PDF', error);
+        }
+      });
+    } catch (error) {
+      console.error('Error al generar el PDF', error);
+    }
+  }
+  
+  
 }

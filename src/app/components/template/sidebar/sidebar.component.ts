@@ -18,6 +18,7 @@ export class SidebarComponent implements OnInit {
   before: any;
   isMatriculasOpen = false;
   isFinanzasOpen = false;
+  isAdministacionOpen = false;
   isProfesorOpen = false;
   constructor(
     private auth: AuthService,
@@ -103,6 +104,10 @@ export class SidebarComponent implements OnInit {
 
   toggleFinanzas() {
     this.isFinanzasOpen = !this.isFinanzasOpen;
+  }
+  
+  toggleAdm() {
+    this.isAdministacionOpen = !this.isAdministacionOpen;
   }
 
   toggleProfesor() {

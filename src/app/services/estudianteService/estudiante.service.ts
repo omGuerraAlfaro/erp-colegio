@@ -17,6 +17,13 @@ export class EstudianteService {
 
   constructor(private http: HttpClient) { }
 
+  getAllEstudiantes(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/estudiante`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getInfoEstudiante(rut: any): Observable<IEstudiante> {
     return this.http.get<IEstudiante>(`${environment.api}/estudiante/rut/${rut}`, this.httpOptions)
       .pipe(
@@ -60,7 +67,7 @@ export class EstudianteService {
 
   private currentStudentSubject = new BehaviorSubject<IEstudiante | null>(null);
   currentStudent$ = this.currentStudentSubject.asObservable();
-  
+
   setCurrentStudent(student: IEstudiante) {
     this.currentStudentSubject.next(student);
   }

@@ -1,29 +1,93 @@
 <div class="color posicion border">
-    <div class="container">
-      <div class="cabecera">
-        <h1><b>Libro de Matrículas</b></h1>
-      </div>
-      <hr>
-  
-      <div class="row">
-        <div class="col-4 text-center">
-          <h2>
-            <b>Total Matrículados: </b>{{ totalEstudiantes }}
-          </h2>
-        </div>
-        <div class="col-4 text-center">
-          <h2>
-            <b>Total Hombres: </b>{{ totalHombres }}
-          </h2>
-        </div>
-        <div class="col-4 text-center">
-          <h2>
-            <b>Total Mujeres: </b>{{ totalMujeres }}
-          </h2>
-        </div>
-      </div>
-  
-      <button mat-button class="btn btn-warning" (click)="openModalNuevaMatricula()">Nueva Matrícula</button>
+  <div class="container">
+    <div class="cabecera">
+      <h1><b>Libro de Matrículas</b></h1>
     </div>
+    <hr>
+
+    <div class="row">
+      <div class="col-4 text-center">
+        <h2>
+          <b>Total Matrículados: </b>{{ totalEstudiantes }}
+        </h2>
+      </div>
+      <div class="col-4 text-center">
+        <h2>
+          <b>Total Hombres: </b>{{ totalHombres }}
+        </h2>
+      </div>
+      <div class="col-4 text-center">
+        <h2>
+          <b>Total Mujeres: </b>{{ totalMujeres }}
+        </h2>
+      </div>
+    </div>
+
+    <button mat-button class="btn btn-warning" (click)="openModalNuevaMatricula()">Nueva Matrícula</button>
+
+    <table mat-table [dataSource]="estudiantes" class="mat-elevation-z8 mt-4 w-100">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> ID </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.id}} </td>
+      </ng-container>
+
+      <!-- Nombre Completo Column -->
+      <ng-container matColumnDef="nombreCompleto">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Nombre Completo </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.primer_nombre_alumno}}
+          {{element.segundo_nombre_alumno}} {{element.primer_apellido_alumno}} {{element.segundo_apellido_alumno}} </td>
+      </ng-container>
+
+      <!-- Fecha de Nacimiento Column -->
+      <ng-container matColumnDef="fecha_nacimiento">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Fecha de Nacimiento </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.fecha_nacimiento_alumno | date:
+          'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- RUT Column -->
+      <ng-container matColumnDef="rut">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> RUT </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.rut}} </td>
+      </ng-container>
+
+      <!-- Género Column -->
+      <ng-container matColumnDef="genero">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Género </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.genero_alumno}} </td>
+      </ng-container>
+
+      <!-- Vive con Column -->
+      <ng-container matColumnDef="vive_con">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Vive Con </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.vive_con}} </td>
+      </ng-container>
+
+      <!-- Previsión Column -->
+      <ng-container matColumnDef="prevision">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Previsión </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.prevision_alumno}} </td>
+      </ng-container>
+
+      <!-- Autorización de Fotografías Column -->
+      <ng-container matColumnDef="autorizacion_fotografias">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Autorización de Fotografías </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.autorizacion_fotografias ? 'Sí' : 'No'}}
+        </td>
+      </ng-container>
+
+      <!-- Curso Column -->
+      <ng-container matColumnDef="curso">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Curso </th>
+        <td mat-cell *matCellDef="let element" class="text-center"> {{element.curso[0]?.nombre}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Paginador -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
   </div>
-  
+</div>
