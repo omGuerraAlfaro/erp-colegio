@@ -12,7 +12,7 @@ export class PdfgeneratorService {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
-    responseType: 'blob' as 'json' // Asegurar que la respuesta sea tratada como Blob (PDF)
+    responseType: 'blob' as 'json'
   };
 
   constructor(private http: HttpClient) { }

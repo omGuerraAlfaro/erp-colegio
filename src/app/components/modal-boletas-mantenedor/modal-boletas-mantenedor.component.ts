@@ -134,7 +134,7 @@ export class ModalBoletasMantenedorComponent implements OnInit {
     const datosMatriculaPrueba = {
       estudiantes: [
         {
-          primer_nombre_alumno: "Lucía",
+          primer_nombre_alumno: "Alfredo",
           segundo_nombre_alumno: "Isabel",
           primer_apellido_alumno: "Fernández",
           segundo_apellido_alumno: "González",
@@ -185,7 +185,7 @@ export class ModalBoletasMantenedorComponent implements OnInit {
       direccion_suplente: "Calle Falsa 123",
       comuna_suplente: "Santiago",
       valor_matricula: 50000,
-      valor_mensualidad: 30000
+      valor_mensualidad: "225.000"
     };
     console.log("aaaaaaaa");
   
@@ -200,15 +200,15 @@ export class ModalBoletasMantenedorComponent implements OnInit {
           window.open(url);
   
           // O, si prefieres, puedes crear un enlace de descarga
-          // const link = document.createElement('a');
-          // link.href = url;
-          // link.download = 'contrato.pdf'; // nombre del archivo
-          // document.body.appendChild(link);
-          // link.click();
-          // document.body.removeChild(link);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'contrato.pdf'; // nombre del archivo
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
   
-          // // Liberar la URL del blob
-          // window.URL.revokeObjectURL(url);
+          // Liberar la URL del blob
+          window.URL.revokeObjectURL(url);
         },
         error: (error) => {
           console.error('Error al generar el PDF', error);
