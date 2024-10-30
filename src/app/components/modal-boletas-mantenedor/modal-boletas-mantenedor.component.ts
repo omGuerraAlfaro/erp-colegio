@@ -24,6 +24,8 @@ export class ModalBoletasMantenedorComponent implements OnInit {
   loading: boolean = false;
   // Variable global para almacenar datos del apoderado
   apoderado: any;
+  boletas: any;
+  boletasAlumno: BoletaDetalle[] = [];
 
   constructor(
     private boletaService: BoletasService,
@@ -41,6 +43,7 @@ export class ModalBoletasMantenedorComponent implements OnInit {
       next: (boletas: BoletaDetalle[]) => {
         console.log(boletas);
         this.groupBoletasByEstudiante(boletas);
+        this.boletas = boletas;
       },
       error: (error) => {
         console.error('Error fetching boletas:', error);
@@ -59,16 +62,29 @@ export class ModalBoletasMantenedorComponent implements OnInit {
   }
 
   groupBoletasByEstudiante(boletas: BoletaDetalle[]) {
+    // Group the boletas by estudiante_id
     this.dataSource = boletas.reduce((acc, boleta) => {
       if (!acc[boleta.estudiante_id]) {
         acc[boleta.estudiante_id] = new MatTableDataSource();
+        acc[boleta.estudiante_id].data = []; // Initialize the data array
       }
-      if (!acc[boleta.estudiante_id].data) {
-        acc[boleta.estudiante_id].data = [];
-      }
-      acc[boleta.estudiante_id].data.push(boleta);
+      acc[boleta.estudiante_id].data.push(boleta); // Add the current boleta
       return acc;
     }, {} as { [key: number]: MatTableDataSource<BoletaDetalle> });
+
+    // Clear the boletasAlumno array before populating
+    this.boletasAlumno = []; // Resetting to ensure fresh data
+
+    // Populate boletasAlumno with the required positions
+    Object.values(this.dataSource).forEach((dataSource: MatTableDataSource<BoletaDetalle>) => {
+      // Store the second boleta from position 1 (second element)
+      if (dataSource.data[1]) {
+        this.boletasAlumno.push(dataSource.data[1]); // Second boleta (index 1)
+      }
+    });
+
+    // Optionally, you can return boletasAlumno or handle it as needed
+    return this.boletasAlumno; // Return or handle the boletasAlumno array as needed
   }
 
   closeModal(): void {
@@ -139,11 +155,19 @@ export class ModalBoletasMantenedorComponent implements OnInit {
     this.loading = true; // Mostrar spinner
     const { estudiantes } = this.apoderado;
     const apoderadoScope = this.apoderado;
+    console.log(this.boletas);
+    console.log(this.boletasAlumno);
 
+    const obtenerTotalBoletaPorRut = (rutEstudiante: string): string | null => {
+      const boleta = this.boletasAlumno.find((b:any) => b.rut_estudiante === rutEstudiante);
+      return boleta ? boleta.total : null;
+    };
     try {
       const contratosPorEstudiante = await Promise.all(estudiantes.map(async (estudiante: any) => {
         const cursoId = await this.getCursoId(estudiante.rut).toPromise(); // Asegúrate que esto devuelve una promesa
         const apoderadoSuplente = await this.getInfoApoderadoSuplenteByRutEstudiante(estudiante.rut).toPromise(); // Igual aquí
+        const totalMensualidad = obtenerTotalBoletaPorRut(estudiante.rut);
+
 
         return {
           estudiantes: [{
@@ -197,7 +221,7 @@ export class ModalBoletasMantenedorComponent implements OnInit {
           direccion_suplente: apoderadoSuplente.direccion_suplente,
           comuna_suplente: apoderadoSuplente.comuna_suplente,
           valor_matricula: 50200,
-          valor_mensualidad: 432000
+          valor_mensualidad: totalMensualidad
         };
       }));
 
@@ -225,7 +249,7 @@ export class ModalBoletasMantenedorComponent implements OnInit {
           });
         });
       }
-      
+
 
     } catch (error) {
       console.error('Error al generar el contrato', error);
