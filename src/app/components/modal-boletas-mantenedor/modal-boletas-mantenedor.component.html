@@ -6,130 +6,132 @@
     </button>
 </h1>
 
-<div class="table-container">
-    <mat-card class="apoderado-card">
-        <div class="row">
-            <div class="col-8">
-                <mat-card-content>
-                    <div class="apoderado-info">
-                        <p><strong>RUT: </strong> {{ apoderado?.rut }}-{{ apoderado?.dv }}</p>
-                        <p><strong>Teléfono: </strong> {{ apoderado?.telefono_apoderado }}</p>
-                        <p><strong>Email: </strong> {{ apoderado?.correo_apoderado }}</p>
-                        <p><strong>Dirección: </strong> {{ apoderado?.direccion }}, {{ apoderado?.comuna }}</p>
-                    </div>
-                </mat-card-content>
+<!-- Wrapper for content -->
+<div class="content-wrapper" style="position: relative; height: 100%;">
+    <!-- Loading spinner -->
+    <div *ngIf="loading" class="loading-spinner">
+        <mat-spinner></mat-spinner> <!-- Spinner from Angular Material -->
+    </div>
+
+    <div class="table-container">
+        <mat-card class="apoderado-card">
+            <div class="row">
+                <div class="col-8">
+                    <mat-card-content>
+                        <div class="apoderado-info">
+                            <p><strong>RUT: </strong> {{ apoderado?.rut }}-{{ apoderado?.dv }}</p>
+                            <p><strong>Teléfono: </strong> {{ apoderado?.telefono_apoderado }}</p>
+                            <p><strong>Email: </strong> {{ apoderado?.correo_apoderado }}</p>
+                            <p><strong>Dirección: </strong> {{ apoderado?.direccion }}, {{ apoderado?.comuna }}</p>
+                        </div>
+                    </mat-card-content>
+                </div>
+                <div class="col-4 d-flex align-items-center justify-content-center">
+                    <button class="boton3" (click)="crearBoletas()">Crear Boletas</button>
+                    <button class="boton3 mx-3" (click)="generarContrato()">Generar Contrato</button>
+                </div>
             </div>
-            <div class="col-4 d-flex align-items-center justify-content-center">
-                <button class="boton3" (click)="crearBoletas()">Crear Boletas</button>
-                <button class="boton3 mx-3" (click)="generarContrato()">Generar Contrato</button>
+        </mat-card>
+
+        <mat-divider></mat-divider>
+
+        <mat-card class="mb-1">
+            <h3 class="estudiantes-title">Estudiantes Asociados</h3>
+            <table mat-table [dataSource]="apoderado?.estudiantes" class="mat-elevation-z8 estudiantes-table">
+                <!-- Define columns as before -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                    <td mat-cell *matCellDef="let estudiante"> {{ estudiante.id }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+                    <td mat-cell *matCellDef="let estudiante">
+                        {{ estudiante.primer_nombre_alumno }} {{ estudiante.segundo_nombre_alumno }} {{
+                        estudiante.primer_apellido_alumno }} {{ estudiante.segundo_apellido_alumno }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rut">
+                    <th mat-header-cell *matHeaderCellDef> RUT </th>
+                    <td mat-cell *matCellDef="let estudiante"> {{ estudiante.rut }}-{{ estudiante.dv }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha_nacimiento">
+                    <th mat-header-cell *matHeaderCellDef> Fecha de Nacimiento </th>
+                    <td mat-cell *matCellDef="let estudiante"> {{ estudiante.fecha_nacimiento_alumno | date }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="observaciones">
+                    <th mat-header-cell *matHeaderCellDef> Observaciones </th>
+                    <td mat-cell *matCellDef="let estudiante"> {{ estudiante.observaciones_alumno }} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['id', 'nombre', 'rut', 'fecha_nacimiento', 'observaciones']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['id', 'nombre', 'rut', 'fecha_nacimiento', 'observaciones'];"></tr>
+            </table>
+        </mat-card>
+
+        <!-- Iterate through each student in apoderado -->
+        <mat-card *ngFor="let estudiante of apoderado?.estudiantes">
+            <h3 class="estudiantes-title">Boletas para {{ estudiante.primer_nombre_alumno }} {{
+                estudiante.primer_apellido_alumno }}</h3>
+
+            <!-- Mostrar mensaje si no hay boletas para el estudiante -->
+            <div *ngIf="!dataSource[estudiante.id] || dataSource[estudiante.id].data.length === 0" class="empty-message">
+                El estudiante no tiene boletas asignadas
             </div>
-        </div>
-    </mat-card>
 
-    <mat-divider></mat-divider>
+            <!-- Mostrar tabla si hay boletas para el estudiante -->
+            <table *ngIf="dataSource[estudiante.id] && dataSource[estudiante.id].data.length > 0" mat-table
+                [dataSource]="dataSource[estudiante.id]" class="mat-elevation-z8 estudiantes-table">
 
-    <mat-card class="mb-1">
-        <h3 class="estudiantes-title">Estudiantes Asociados</h3>
-        <table mat-table [dataSource]="apoderado?.estudiantes" class="mat-elevation-z8 estudiantes-table">
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                    <td mat-cell *matCellDef="let boleta"> {{ boleta.id }} </td>
+                </ng-container>
 
-            <!-- ID Column -->
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef> ID </th>
-                <td mat-cell *matCellDef="let estudiante"> {{ estudiante.id }} </td>
-            </ng-container>
+                <ng-container matColumnDef="detalle">
+                    <th mat-header-cell *matHeaderCellDef> Detalle </th>
+                    <td mat-cell *matCellDef="let boleta"> {{ boleta.detalle }} </td>
+                </ng-container>
 
-            <!-- Nombre Column -->
-            <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
-                <td mat-cell *matCellDef="let estudiante">
-                    {{ estudiante.primer_nombre_alumno }} {{ estudiante.segundo_nombre_alumno }} {{
-                    estudiante.primer_apellido_alumno }} {{ estudiante.segundo_apellido_alumno }}
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="fecha_vencimiento">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> Fecha Vencimiento </th>
+                    <td mat-cell *matCellDef="let boleta" class="text-center"> {{ boleta.fecha_vencimiento | date:
+                        'dd/MM/yyyy' }} </td>
+                </ng-container>
 
-            <!-- Rut Column -->
-            <ng-container matColumnDef="rut">
-                <th mat-header-cell *matHeaderCellDef> RUT </th>
-                <td mat-cell *matCellDef="let estudiante"> {{ estudiante.rut }}-{{ estudiante.dv }} </td>
-            </ng-container>
+                <ng-container matColumnDef="total">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> Total </th>
+                    <td mat-cell *matCellDef="let boleta" class="text-center"> {{ boleta.total |
+                        currency:'CLP':'symbol':'1.0-0' }} </td>
+                </ng-container>
 
-            <!-- Fecha de Nacimiento Column -->
-            <ng-container matColumnDef="fecha_nacimiento">
-                <th mat-header-cell *matHeaderCellDef> Fecha de Nacimiento </th>
-                <td mat-cell *matCellDef="let estudiante"> {{ estudiante.fecha_nacimiento_alumno | date }} </td>
-            </ng-container>
+                <ng-container matColumnDef="estado_boleta">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> Estado Boleta </th>
+                    <td mat-cell *matCellDef="let boleta" class="text-center">
+                        <ng-container *ngIf="boleta.estado_boleta; else elseBlock">
+                            <i class="fas fa-check text-success"></i> <!-- Icono de check -->
+                        </ng-container>
+                        <ng-template #elseBlock>
+                            <i class="fas fa-times text-danger"></i> <!-- Icono de X -->
+                        </ng-template>
+                    </td>
+                </ng-container>
 
-            <!-- Observaciones Column -->
-            <ng-container matColumnDef="observaciones">
-                <th mat-header-cell *matHeaderCellDef> Observaciones </th>
-                <td mat-cell *matCellDef="let estudiante"> {{ estudiante.observaciones_alumno }} </td>
-            </ng-container>
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
+                    <td mat-cell *matCellDef="let element" class="text-center">
+                        <button class="boton2 mx-3" (click)="editarBoleta(element)">Editar</button>
+                        <button class="boton" (click)="editarBoleta2(element)">Cambiar Estado</button>
+                    </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="['id', 'nombre', 'rut', 'fecha_nacimiento', 'observaciones']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['id', 'nombre', 'rut', 'fecha_nacimiento', 'observaciones'];">
-            </tr>
-        </table>
-    </mat-card>
-
-    <!-- Iterate through each student in apoderado -->
-    <mat-card *ngFor="let estudiante of apoderado?.estudiantes">
-        <h3 class="estudiantes-title">Boletas para {{ estudiante.primer_nombre_alumno }} {{
-            estudiante.primer_apellido_alumno }}</h3>
-
-        <!-- Mostrar mensaje si no hay boletas para el estudiante -->
-        <div *ngIf="!dataSource[estudiante.id] || dataSource[estudiante.id].data.length === 0" class="empty-message">
-            El estudiante no tiene boletas asignadas
-        </div>
-
-        <!-- Mostrar tabla si hay boletas para el estudiante -->
-        <table *ngIf="dataSource[estudiante.id] && dataSource[estudiante.id].data.length > 0" mat-table
-            [dataSource]="dataSource[estudiante.id]" class="mat-elevation-z8 estudiantes-table">
-
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef> ID </th>
-                <td mat-cell *matCellDef="let boleta"> {{ boleta.id }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="detalle">
-                <th mat-header-cell *matHeaderCellDef> Detalle </th>
-                <td mat-cell *matCellDef="let boleta"> {{ boleta.detalle }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="fecha_vencimiento">
-                <th mat-header-cell *matHeaderCellDef class="text-center"> Fecha Vencimiento </th>
-                <td mat-cell *matCellDef="let boleta" class="text-center"> {{ boleta.fecha_vencimiento | date:
-                    'dd/MM/yyyy' }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="total">
-                <th mat-header-cell *matHeaderCellDef class="text-center"> Total </th>
-                <td mat-cell *matCellDef="let boleta" class="text-center"> {{ boleta.total |
-                    currency:'CLP':'symbol':'1.0-0' }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="estado_boleta">
-                <th mat-header-cell *matHeaderCellDef class="text-center"> Estado Boleta </th>
-                <td mat-cell *matCellDef="let boleta" class="text-center">
-                    <ng-container *ngIf="boleta.estado_boleta; else elseBlock">
-                        <i class="fas fa-check text-success"></i> <!-- Icono de check -->
-                    </ng-container>
-                    <ng-template #elseBlock>
-                        <i class="fas fa-times text-danger"></i> <!-- Icono de X -->
-                    </ng-template>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="acciones">
-                <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
-                <td mat-cell *matCellDef="let element" class="text-center">
-                    <button class="boton2 mx-3" (click)="editarBoleta(element)">Editar</button>
-                    <button class="boton" (click)="editarBoleta2(element)">Cambiar Estado</button>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </mat-card>
-    <mat-divider></mat-divider>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </mat-card>
+        <mat-divider></mat-divider>
+    </div>
 </div>
