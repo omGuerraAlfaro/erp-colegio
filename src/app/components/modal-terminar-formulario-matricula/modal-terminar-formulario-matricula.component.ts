@@ -70,7 +70,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       fecha_nacimiento_alumno: ['', [Validators.required]],
       cursoId: ['', [Validators.required]],
       vive_con: ['', [Validators.required]],
-      nacionalidad_alumno: ['', [Validators.required]],
+      nacionalidad: ['', [Validators.required]],
       enfermedad_cronica_alumno: [''],
       alergico_alimento_alumno: [''],
       alergico_medicamentos_alumno: [''],
@@ -220,6 +220,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
         ...restApoderado,
         rut: rutApoderado.rut,
         dv: rutApoderado.dv,
+        rut_apoderado_suplente: rutApoderadoSuplente.rut,
         dv_apoderado_suplente: rutApoderadoSuplente.dv,
         estudiantes: estudiantesFormateados
       };

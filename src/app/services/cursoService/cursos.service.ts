@@ -36,6 +36,13 @@ export class CursosService {
         catchError(this.handleError)
       );
   }
+  
+  getCursoByRutEstudiante(rut: string): Observable<any> {
+    return this.http.get<any>(`${environment.api}/curso/curso-estudiante/` + rut, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;

@@ -31,6 +31,13 @@ export class InfoApoderadoService {
       );
   }
 
+  getInfoApoderadoSuplenteByRutEstudiante(rut: any): Observable<any> {
+    return this.http.get<any>(`${environment.api}/apoderado/apoderado-suplente/${rut}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getInfoBoletasApoderado(rut: any): Observable<any> {
     return this.http.get<any>(`${environment.api}/boleta/${rut}`, this.httpOptions)
       .pipe(
