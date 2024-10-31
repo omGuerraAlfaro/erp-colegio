@@ -23,7 +23,11 @@
       </div>
     </div>
 
-    <button mat-button class="btn btn-warning" (click)="openModalNuevaMatricula()">Nueva Matrícula</button>
+    <hr>
+    <div class="d-flex justify-content-center">
+      <button mat-button class="boton" (click)="openModalNuevaMatricula()">Nueva Matrícula</button>
+    </div>
+    <hr>
 
     <table mat-table [dataSource]="estudiantes" class="mat-elevation-z8 mt-4 w-100">
       <!-- ID Column -->

@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
   vars = [
     {
       name: 'Gestionar Matriculas',
-      link: 'apoderados',
+      link: 'matriculas',
       icon: 'fas fa-id-badge',
       color: 'bg-green',
       roles: ['administrador']
