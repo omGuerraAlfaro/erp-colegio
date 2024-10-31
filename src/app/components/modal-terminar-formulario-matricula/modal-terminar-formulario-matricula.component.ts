@@ -158,7 +158,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
             fecha_nacimiento_alumno: data.fecha_nacimiento_alumno,
             cursoId: data.curso_alumno,
             vive_con: '',
-            nacionalidad_alumno: '',
+            nacionalidad: '',
             prevision_alumno: '',
             consultorio_clinica_alumno: '',
           }]
