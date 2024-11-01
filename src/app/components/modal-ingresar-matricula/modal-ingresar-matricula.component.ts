@@ -134,7 +134,7 @@ export class ModalIngresarMatriculaComponent implements OnInit {
       const rutApoderado = this.splitRut(formValue.rut_apoderado);
       const rutApoderadoSuplente = this.splitRut(formValue.rut_apoderado_suplente);
 
-      const { rut_apoderado, ...restApoderado } = formValue;
+      const { rut_apoderado, rut_apoderado_suplente, ...restApoderado } = formValue;
 
       this.inscripcionForm.patchValue({
         rut: rutApoderado.rut,
@@ -160,6 +160,7 @@ export class ModalIngresarMatriculaComponent implements OnInit {
         ...restApoderado,
         rut: rutApoderado.rut,
         dv: rutApoderado.dv,
+        rut_apoderado_suplente: rutApoderadoSuplente.rut,
         dv_apoderado_suplente: rutApoderadoSuplente.dv,
         estudiantes: estudiantesFormateados
       };

@@ -220,6 +220,10 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
 
       const formattedData = {
         ...restApoderado,
+        rut: rutApoderado.rut,
+        dv: rutApoderado.dv,
+        rut_apoderado_suplente: rutApoderadoSuplente.rut,
+        dv_apoderado_suplente: rutApoderadoSuplente.dv,
         estudiantes: estudiantesFormateados
       };
 
