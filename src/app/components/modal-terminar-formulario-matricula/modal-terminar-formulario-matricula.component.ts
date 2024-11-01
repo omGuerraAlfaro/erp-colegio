@@ -72,8 +72,8 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       vive_con: ['', [Validators.required]],
       nacionalidad: ['', [Validators.required]],
       enfermedad_cronica_alumno: [''],
-      alergico_alimento_alumno: [''],
-      alergico_medicamentos_alumno: [''],
+      alergia_alimento_alumno: [''],
+      alergia_medicamento_alumno: [''],
       prevision_alumno: ['', [Validators.required]],
       consultorio_clinica_alumno: ['', [Validators.required]],
       es_pae: [false],
@@ -192,12 +192,14 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       const rutApoderadoSuplente = this.splitRut(formValue.rut_apoderado_suplente);
 
       // Desestructurar el rut_apoderado para excluirlo y mantener el resto
-      const { rut_apoderado, ...restApoderado } = formValue;
+      const { rut_apoderado, rut_apoderado_suplente, ...restApoderado } = formValue;
 
       // Actualizar el formulario con el RUT del apoderado como `rut`
       this.inscripcionForm.patchValue({
-        rut: rutApoderado.rut, // Asignar RUT del apoderado a `rut`
+        rut: rutApoderado.rut,
+        dv: rutApoderado.dv,
         rut_apoderado_suplente: rutApoderadoSuplente.rut,
+        dv_apoderado_suplente: rutApoderadoSuplente.dv,
       });
 
       // Recorrer el array de estudiantes y formatear cada RUT, eliminando `rut_alumno`
@@ -218,10 +220,6 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
 
       const formattedData = {
         ...restApoderado,
-        rut: rutApoderado.rut,
-        dv: rutApoderado.dv,
-        rut_apoderado_suplente: rutApoderadoSuplente.rut,
-        dv_apoderado_suplente: rutApoderadoSuplente.dv,
         estudiantes: estudiantesFormateados
       };
 
