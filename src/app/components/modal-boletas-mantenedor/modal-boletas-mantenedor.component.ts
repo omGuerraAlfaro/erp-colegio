@@ -238,13 +238,13 @@ export class ModalBoletasMantenedorComponent implements OnInit {
               document.body.appendChild(link);
               link.click();
               document.body.removeChild(link);
-              window.URL.revokeObjectURL(url);
-              window.open(url, '_blank');
+        
+              setTimeout(() => window.open(url, '_blank'), 100);
               resolve();
             },
             error: (error) => {
               console.error('Error al generar el PDF', error);
-              reject(error); // Rechazamos la promesa en caso de error
+              reject(error);
             }
           });
         });
