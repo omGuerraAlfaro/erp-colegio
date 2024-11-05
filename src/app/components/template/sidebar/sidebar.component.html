@@ -43,7 +43,7 @@
                 <a mat-list-item routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a>
             </mat-nav-list>
 
-            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleAdm()"> //    || 'subAdministrador'
+            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleAdm()">
                 <i class="fas fa-cog icon"></i>
                 <span>Administración</span>
                 <mat-icon class="expand-icon" aria-hidden="true">{{ isAdministacionOpen ? 'expand_less' : 'expand_more'
