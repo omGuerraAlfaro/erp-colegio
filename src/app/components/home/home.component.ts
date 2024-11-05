@@ -96,6 +96,17 @@ export class HomeComponent implements OnInit {
           console.error("Error al obtener datos:", error);
         }
       });
+    } else if (this.rolUser === 'subAdministrador') {
+      this.admService.getInfoSubAdm(this.rutUser).subscribe({
+        next: (data) => {
+          console.log(data);
+          
+          this.nameUser = `${data.primer_nombre} ${data.primer_apellido} ${data.segundo_apellido}`;
+        },
+        error: (error) => {
+          console.error("Error al obtener datos:", error);
+        }
+      });
     } else if (this.rolUser === 'profesor') {
       this.admService.getInfoProfesor(this.rutUser).subscribe({
         next: (data) => {

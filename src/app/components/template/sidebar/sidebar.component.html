@@ -21,13 +21,13 @@
                 </a>
             </mat-nav-list>
 
-            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleMatriculas()">
+            <mat-list-item *ngIf="rolUser === 'administrador' || rolUser === 'subAdministrador'"  class="mb-1" mat-button (click)="toggleMatriculas()">
                 <i class="fas fa-book icon"></i>
                 <span>Matrículas</span>
                 <mat-icon class="expand-icon" aria-hidden="true">{{ isMatriculasOpen ? 'expand_less' : 'expand_more'
                     }}</mat-icon>
             </mat-list-item>
-            <mat-nav-list *ngIf="isMatriculasOpen && rolUser === 'administrador'">
+            <mat-nav-list *ngIf="(isMatriculasOpen && rolUser === 'administrador') || (isMatriculasOpen && rolUser === 'subAdministrador')">
                 <a mat-list-item routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a>
                 <a mat-list-item routerLink="/bandeja-inscripciones" routerLinkActive="active">Bandeja de
                     Inscripciones</a>
@@ -39,17 +39,17 @@
                 <mat-icon class="expand-icon" aria-hidden="true">{{ isFinanzasOpen ? 'expand_less' : 'expand_more'
                     }}</mat-icon>
             </mat-list-item>
-            <mat-nav-list *ngIf="isFinanzasOpen && rolUser === 'administrador'">
+            <mat-nav-list *ngIf="(isFinanzasOpen && rolUser === 'administrador' )|| (isFinanzasOpen && rolUser === 'subAdministrador' )">
                 <a mat-list-item routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a>
             </mat-nav-list>
 
-            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleAdm()">
+            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleAdm()"> //    || 'subAdministrador'
                 <i class="fas fa-cog icon"></i>
                 <span>Administración</span>
                 <mat-icon class="expand-icon" aria-hidden="true">{{ isAdministacionOpen ? 'expand_less' : 'expand_more'
                     }}</mat-icon>
             </mat-list-item>
-            <mat-nav-list *ngIf="isAdministacionOpen && rolUser === 'administrador'">
+            <mat-nav-list *ngIf="(isAdministacionOpen && rolUser === 'administrador') || (isAdministacionOpen && rolUser === 'subAdministrador')">
                 <a mat-list-item routerLink="/boletas-mantenedor" routerLinkActive="active">Mantenedor Boletas y Contrato</a>
             </mat-nav-list>
 

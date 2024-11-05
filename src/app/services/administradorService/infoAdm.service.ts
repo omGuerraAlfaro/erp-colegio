@@ -23,6 +23,13 @@ export class InfoAdmService {
         catchError(this.handleError)
       );
   }
+
+  getInfoSubAdm(rut: any): Observable<any> {
+    return this.http.get<any>(`${environment.api}/administrador/sub/${rut}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
   getInfoProfesor(rut: any): Observable<any> {
     return this.http.get<any>(`${environment.api}/profesor/rut/${rut}`, this.httpOptions)
       .pipe(

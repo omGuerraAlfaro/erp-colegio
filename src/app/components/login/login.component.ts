@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
         if (loginData && loginData.token) {
           this.userData = loginData.user;
           console.log(this.userData);
-          const { username, correo_electronico, rut, administrador_id, apoderado_id, profesor_id, genero} = this.userData;
+          const { username, correo_electronico, rut, administrador_id, subAdministrador_id, apoderado_id, profesor_id, genero} = this.userData;
 
           if (apoderado_id != null) {
             this.showAlert('Acceso Denegado', 'No tienes permisos para ingresar.', 'error');
@@ -45,9 +45,12 @@ export class LoginComponent implements OnInit {
           }
 
           var rol = '';
-          if (administrador_id != null || profesor_id != null) {
+          if (administrador_id != null || profesor_id != null || subAdministrador_id != null) {
             if (administrador_id) {
               rol = 'administrador'
+            }
+            if (subAdministrador_id) {
+              rol = 'subAdministrador'
             }
             if (profesor_id) {
               rol = 'profesor'
