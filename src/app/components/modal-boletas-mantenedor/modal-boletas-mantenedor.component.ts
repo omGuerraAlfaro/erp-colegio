@@ -227,28 +227,7 @@ export class ModalBoletasMantenedorComponent implements OnInit {
 
       console.log("datosMatriculaPrueba", contratosPorEstudiante);
 
-      for (const contrato of contratosPorEstudiante) {
-        await new Promise<void>((resolve, reject) => {
-          this.pdfService.getPdfContrato(contrato).subscribe({
-            next: (blob) => {
-              const url = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              link.download = `contrato_${contrato.estudiantes[0].rut}-${contrato.estudiantes[0].dv}.pdf`;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-        
-              setTimeout(() => window.open(url, '_blank'), 100);
-              resolve();
-            },
-            error: (error) => {
-              console.error('Error al generar el PDF', error);
-              reject(error);
-            }
-          });
-        });
-      }
+      1
 
 
     } catch (error) {
