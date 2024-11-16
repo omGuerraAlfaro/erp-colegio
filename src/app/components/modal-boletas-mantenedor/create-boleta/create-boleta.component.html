@@ -1,27 +1,34 @@
 <mat-nav-list>
     <h3 style="text-align: center; font-size: 24px; margin-bottom: 16px;">Crear Boleta</h3>
+  
+    <!-- Overlay para el spinner -->
+    <div *ngIf="isCreatingAllBoletas" class="spinner-overlay">
+      <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    </div>
+  
     <form [formGroup]="boletaForm" (ngSubmit)="crearBoletas()">
-        <mat-form-field appearance="fill" class="full-width">
-            <mat-label>Valor Matrícula</mat-label>
-            <input matInput formControlName="valor_matricula" type="number" class="input-large"/>
-            <mat-error
-                *ngIf="boletaForm.get('valor_matricula')?.invalid && (boletaForm.get('valor_matricula')?.dirty || boletaForm.get('valor_matricula')?.touched)">
-                Debe ingresar un valor válido.
-            </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="full-width">
-            <mat-label>Valor Mensualidad</mat-label>
-            <input matInput formControlName="valor_mensualidad" type="number" class="input-large" />
-            <mat-error
-                *ngIf="boletaForm.get('valor_mensualidad')?.invalid && (boletaForm.get('valor_mensualidad')?.dirty || boletaForm.get('valor_mensualidad')?.touched)">
-                Debe ingresar un valor válido.
-            </mat-error>
-        </mat-form-field>
-
-        <div style="display: flex; justify-content: space-between; margin-top: 16px; margin-bottom: 15px;">
-            <button type="submit" mat-raised-button color="primary">Guardar</button>
-            <button type="button" mat-button (click)="cerrar()">Cancelar</button>
-        </div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Valor Matrícula</mat-label>
+        <input matInput formControlName="valor_matricula" type="number" class="input-large"/>
+        <mat-error
+          *ngIf="boletaForm.get('valor_matricula')?.invalid && (boletaForm.get('valor_matricula')?.dirty || boletaForm.get('valor_matricula')?.touched)">
+          Debe ingresar un valor válido.
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Valor Mensualidad</mat-label>
+        <input matInput formControlName="valor_mensualidad" type="number" class="input-large" />
+        <mat-error
+          *ngIf="boletaForm.get('valor_mensualidad')?.invalid && (boletaForm.get('valor_mensualidad')?.dirty || boletaForm.get('valor_mensualidad')?.touched)">
+          Debe ingresar un valor válido.
+        </mat-error>
+      </mat-form-field>
+  
+      <div style="display: flex; justify-content: space-between; margin-top: 16px; margin-bottom: 15px;">
+        <button type="submit" mat-raised-button color="primary" [disabled]="isCreatingAllBoletas">Guardar</button>
+        <button type="button" mat-button (click)="cerrar()" [disabled]="isCreatingAllBoletas">Cancelar</button>
+      </div>
     </form>
-</mat-nav-list>
+  </mat-nav-list>
+  

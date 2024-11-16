@@ -3,6 +3,11 @@
     <button class="close-button" (click)="closeModal()">X</button>
 </h1>
 <mat-dialog-content class="modal-content">
+
+    <div *ngIf="isLoading" class="spinner-overlay">
+        <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    </div>
+
     <form [formGroup]="inscripcionForm" class="bg-light p-5" (ngSubmit)="onSubmit()">
         <div formArrayName="estudiantes" class="back rounded">
             <div *ngFor="let estudiante of estudiantes.controls; let i=index" [formGroupName]="i">

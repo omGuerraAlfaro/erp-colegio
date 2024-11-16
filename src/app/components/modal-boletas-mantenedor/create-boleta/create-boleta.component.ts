@@ -34,10 +34,8 @@ export class CreateBoletaComponent implements OnInit {
   crearBoletas() {
     if (this.boletaForm.valid) {
       const crearBoletaDto = this.boletaForm.value;
-
-      console.log(crearBoletaDto);
-      
-      // Llamar al servicio para crear todas las boletas
+      this.isCreatingAllBoletas = true; // Activa el spinner
+  
       this.boletaService.createAnnualBoletasForApoderadoByRut(crearBoletaDto.rut, crearBoletaDto).subscribe({
         next: (response: any) => {
           Swal.fire({
@@ -46,18 +44,19 @@ export class CreateBoletaComponent implements OnInit {
             icon: 'success',
             confirmButtonText: 'Ok'
           });
+          this.isCreatingAllBoletas = false; // Desactiva el spinner
           this.bottomSheetRef.dismiss(true);
           this.cerrar();
         },
         error: (error: any) => {
           console.log(error);
-          
           Swal.fire({
             title: 'Error',
             text: 'No se pudieron crear las boletas. Inténtalo de nuevo.',
             icon: 'error',
             confirmButtonText: 'Ok'
           });
+          this.isCreatingAllBoletas = false; // Desactiva el spinner
         }
       });
     } else {
@@ -69,6 +68,7 @@ export class CreateBoletaComponent implements OnInit {
       });
     }
   }
+  
 
   cerrar() {
     this.bottomSheetRef.dismiss();

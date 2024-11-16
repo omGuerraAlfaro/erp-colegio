@@ -16,6 +16,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
   @Output() inscripcionOK = new EventEmitter<void>();
   inscripcionForm: FormGroup;
   inscripcionData: IInscripcionMatricula | null = null;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -180,6 +181,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
     console.log("No VALIDO");
 
     if (this.inscripcionForm.valid) {
+      this.isLoading = true; 
       console.log("VALIDO");
 
       // Obtener los valores del formulario al inicio
@@ -231,6 +233,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
 
       this.inscripcionService.postNuevaMatricula(formattedData).subscribe({
         next: (data: any) => {
+          this.isLoading = false;
           console.log("INSERT OK");
           console.log(data);
 
@@ -278,6 +281,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
           this.closeModal();
         },
         error: (error) => {
+          this.isLoading = false;
           console.error(error);
 
           // Mostrar alerta en caso de error

@@ -3,6 +3,11 @@
     <button class="close-button" (click)="closeModal()">X</button>
 </h1>
 <mat-dialog-content class="modal-content">
+
+    <div *ngIf="isLoading" class="spinner-overlay">
+        <mat-progress-spinner mode="indeterminate" diameter="50" color="primary"></mat-progress-spinner>
+    </div>
+
     <form [formGroup]="inscripcionForm" class="bg-light p-5" (ngSubmit)="onSubmit()">
         <div style="display: flex; justify-content: flex-start;">
             <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; min-width: 150px; max-width: 250px;">
@@ -19,7 +24,7 @@
             </mat-form-field>
         </div>
         <br>
-        
+
         <div formArrayName="estudiantes" class="back rounded">
             <div *ngFor="let estudiante of estudiantes.controls; let i=index" [formGroupName]="i">
                 <hr *ngIf="i > 0">
@@ -29,7 +34,8 @@
                         <small style="color: red;"><b>Nota: </b>Revisar y editar datos del Alumno</small>
                     </div>
                     <div>
-                        <button type="button" class="boton" (click)="removeEstudiante(i)" *ngIf="i > 0">Eliminar</button>
+                        <button type="button" class="boton" (click)="removeEstudiante(i)"
+                            *ngIf="i > 0">Eliminar</button>
                     </div>
                 </div>
                 <mat-form-field appearance="fill" class="mx-2">
@@ -72,7 +78,8 @@
                         <mat-option value="Masculino">Masculino</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field appearance="fill" class="mx-2" style="flex: 1 1 auto; min-width: 150px; max-width: 200px;">
+                <mat-form-field appearance="fill" class="mx-2"
+                    style="flex: 1 1 auto; min-width: 150px; max-width: 200px;">
                     <mat-label>Fecha de Nacimiento</mat-label>
                     <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento_alumno" />
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -93,12 +100,13 @@
                         <mat-option value="10">Octavo Básico</mat-option>
                     </mat-select>
                 </mat-form-field>
-    
+
                 <hr>
-    
+
                 <div class="d-flex flex-column mb-3 mx-2">
                     <h3><b>Datos Adicionales del Alumno</b></h3>
-                    <small style="color: red;"><b>Nota: </b>Ingresar datos adicionales del Alumno, ten en cuenta que las opciones "enfermedad crónica y alergias" no son obligatorias.</small>
+                    <small style="color: red;"><b>Nota: </b>Ingresar datos adicionales del Alumno, ten en cuenta que las
+                        opciones "enfermedad crónica y alergias" no son obligatorias.</small>
                 </div>
                 <mat-form-field appearance="fill" class="mx-2">
                     <mat-label>Enfermedad Crónica</mat-label>
@@ -151,17 +159,19 @@
                 </mat-form-field>
                 <div class="d-flex flex-column mb-3 mx-2">
                     <h4><b>Confirmaciones</b></h4>
-                    <small class="mb-2" style="color: red;"><b>Nota: </b>Ten en cuenta que las siguientes opciones no son
+                    <small class="mb-2" style="color: red;"><b>Nota: </b>Ten en cuenta que las siguientes opciones no
+                        son
                         obligatorias: validar con apoderado.</small>
                     <mat-checkbox formControlName="es_pae">Es Pae</mat-checkbox>
                     <!-- <mat-checkbox formControlName="eximir_religion">Eximir de Religión</mat-checkbox> -->
-                    <mat-checkbox formControlName="autorizacion_fotografias">Autorización para Fotografías</mat-checkbox>
+                    <mat-checkbox formControlName="autorizacion_fotografias">Autorización para
+                        Fotografías</mat-checkbox>
                     <mat-checkbox formControlName="apto_educacion_fisica">Apto para Educación Física</mat-checkbox>
                     <mat-form-field appearance="fill" class="mt-3">
                         <mat-label>Observaciones</mat-label>
                         <textarea matInput formControlName="observaciones_alumno" rows="5"></textarea>
                     </mat-form-field>
-    
+
                 </div>
             </div>
             <button type="button" class="boton" (click)="addEstudiante()">Agregar Otro Alumno</button>

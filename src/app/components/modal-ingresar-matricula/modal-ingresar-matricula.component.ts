@@ -15,6 +15,7 @@ export class ModalIngresarMatriculaComponent implements OnInit {
   @Output() inscripcionOK = new EventEmitter<void>();
   inscripcionForm: FormGroup;
   inscripcionData: IInscripcionMatricula | null = null;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -76,7 +77,7 @@ export class ModalIngresarMatriculaComponent implements OnInit {
       prevision_alumno: ['', [Validators.required]],
       consultorio_clinica_alumno: ['', [Validators.required]],
       es_pae: [false],
-      // eximir_religion: [false],
+      eximir_religion: [false],
       autorizacion_fotografias: [false],
       apto_educacion_fisica: [false],
       observaciones_alumno: [''],
@@ -126,6 +127,7 @@ export class ModalIngresarMatriculaComponent implements OnInit {
     console.log("No VALIDO");
 
     if (this.inscripcionForm.valid) {
+      this.isLoading = true; 
       console.log("VALIDO");
       const formValue = this.inscripcionForm.value;
 
@@ -169,6 +171,7 @@ export class ModalIngresarMatriculaComponent implements OnInit {
 
       this.inscripcionService.postNuevaMatricula(formattedData).subscribe({
         next: (data: any) => {
+          this.isLoading = false;
           console.log("INSERT OK");
           console.log(data);
 
@@ -216,6 +219,7 @@ export class ModalIngresarMatriculaComponent implements OnInit {
           this.closeModal();
         },
         error: (error) => {
+          this.isLoading = false;
           console.error(error);
 
           // Mostrar alerta en caso de error
