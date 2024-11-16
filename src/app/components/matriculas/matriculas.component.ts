@@ -43,7 +43,7 @@ export class MatriculasComponent implements OnInit {
   loadEstudiantes(): void {
     this.estudianteService.getAllEstudiantes().subscribe(data => {
       console.log(data);
-      
+
       this.estudiantes = data;  // Asignar la lista de estudiantes
 
     }, error => {
@@ -62,7 +62,9 @@ export class MatriculasComponent implements OnInit {
   openModalNuevaMatricula() {
     const dialogRef = this.dialog.open(ModalIngresarMatriculaComponent, {
       width: '70%',
-      height: 'auto',
+      height: '100%',
+      maxHeight: '100%',
+      panelClass: 'full-height-dialog',
     });
 
     dialogRef.componentInstance.inscripcionOK.subscribe(() => {
