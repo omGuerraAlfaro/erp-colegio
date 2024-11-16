@@ -47,7 +47,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
       segundo_apellido_apoderado_suplente: ['', [Validators.required, Validators.minLength(3)]],
       rut_apoderado_suplente: ['', [Validators.required, rutValidator()]],
       telefono_apoderado_suplente: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
-      correo_apoderado_suplente: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
+      correo_apoderado_suplente: ['', [Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       parentesco_apoderado_suplente: ['', [Validators.required]],
       estado_civil_suplente: ['', [Validators.required]],
       profesion_oficio_suplente: ['', [Validators.required]],
