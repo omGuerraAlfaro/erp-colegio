@@ -105,16 +105,27 @@ export class ModalBoletasMantenedorComponent implements OnInit {
   }
 
   crearBoletas() {
+    if (this.boletas && this.boletas.length > 0) {
+      Swal.fire({
+        title: 'Boletas existentes',
+        html: 'Ya existen boletas creadas para este apoderado. <br> Por favor, edite las boletas existentes.',
+        icon: 'info',
+        confirmButtonText: 'Ok'
+      });
+      return;
+    }
+
     const bottomSheetRef = this.bottomSheet.open(CreateBoletaComponent, {
       data: this.apoderado
     });
-
+  
     bottomSheetRef.afterDismissed().subscribe((result) => {
       if (result) {
         this.ngOnInit();
       }
     });
   }
+  
 
   editarBoleta2(element: any): void {
     // Cambia el estado de la boleta
