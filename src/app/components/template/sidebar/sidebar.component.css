@@ -1,51 +1,102 @@
-.sidenav {
-    background-color: #f8f9fa;
-    /* Light background for the sidebar */
-    height: 100%;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-    /* Scrollable if content overflows */
-}
-
-.link-dark {
-    color: #343a40;
-}
-
-.link-dark:hover {
-    background-color: #e9ecef;
-}
-
 .logo {
     width: 30%;
     height: auto;
     display: block;
     margin: 0 auto;
 }
-
-.icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-}
-
-
-.dropdown {
-    cursor: pointer;
-}
-
-.active {
-    background-color: #e9ecef;
-    color: #328dc3;
+/* Sección primaria */
+.primary-section {
+    background-color: #e6f7ff; /* Fondo azul claro */
+    color: #003366; /* Texto azul oscuro */
     font-weight: bold;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.3s;
 }
 
-.perfil{
-    margin-left: 25px;
+.primary-section:hover {
+    background-color: #cce7ff; /* Cambiar a un tono más claro de azul */
+    transform: scale(1.02);
+    color: #001f4d;
 }
 
+/* Sección secundaria */
+.secondary-section {
+    background-color: #f0f8ff;
+    padding: 8px 16px;
+    margin: 5px 2px 15px 20px;
+    border-left: 4px solid #ff4d4d; /* Línea roja a la izquierda */
+    border-radius: 6px;
+    align-items: center;
+    justify-items: center;
+}
+
+/* Sección secundaria */
+.secondary-section a {
+    display: flex; /* Activar flexbox */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    text-align: center; /* Centrar texto */
+    color: #003366; /* Texto azul oscuro */
+    font-size: 15px;
+    font-weight: bold; /* Opcional: para que resalte más */
+    padding: 10px 0; /* Ajustar espacio interno */
+    margin: 5px 0; /* Espaciado entre enlaces */
+    background-color: #f0f8ff; /* Fondo azul claro */
+    border-radius: 6px; /* Bordes redondeados */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.secondary-section a:hover {
+    background-color: #003366; /* Fondo azul oscuro al pasar el mouse */
+    color: #ffffff; /* Texto blanco al pasar el mouse */
+}
+
+/* Íconos */
+.icon {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #003366; /* Azul oscuro */
+}
+
+.icon:hover {
+    color: #001f4d; /* Más oscuro al pasar el mouse */
+    border-radius: 6px;
+}
+
+/* Links activos */
+.active {
+    background-color: #003366!important;
+    color: white !important;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+/* Efectos en el menú */
+.expand-icon {
+    margin-left: auto;
+    color: #003366;
+}
+
+/* Estilo del sidenav */
+.sidenav {
+    background-color: #e6f2ff; /* Fondo azul claro */
+    padding: 20px;
+    height: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+
+/* Responsivo */
 @media (max-width: 768px) {
     .sidenav {
-        width: 200px;
-
+        width: 240px;
+    }
+    .primary-section {
+        padding: 10px;
     }
 }

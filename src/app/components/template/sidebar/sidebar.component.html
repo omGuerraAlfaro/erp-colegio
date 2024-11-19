@@ -1,10 +1,9 @@
-<mat-toolbar style="background-color: rgb(82, 126, 197);" *ngIf="isLogged;">
+<mat-toolbar style="background-color: rgb(51, 102, 204);" *ngIf="isLogged;">
     <button mat-icon-button (click)="sidenav.toggle()" class="sidenavBotton">
         <mat-icon style="color: white;">menu</mat-icon>
     </button>
     <span style="color: white; font-weight: bold;">Intranet Colegio Andes Chile</span>
 </mat-toolbar>
-
 
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" class="sidenav" [style.width]="'280px'">
@@ -14,78 +13,69 @@
 
         <!-- Menú de navegación -->
         <mat-nav-list>
-            <mat-nav-list class="mb-1" mat-button>
+            <!-- Sección Inicio -->
+            <mat-nav-list class="mb-1 primary-section" mat-button>
                 <a mat-list-item routerLink="/home" routerLinkActive="active" class="link-dark">
                     <i class="fas fa-home icon"></i>
                     <span>Inicio</span>
                 </a>
             </mat-nav-list>
 
-            <mat-list-item *ngIf="rolUser === 'administrador' || rolUser === 'subAdministrador'"  class="mb-1" mat-button (click)="toggleMatriculas()">
+            <!-- Sección Matrículas -->
+            <mat-list-item *ngIf="rolUser === 'administrador' || rolUser === 'subAdministrador'" class="mb-1 primary-section" mat-button (click)="toggleMatriculas()">
                 <i class="fas fa-book icon"></i>
                 <span>Matrículas</span>
-                <mat-icon class="expand-icon" aria-hidden="true">{{ isMatriculasOpen ? 'expand_less' : 'expand_more'
-                    }}</mat-icon>
+                <mat-icon class="expand-icon" aria-hidden="true">{{ isMatriculasOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
             </mat-list-item>
-            <mat-nav-list *ngIf="(isMatriculasOpen && rolUser === 'administrador') || (isMatriculasOpen && rolUser === 'subAdministrador')">
+            <mat-nav-list class="secondary-section" *ngIf="isMatriculasOpen">
                 <a mat-list-item routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a>
-                <a mat-list-item routerLink="/bandeja-inscripciones" routerLinkActive="active">Bandeja de
-                    Inscripciones</a>
+                <a mat-list-item routerLink="/bandeja-inscripciones" routerLinkActive="active">Bandeja de Inscripciones</a>
             </mat-nav-list>
 
-            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1" mat-button (click)="toggleFinanzas()">
+            <!-- Sección Finanzas -->
+            <mat-list-item *ngIf="rolUser === 'administrador'" class="mb-1 primary-section" mat-button (click)="toggleFinanzas()">
                 <i class="fas fa-chart-line icon"></i>
                 <span>Finanzas</span>
-                <mat-icon class="expand-icon" aria-hidden="true">{{ isFinanzasOpen ? 'expand_less' : 'expand_more'
-                    }}</mat-icon>
+                <mat-icon class="expand-icon" aria-hidden="true">{{ isFinanzasOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
             </mat-list-item>
-            <mat-nav-list *ngIf="(isFinanzasOpen && rolUser === 'administrador' )|| (isFinanzasOpen && rolUser === 'subAdministrador' )">
+            <mat-nav-list class="secondary-section" *ngIf="isFinanzasOpen">
                 <a mat-list-item routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a>
             </mat-nav-list>
 
-            <mat-list-item *ngIf="rolUser === 'administrador' || rolUser === 'subAdministrador'" class="mb-1" mat-button (click)="toggleAdm()">
+            <!-- Sección Administración -->
+            <mat-list-item *ngIf="rolUser === 'administrador' || rolUser === 'subAdministrador'" class="mb-1 primary-section" mat-button (click)="toggleAdm()">
                 <i class="fas fa-cog icon"></i>
                 <span>Administración</span>
-                <mat-icon class="expand-icon" aria-hidden="true">{{ isAdministacionOpen ? 'expand_less' : 'expand_more'
-                    }}</mat-icon>
+                <mat-icon class="expand-icon" aria-hidden="true">{{ isAdministacionOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
             </mat-list-item>
-            <mat-nav-list *ngIf="(isAdministacionOpen && rolUser === 'administrador') || (isAdministacionOpen && rolUser === 'subAdministrador')">
+            <mat-nav-list class="secondary-section" *ngIf="isAdministacionOpen">
                 <a mat-list-item routerLink="/boletas-mantenedor" routerLinkActive="active">Mantenedor Boletas y Contrato</a>
             </mat-nav-list>
 
-            <mat-list-item *ngIf="isProfesorOpen && rolUser === 'profesor'" class="mb-1" mat-button
-                (click)="toggleProfesor()">
+            <!-- Sección Profesor -->
+            <mat-list-item *ngIf="rolUser === 'profesor'" class="mb-1 primary-section" mat-button (click)="toggleProfesor()">
                 <i class="fas fa-users icon"></i>
                 <span>Cursos</span>
-                <mat-icon class="expand-icon" aria-hidden="true">{{ isProfesorOpen ? 'expand_less' : 'expand_more'
-                    }}</mat-icon>
+                <mat-icon class="expand-icon" aria-hidden="true">{{ isProfesorOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
             </mat-list-item>
-            <mat-nav-list *ngIf="rolUser === 'profesor'">
+            <mat-nav-list class="secondary-section" *ngIf="rolUser === 'profesor'">
                 <a mat-list-item routerLink="/cursos" routerLinkActive="active">Gestionar Anotaciones</a>
             </mat-nav-list>
         </mat-nav-list>
 
-        <!-- Sección de perfil dentro del nav -->
+        <!-- Sección de perfil -->
         <hr>
-
         <div class="perfil">
             <strong><small>Perfil</small></strong>
             <div class="perfil-container d-flex flex-column align-items-start">
                 <div class="dropdown d-flex align-items-center mt-2">
-
-                    <!-- Imagen de perfil -->
-                    <img [src]="genderUser === 'F' ? '../../../assets/img/6.png' : '../../../assets/img/5.png'" alt=""
-                        width="50" height="50" class="rounded-circle me-2">
-
-                    <a mat-list-item class="d-flex align-items-center text-black text-decoration-none"
-                        [matMenuTriggerFor]="userMenu">
-                        <!-- Datos del perfil -->
+                    <img [src]="genderUser === 'F' ? '../../../assets/img/6.png' : '../../../assets/img/5.png'" alt="" width="50" height="50" class="rounded-circle me-2">
+                    <a mat-list-item class="d-flex align-items-center text-black text-decoration-none" [matMenuTriggerFor]="userMenu">
                         <div class="datosPerfil d-flex flex-column ms-2">
                             <strong>{{nombreUser}}</strong>
                             <small>{{rolUser === 'profesor' ? 'Profesor' : 'Administrador'}}</small>
                         </div>
                     </a>
-                    <!-- Menú desplegable -->
                     <mat-menu #userMenu="matMenu">
                         <button mat-menu-item routerLink="#">Perfil</button>
                         <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
@@ -93,15 +83,12 @@
                 </div>
             </div>
         </div>
-
-
     </mat-sidenav>
 
     <mat-sidenav-content>
         <ng-container *ngIf="isLogged; else isNotLogged">
             <router-outlet></router-outlet>
         </ng-container>
-
         <ng-template #isNotLogged>
             <app-login></app-login>
         </ng-template>
