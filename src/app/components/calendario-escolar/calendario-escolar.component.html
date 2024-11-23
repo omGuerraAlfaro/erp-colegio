@@ -1,0 +1,14 @@
+<div class="color posicion border">
+    <div class="container mt-3">
+        <h1><b>Calendario Escolar</b></h1>
+        <mat-divider></mat-divider>
+
+        <div class="calendar-wrapper mt-3">
+            <div class="calendar-container">
+                <mat-calendar [(selected)]="selectedDate" [dateClass]="dateClass" (selectedChange)="onDateSelected($event)"></mat-calendar>
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -31,7 +31,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { CursosComponent } from './components/cursos/cursos.component';
+import { CursosAnotacionesComponent } from './components/cursos-anotaciones/cursos-anotaciones.component';
 import { ModalDetalleBoletaComponent } from './components/modal-detalle-boleta/modal-detalle-boleta.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ModalBoletasEstudianteComponent } from './components/modal-boletas-estudiante/modal-boletas-estudiante.component';
@@ -61,6 +61,10 @@ import { ModalBoletasMantenedorComponent } from './components/modal-boletas-mant
 import { EditBoletaComponent } from './components/modal-boletas-mantenedor/edit-boleta/edit-boleta.component';
 import { CreateBoletaComponent } from './components/modal-boletas-mantenedor/create-boleta/create-boleta.component';
 import { ModalIngresarMatriculaComponent } from './components/modal-ingresar-matricula/modal-ingresar-matricula.component';
+import { CursosAsistenciaComponent } from './components/cursos-asistencia/cursos-asistencia.component';
+import { CursosNotasComponent } from './components/cursos-notas/cursos-notas.component';
+import { CalendarioEscolarComponent } from './components/calendario-escolar/calendario-escolar.component';
+import { ModalCalendarioComponent } from './components/calendario-escolar/modal-calendario/modal-calendario.component';
 
 
 
@@ -76,7 +80,7 @@ import { ModalIngresarMatriculaComponent } from './components/modal-ingresar-mat
     BoletasComponent,
     RutFormatPipe,
     FormatNumberPipe,
-    CursosComponent,
+    CursosAnotacionesComponent,
     ModalDetalleBoletaComponent,
     ModalBoletasEstudianteComponent,
     MatriculasComponent,
@@ -88,7 +92,11 @@ import { ModalIngresarMatriculaComponent } from './components/modal-ingresar-mat
     ModalBoletasMantenedorComponent,
     EditBoletaComponent,
     CreateBoletaComponent,
-    ModalIngresarMatriculaComponent
+    ModalIngresarMatriculaComponent,
+    CursosAsistenciaComponent,
+    CursosNotasComponent,
+    CalendarioEscolarComponent,
+    ModalCalendarioComponent
   ],
   imports: [
     BrowserModule,

@@ -16,8 +16,14 @@
             <!-- Sección Inicio -->
             <mat-nav-list class="mb-1 primary-section" mat-button>
                 <a mat-list-item routerLink="/home" routerLinkActive="active" class="link-dark">
-                    <i class="fas fa-home icon"></i>
+                    <i class="fas fa-home icon2"></i>
                     <span>Inicio</span>
+                </a>
+            </mat-nav-list>
+            <mat-nav-list class="mb-1 primary-section" mat-button>
+                <a mat-list-item routerLink="/calendario-escolar" routerLinkActive="active" class="link-dark">
+                    <i class="fas fa-calendar-alt icon2"></i>
+                    <span>Calendario Escolar</span>
                 </a>
             </mat-nav-list>
 
@@ -53,13 +59,15 @@
             </mat-nav-list>
 
             <!-- Sección Profesor -->
-            <mat-list-item *ngIf="rolUser === 'profesor'" class="mb-1 primary-section" mat-button (click)="toggleProfesor()">
+            <mat-list-item *ngIf="rolUser === 'profesor' || rolUser === 'administrador'" class="mb-1 primary-section" mat-button (click)="toggleProfesor()">
                 <i class="fas fa-users icon"></i>
                 <span>Cursos</span>
                 <mat-icon class="expand-icon" aria-hidden="true">{{ isProfesorOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
             </mat-list-item>
-            <mat-nav-list class="secondary-section" *ngIf="rolUser === 'profesor'">
-                <a mat-list-item routerLink="/cursos" routerLinkActive="active">Gestionar Anotaciones</a>
+            <mat-nav-list class="secondary-section" *ngIf="isProfesorOpen">
+                <a mat-list-item routerLink="/cursos-notas" routerLinkActive="active">Registro de Notas</a>
+                <a mat-list-item routerLink="/cursos-asistencia" routerLinkActive="active">Registro de Asistencia</a>
+                <a mat-list-item routerLink="/cursos-anotaciones" routerLinkActive="active">Registro de Anotaciones</a>
             </mat-nav-list>
         </mat-nav-list>
 

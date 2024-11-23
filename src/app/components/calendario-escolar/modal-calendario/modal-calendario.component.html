@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Detalle del Día</h2>
+<mat-divider></mat-divider>
+
+<div mat-dialog-content>
+  <p><strong>Fecha:</strong> {{ data.fecha }}</p>
+  <p><strong>Tipo:</strong> {{ data.tipo || 'N/A' }}</p>
+  <p><strong>Descripción:</strong> {{ data.descripcion || 'Sin descripción' }}</p>
+</div>
+
+<mat-divider></mat-divider>
+<div mat-dialog-actions align="end">
+  <button mat-button color="primary" (click)="onAgregar()">Agregar</button>
+  <button mat-button color="accent" (click)="onEditar()">Editar</button>
+  <button mat-button color="warn" (click)="onDesactivar()">Desactivar</button>
+  <button mat-button (click)="onClose()">Cerrar</button>
+</div>

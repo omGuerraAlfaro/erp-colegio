@@ -8,7 +8,7 @@ import { LoginComponent } from './components/login/login.component';
 import { BoletasComponent } from './components/boletas/boletas.component';
 
 //Cursos
-import { CursosComponent } from './components/cursos/cursos.component';
+import { CursosAnotacionesComponent } from './components/cursos-anotaciones/cursos-anotaciones.component';
 
 //recursos humanos
 import { ColaboradoresComponent } from './components/rrhh/colaboradores/colaboradores.component';
@@ -16,6 +16,9 @@ import { RemuneracionesComponent } from './components/rrhh/remuneraciones/remune
 import { MatriculasComponent } from './components/matriculas/matriculas.component';
 import { InscripcionMatriculaComponent } from './components/inscripcion-matricula/inscripcion-matricula.component';
 import { BoletasMantenedorComponent } from './components/boletas-mantenedor/boletas-mantenedor.component';
+import { CursosAsistenciaComponent } from './components/cursos-asistencia/cursos-asistencia.component';
+import { CursosNotasComponent } from './components/cursos-notas/cursos-notas.component';
+import { CalendarioEscolarComponent } from './components/calendario-escolar/calendario-escolar.component';
 
 
 const routes: Routes = [
@@ -23,9 +26,14 @@ const routes: Routes = [
   { path: 'content', component: ContentComponent },
   { path: 'home', component: HomeComponent, /* canActivate: [AuthGuard] */ },
 
+  { path: 'calendario-escolar', component: CalendarioEscolarComponent },
+
   { path: 'boletas', component: BoletasComponent },
   { path: 'boletas-mantenedor', component: BoletasMantenedorComponent },
-  { path: 'cursos', component: CursosComponent },
+
+  { path: 'cursos-anotaciones', component: CursosAnotacionesComponent },
+  { path: 'cursos-asistencia', component: CursosAsistenciaComponent },
+  { path: 'cursos-notas', component: CursosNotasComponent },
 
   { path: 'colaboradores', component: ColaboradoresComponent},
   { path: 'remuneraciones', component: RemuneracionesComponent},

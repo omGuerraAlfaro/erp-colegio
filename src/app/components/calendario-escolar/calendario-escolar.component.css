@@ -1,0 +1,95 @@
+.color {
+    background-color: #f5f5f5;
+}
+
+.posicion {
+    margin-left: 2px;
+    min-height: 100vh;
+    min-width: 100vh;
+}
+
+
+.calendar-wrapper {
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: flex-start; /* Alinear arriba */
+    height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.calendar-container {
+    width: 600px;
+    padding: 20px;
+    border: 2px solid #90caf9; /* Borde azul */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    background: linear-gradient(135deg, #ffffff, #e3f2fd); /* Fondo con degradado */
+}
+
+
+.mat-calendar {
+    width: 100%;
+    height: auto; /* Ajusta automáticamente según el contenedor */
+    font-size: 1.2em; /* Aumenta el tamaño del texto */
+}
+
+.mat-calendar .feriado-class {
+    background-color: #ff6f61; /* Rojo vibrante */
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.mat-calendar .clase-class {
+    background-color: #42a5f5; /* Azul vibrante */
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.mat-calendar .evento-class {
+    background-color: tan; /* Amarillo para eventos */
+    color: black;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+
+
+
+.selected-class {
+    background-color: #4caf50;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+}
+
+.mat-calendar-header {
+    background-color: #1e88e5; /* Azul fuerte */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+    padding: 10px;
+}
+
+
+.mat-calendar-body-cell {
+    font-size: 16px;
+    height: 50px;
+    width: 50px;
+    color: #4a4a4a; /* Color de texto neutro */
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.mat-calendar-body-cell:hover {
+    background-color: #90caf9; /* Azul claro al pasar el ratón */
+    color: white;
+}
+
+.mat-calendar-body-selected {
+    background-color: #4caf50 !important; /* Verde intenso para fechas seleccionadas */
+    color: white !important;
+    font-weight: bold;
+}

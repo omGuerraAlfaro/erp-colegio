@@ -8,10 +8,10 @@ import { ModalVerAnotacionComponent } from '../modal-ver-anotacion/modal-ver-ano
 
 @Component({
   selector: 'app-cursos',
-  templateUrl: './cursos.component.html',
-  styleUrls: ['./cursos.component.css']
+  templateUrl: './cursos-anotaciones.component.html',
+  styleUrls: ['./cursos-anotaciones.component.css']
 })
-export class CursosComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class CursosAnotacionesComponent implements OnInit, AfterViewInit, AfterViewChecked {
   displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'ver_anotacion', 'ingresar_anotacion'];
   dataSourceCursos: { [key: string]: { dataSource: MatTableDataSource<CursoEstudianteDetalle>, nombreCurso: string } } = {};
   hasLoadedData = false;

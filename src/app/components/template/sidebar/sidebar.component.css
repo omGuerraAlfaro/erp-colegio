@@ -68,12 +68,22 @@
     border-radius: 6px;
 }
 
+.icon2 {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #001f4d;/* Azul oscuro */
+}
+
 /* Links activos */
 .active {
     background-color: #003366!important;
     color: white !important;
     font-weight: bold;
     border-radius: 6px;
+}
+
+a.active .icon2 {
+    color: #ffffff; /* Blanco */
 }
 
 /* Efectos en el menú */
