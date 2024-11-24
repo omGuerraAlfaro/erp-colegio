@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
       link: 'matriculas',
       icon: 'fas fa-id-badge',
       color: 'bg-green',
-      roles: ['administrador']
+      roles: ['administrador', 'subAdministrador']
     },
     {
       name: 'Gestionar Profesores',
@@ -47,31 +47,31 @@ export class HomeComponent implements OnInit {
     },
     {
       name: 'Gestionar Calendario',
-      link: 'calendario',
+      link: 'calendario-escolar',
       icon: 'fas fa-calendar-alt',
       color: 'bg-lightblue',
-      roles: ['administrador']
+      roles: ['administrador', 'subAdministrador', 'profesor']
     },
     {
       name: 'Gestionar Asignaturas',
-      link: 'asignaturas',
+      link: 'cursos-asignaturas',
       icon: 'fas fa-book-open',
       color: 'bg-lightblue',
-      roles: ['profesor']
+      roles: ['administrador', 'subAdministrador', 'profesor']
     },
     {
       name: 'Gestionar Notas',
-      link: 'notas',
+      link: 'cursos-notas',
       icon: 'fas fa-clipboard-list',
       color: 'bg-darkgrey',
-      roles: ['profesor']
+      roles: ['administrador', 'subAdministrador', 'profesor']
     },
     {
       name: 'Gestionar Anotaciones',
       link: 'anotaciones',
       icon: 'fas fa-clipboard-list',
       color: 'bg-yellow',
-      roles: ['profesor']
+      roles: ['administrador', 'subAdministrador', 'profesor']
     }
   ];
 

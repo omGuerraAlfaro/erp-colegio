@@ -1,14 +1,60 @@
 <div class="color posicion border">
     <div class="container mt-3">
-        <h1><b>Calendario Escolar</b></h1>
+        <h1><b>Calendario Escolar 2025</b></h1>
         <mat-divider></mat-divider>
 
-        <div class="calendar-wrapper mt-3">
-            <div class="calendar-container">
-                <mat-calendar [(selected)]="selectedDate" [dateClass]="dateClass" (selectedChange)="onDateSelected($event)"></mat-calendar>
+        <div class="row mt-3">
+            <!-- Calendario -->
+            <div class="col-md-7">
+                <div class="calendar-wrapper">
+                    <div class="calendar-container">
+                        <mat-calendar [(selected)]="selectedDate" [dateClass]="dateClass"
+                            (selectedChange)="onDateSelected($event)"></mat-calendar>
+                    </div>
+                </div>
             </div>
+
+            <!-- Card con fechas -->
+            <div class="col-md-5 mt-3">
+                <mat-card>
+                    <h3>Lista de Fechas</h3>
+                    <div *ngIf="markedDatesKeys.length > 0; else noDates">
+                        <div class="list-wrapper">
+                            <ul class="list-group">
+                                <li *ngFor="let date of getFormattedDates()"
+                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <b>{{ date.fecha }}</b> - {{ date.tipo }}
+                                    </span>
+                                    <span *ngIf="date.descripcion" class="badge bg-primary">
+                                        {{ date.descripcion }}
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ng-template #noDates>
+                        <p>No hay fechas registradas.</p>
+                    </ng-template>
+                    <div class="instructions">
+                        <div class="instruction-item">
+                            <span class="circle red"></span>
+                            <span>Días feriados</span>
+                        </div>
+                        <!-- <div class="instruction-item">
+                                    <span class="circle blue"></span>
+                                    <span>Clases normales</span>
+                                  </div> -->
+                        <div class="instruction-item">
+                            <span class="circle yellow"></span>
+                            <span>Eventos escolares</span>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+
         </div>
-
     </div>
-
 </div>
+
+<br>

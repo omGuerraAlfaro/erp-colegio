@@ -11,61 +11,60 @@
 
 .calendar-wrapper {
     display: flex;
-    justify-content: center; /* Centrar horizontalmente */
-    align-items: flex-start; /* Alinear arriba */
-    height: 100vh;
-    background-color: #f9f9f9;
+    padding-top: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    height: 70vh;
 }
 
 .calendar-container {
     width: 600px;
     padding: 20px;
-    border: 2px solid #90caf9; /* Borde azul */
-    border-radius: 12px; /* Bordes redondeados */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra suave */
-    background: linear-gradient(135deg, #ffffff, #e3f2fd); /* Fondo con degradado */
+    border: 2px solid #90caf9;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #ffffff, #e3f2fd);
 }
 
 
 .mat-calendar {
     width: 100%;
-    height: auto; /* Ajusta automáticamente según el contenedor */
-    font-size: 1.2em; /* Aumenta el tamaño del texto */
+    height: auto;
+    font-size: 1.2em;
 }
 
 .mat-calendar .feriado-class {
-    background-color: #ff6f61; /* Rojo vibrante */
+    background-color: #ff6f61;
+    /* Rojo vibrante */
     color: white;
     border-radius: 50%;
     font-weight: bold;
 }
 
 .mat-calendar .clase-class {
-    background-color: #42a5f5; /* Azul vibrante */
+    background-color: #42a5f5;
+    /* Azul vibrante */
     color: white;
     border-radius: 50%;
     font-weight: bold;
 }
 
 .mat-calendar .evento-class {
-    background-color: tan; /* Amarillo para eventos */
+    background-color: #ffc107;
     color: black;
     border-radius: 50%;
     font-weight: bold;
 }
 
-
-
-
 .selected-class {
-    background-color: #4caf50;
+    background-color: #c3e6c4;
     color: white;
     font-weight: bold;
     border-radius: 50%;
 }
 
 .mat-calendar-header {
-    background-color: #1e88e5; /* Azul fuerte */
+    background-color: #1e88e5;
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -73,23 +72,79 @@
     padding: 10px;
 }
 
-
 .mat-calendar-body-cell {
     font-size: 16px;
     height: 50px;
     width: 50px;
-    color: #4a4a4a; /* Color de texto neutro */
+    color: #4a4a4a;
     border-radius: 50%;
     transition: background-color 0.3s ease;
 }
 
 .mat-calendar-body-cell:hover {
-    background-color: #90caf9; /* Azul claro al pasar el ratón */
+    background-color: #90caf9;
     color: white;
 }
 
 .mat-calendar-body-selected {
-    background-color: #4caf50 !important; /* Verde intenso para fechas seleccionadas */
+    background-color: #4caf50 !important;
     color: white !important;
     font-weight: bold;
 }
+
+.mat-calendar-period-button {
+    font-size: 1.5rem;
+    padding: 10px;
+}
+
+.mat-calendar-controls {
+    height: 50px;
+    padding: 5px;
+}
+
+.instructions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.circle.red {
+    background-color: #f44336;
+    /* Rojo */
+}
+
+.circle.blue {
+    background-color: #2196f3;
+    /* Azul */
+}
+
+.circle.yellow {
+    background-color: #ffc107;
+    /* Amarillo */
+}
+
+.list-wrapper {
+    max-height: 50vh; /* Altura igual al calendario */
+    overflow-y: auto; /* Activa el scroll vertical */
+    padding-right: 10px; /* Espacio para evitar que el scroll tape el contenido */
+  }
+  
+  .list-group-item {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  

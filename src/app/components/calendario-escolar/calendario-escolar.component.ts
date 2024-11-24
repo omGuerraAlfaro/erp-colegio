@@ -24,7 +24,22 @@ export class CalendarioEscolarComponent implements OnInit {
     const fechas = [
       { fecha: '2024-11-24', tipo: 'Feriado', descripcion: 'Día Feriado' },
       { fecha: '2024-11-20', tipo: 'Clase', descripcion: null },
-      { fecha: '2024-11-21', tipo: 'Evento', descripcion: null },
+      { fecha: '2024-11-11', tipo: 'Evento', descripcion: null },
+      { fecha: '2024-11-04', tipo: 'Feriado', descripcion: 'Día Feriado' },
+      { fecha: '2024-11-20', tipo: 'Clase', descripcion: null },
+      { fecha: '2024-11-01', tipo: 'Evento', descripcion: null },
+      { fecha: '2024-12-24', tipo: 'Feriado', descripcion: 'Día Feriado' },
+      { fecha: '2024-11-20', tipo: 'Clase', descripcion: null },
+      { fecha: '2024-09-21', tipo: 'Evento', descripcion: null },
+      { fecha: '2024-08-24', tipo: 'Feriado', descripcion: 'Día Feriado' },
+      { fecha: '2024-01-20', tipo: 'Clase', descripcion: null },
+      { fecha: '2024-10-21', tipo: 'Evento', descripcion: null },
+      { fecha: '2023-10-21', tipo: 'Evento', descripcion: null },
+      { fecha: '2022-10-21', tipo: 'Evento', descripcion: null },
+      { fecha: '2021-10-21', tipo: 'Evento', descripcion: null },
+      { fecha: '2020-10-21', tipo: 'Evento', descripcion: null },
+      { fecha: '2027-10-21', tipo: 'Evento', descripcion: null },
+      { fecha: '2028-10-21', tipo: 'Evento', descripcion: null },
     ];
   
     fechas.forEach(fecha => {
@@ -66,13 +81,25 @@ export class CalendarioEscolarComponent implements OnInit {
     console.log(`Fecha: ${formattedDate}, Tipo: ${tipo}`); // Debug
     if (tipo === 'Feriado') {
       return 'feriado-class';
-    } else if (tipo === 'Clase') {
-      return 'clase-class';
+    // } else if (tipo === 'Clase') {
+    //   return 'clase-class';
     } else if (tipo === 'Evento') {
       return 'evento-class';
     }
     return '';
   };
+
+  getFormattedDates() {
+    return Object.keys(this.markedDates).map((key) => ({
+      fecha: key,
+      tipo: this.markedDates[key].tipo,
+      descripcion: this.markedDates[key].descripcion,
+    }));
+  }
+  
+  get markedDatesKeys(): string[] {
+    return Object.keys(this.markedDates);
+  }
   
 
 }
