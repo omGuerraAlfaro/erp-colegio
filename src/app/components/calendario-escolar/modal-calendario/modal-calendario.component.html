@@ -1,16 +1,38 @@
-<h2 mat-dialog-title>Detalle del Día</h2>
-<mat-divider></mat-divider>
-
-<div mat-dialog-content>
-  <p><strong>Fecha:</strong> {{ data.fecha }}</p>
-  <p><strong>Tipo:</strong> {{ data.tipo || 'N/A' }}</p>
-  <p><strong>Descripción:</strong> {{ data.descripcion || 'Sin descripción' }}</p>
+<div class="dialog-header">
+  <!-- Botón de cerrar arriba a la derecha -->
+  <button mat-icon-button (click)="onClose()" class="close-button" matTooltip="Cerrar">
+    <mat-icon>close</mat-icon>
+  </button>
+  <h2 mat-dialog-title>Detalle del Día</h2>
 </div>
+<mat-divider class="mb-3"></mat-divider>
+
+<form mat-dialog-content [formGroup]="detalleDiaForm">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Fecha</mat-label>
+    <input matInput [value]="data.fecha" readonly>
+    <mat-hint>Fecha seleccionada (no editable)</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Tipo</mat-label>
+    <mat-select formControlName="tipo">
+      <mat-option *ngFor="let opcion of tiposOpciones" [value]="opcion">{{ opcion }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="detalleDiaForm.get('tipo')?.hasError('required')">Este campo es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Descripción</mat-label>
+    <textarea matInput formControlName="descripcion" placeholder="Añade una descripción"></textarea>
+    <mat-hint>Máximo 200 caracteres</mat-hint>
+    <mat-error *ngIf="detalleDiaForm.get('descripcion')?.hasError('maxlength')">Máximo 200 caracteres permitidos</mat-error>
+  </mat-form-field>
+</form>
 
 <mat-divider></mat-divider>
+
 <div mat-dialog-actions align="end">
-  <button mat-button color="primary" (click)="onAgregar()">Agregar</button>
-  <button mat-button color="accent" (click)="onEditar()">Editar</button>
-  <button mat-button color="warn" (click)="onDesactivar()">Desactivar</button>
-  <button mat-button (click)="onClose()">Cerrar</button>
+  <button mat-raised-button color="primary" (click)="onGuardar()">Guardar Fecha</button>
+  <button mat-raised-button color="warn" (click)="onEliminar()">Eliminar Fecha</button>
 </div>

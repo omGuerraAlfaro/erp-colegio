@@ -18,7 +18,7 @@
 }
 
 .calendar-container {
-    width: 600px;
+    width: 700px;
     padding: 20px;
     border: 2px solid #90caf9;
     border-radius: 12px;
@@ -137,14 +137,46 @@
     /* Amarillo */
 }
 
+.circle.green {
+    background-color: #4caf50;
+    /* Amarillo */
+}
+
 .list-wrapper {
-    max-height: 50vh; /* Altura igual al calendario */
-    overflow-y: auto; /* Activa el scroll vertical */
-    padding-right: 10px; /* Espacio para evitar que el scroll tape el contenido */
-  }
-  
-  .list-group-item {
+    max-height: 50vh;
+    /* Altura igual al calendario */
+    overflow-y: auto;
+    /* Activa el scroll vertical */
+    padding-right: 10px;
+    /* Espacio para evitar que el scroll tape el contenido */
+}
+
+.list-group-item {
     font-size: 1rem;
     line-height: 1.5;
+}
+
+
+
+.mat-calendar-body-cell-content.multiple-events-class {
+    position: relative;
+    background-color: #f9c74f;
+    border-radius: 50%;
+  }
+  
+  .mat-calendar-body-cell-content.multiple-events-class::after {
+    content: attr(data-count);
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: #f94144;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   

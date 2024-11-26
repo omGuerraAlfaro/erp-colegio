@@ -1,20 +1,35 @@
-:host {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  mat-dialog-content {
-    font-size: 16px;
-    line-height: 1.5;
-  }
-  
-  mat-dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  button {
-    margin-left: 10px;
-  }
-  
+mat-dialog-content {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  margin-left: 10px;
+}
+
+mat-dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.dialog-header {
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 0px;
+  right: 8px;
+  z-index: 2;
+}
+
+mat-dialog-content {
+  overflow: visible !important;
+}
+

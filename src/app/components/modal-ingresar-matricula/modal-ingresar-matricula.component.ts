@@ -127,7 +127,7 @@ export class ModalIngresarMatriculaComponent implements OnInit {
     console.log("No VALIDO");
 
     if (this.inscripcionForm.valid) {
-      this.isLoading = true; 
+      this.isLoading = true;
       console.log("VALIDO");
       const formValue = this.inscripcionForm.value;
 
@@ -232,6 +232,9 @@ export class ModalIngresarMatriculaComponent implements OnInit {
         }
       });
 
+    } else {
+      this.inscripcionForm.markAllAsTouched();
+      alert('Por favor completa todos los campos obligatorios.');
     }
   }
 

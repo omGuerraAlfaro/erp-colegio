@@ -44,7 +44,7 @@ export class MatriculasComponent implements OnInit {
     this.estudianteService.getAllEstudiantes().subscribe(data => {
       console.log(data);
 
-      this.estudiantes = data;  // Asignar la lista de estudiantes
+      this.estudiantes.data = data;
 
     }, error => {
       console.error('Error al cargar estudiantes:', error);
@@ -69,6 +69,7 @@ export class MatriculasComponent implements OnInit {
 
     dialogRef.componentInstance.inscripcionOK.subscribe(() => {
       this.iniciarContadoresAlumnos();
+      this.loadEstudiantes();
     });
 
     dialogRef.afterClosed().subscribe(result => {

@@ -181,7 +181,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
     console.log("No VALIDO");
 
     if (this.inscripcionForm.valid) {
-      this.isLoading = true; 
+      this.isLoading = true;
       console.log("VALIDO");
 
       // Obtener los valores del formulario al inicio
@@ -262,7 +262,7 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
                 </p>
                 <p><strong style="color: #2c3e50;">Estudiantes Matriculados:</strong></p>
                 <ul style="list-style-type: disc; padding-left: 20px;">
-                  ${data.estudiantes.map((est:any) => `
+                  ${data.estudiantes.map((est: any) => `
                     <li>${est.primer_nombre_alumno} ${est.segundo_nombre_alumno} 
                         ${est.primer_apellido_alumno} ${est.segundo_apellido_alumno}
                     </li>
@@ -294,6 +294,9 @@ export class ModalTerminarFormularioMatriculaComponent implements OnInit {
         }
       });
 
+    } else {
+      this.inscripcionForm.markAllAsTouched();
+      alert('Por favor completa todos los campos obligatorios.');
     }
   }
 

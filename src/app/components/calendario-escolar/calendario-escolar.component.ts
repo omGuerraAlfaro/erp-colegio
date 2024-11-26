@@ -1,6 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalCalendarioComponent } from './modal-calendario/modal-calendario.component';
+import { CalendarioEscolarService } from 'src/app/services/calendarioService/calendario-escolar.service';
+import { ChangeDetectorRef } from '@angular/core';
+import { MatCalendar } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-calendario-escolar',
@@ -9,11 +12,16 @@ import { ModalCalendarioComponent } from './modal-calendario/modal-calendario.co
   encapsulation: ViewEncapsulation.None,
 })
 export class CalendarioEscolarComponent implements OnInit {
+  @ViewChild(MatCalendar) calendar!: MatCalendar<Date>;
 
   selectedDate: Date | null = null;
-  markedDates: { [key: string]: { tipo: string; descripcion: string | null } } = {};
+  markedDates: { [key: string]: { id: number; tipo: string; descripcion: string | null } } = {};
 
-  constructor(private dialog: MatDialog) { }
+  constructor(
+    private dialog: MatDialog,
+    private calendarioService: CalendarioEscolarService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     // Carga las fechas desde la base de datos (simulado aquí)
@@ -21,57 +29,59 @@ export class CalendarioEscolarComponent implements OnInit {
   }
 
   loadDates() {
-    const fechas = [
-      { fecha: '2024-11-24', tipo: 'Feriado', descripcion: 'Día Feriado' },
-      { fecha: '2024-11-20', tipo: 'Clase', descripcion: null },
-      { fecha: '2024-11-11', tipo: 'Evento', descripcion: null },
-      { fecha: '2024-11-04', tipo: 'Feriado', descripcion: 'Día Feriado' },
-      { fecha: '2024-11-20', tipo: 'Clase', descripcion: null },
-      { fecha: '2024-11-01', tipo: 'Evento', descripcion: null },
-      { fecha: '2024-12-24', tipo: 'Feriado', descripcion: 'Día Feriado' },
-      { fecha: '2024-11-20', tipo: 'Clase', descripcion: null },
-      { fecha: '2024-09-21', tipo: 'Evento', descripcion: null },
-      { fecha: '2024-08-24', tipo: 'Feriado', descripcion: 'Día Feriado' },
-      { fecha: '2024-01-20', tipo: 'Clase', descripcion: null },
-      { fecha: '2024-10-21', tipo: 'Evento', descripcion: null },
-      { fecha: '2023-10-21', tipo: 'Evento', descripcion: null },
-      { fecha: '2022-10-21', tipo: 'Evento', descripcion: null },
-      { fecha: '2021-10-21', tipo: 'Evento', descripcion: null },
-      { fecha: '2020-10-21', tipo: 'Evento', descripcion: null },
-      { fecha: '2027-10-21', tipo: 'Evento', descripcion: null },
-      { fecha: '2028-10-21', tipo: 'Evento', descripcion: null },
-    ];
-  
-    fechas.forEach(fecha => {
-      this.markedDates[fecha.fecha] = { tipo: fecha.tipo, descripcion: fecha.descripcion };
-    });
-  
-    console.log('Marked Dates:', this.markedDates); // Debug
-  }
-  
+    this.calendarioService.getAllFechas().subscribe({
+      next: (data: { id_dia: number; fecha: string; tipo: string; descripcion: string | null }[]) => {
+        this.markedDates = {}; 
+        data.forEach(fecha => {
+          if (fecha.fecha) {
+            this.markedDates[fecha.fecha] = {
+              id: fecha.id_dia,
+              tipo: fecha.tipo,
+              descripcion: fecha.descripcion,
+            };
+          } else {
+            console.warn('Fecha inválida encontrada:', fecha);
+          }
+        });
 
-  onDateSelected(date: Date | null) {
+        console.log('Marked Dates:', this.markedDates); // Debug
+        this.selectedDate = null;
+        this.calendar.updateTodaysDate();
+      },
+      error: (error) => {
+        console.error('Error fetching fechas:', error);
+      },
+    });
+  }
+
+
+  onDateSelected(date: Date | null): void {
     if (!date) {
       return; // Si la fecha es null, no hacemos nada.
     }
 
     const formattedDate = date.toISOString().split('T')[0];
-    const dayDetails = this.markedDates[formattedDate] || { tipo: 'Sin información', descripcion: null };
+    const dayDetails = this.markedDates[formattedDate] || { id: null, tipo: '', descripcion: null };
 
-    this.dialog.open(ModalCalendarioComponent, {
+    const dialogRef = this.dialog.open(ModalCalendarioComponent, {
       width: '400px',
       data: {
-        fecha: formattedDate,
+        id_dia: dayDetails.id,
+        fecha: this.formatToDDMMYYYY(formattedDate),
         tipo: dayDetails.tipo,
         descripcion: dayDetails.descripcion,
       },
     });
-    // if (this.markedDates[formattedDate]) {
-    //   const { tipo, descripcion } = this.markedDates[formattedDate];
-    //   alert(`Fecha: ${formattedDate}\nTipo: ${tipo}\nDescripción: ${descripcion || 'Ninguna'}`);
-    // } else {
-    //   alert(`Fecha: ${formattedDate}\nNo hay datos para esta fecha.`);
-    // }
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        if (result.action === 'guardar') {
+          this.loadDates(); // Recargar las fechas
+        } else if (result.action === 'eliminar') {
+          this.loadDates(); // Recargar las fechas
+        }
+      }
+    });
   }
 
 
@@ -81,9 +91,13 @@ export class CalendarioEscolarComponent implements OnInit {
     console.log(`Fecha: ${formattedDate}, Tipo: ${tipo}`); // Debug
     if (tipo === 'Feriado') {
       return 'feriado-class';
-    // } else if (tipo === 'Clase') {
-    //   return 'clase-class';
+    } else if (tipo === 'Clase') {
+      return 'clase-class';
     } else if (tipo === 'Evento') {
+      return 'evento-class';
+    } else if (tipo === 'Interferiado') {
+      return 'feriado-class';
+    } else if (tipo === 'Vacaciones') {
       return 'evento-class';
     }
     return '';
@@ -96,10 +110,15 @@ export class CalendarioEscolarComponent implements OnInit {
       descripcion: this.markedDates[key].descripcion,
     }));
   }
-  
+
   get markedDatesKeys(): string[] {
     return Object.keys(this.markedDates);
   }
-  
+
+  formatToDDMMYYYY(fecha: string): string {
+    const [year, month, day] = fecha.split('-'); // Dividir la fecha
+    return `${day}-${month}-${year}`; // Reorganizar los valores
+  }
+
 
 }
