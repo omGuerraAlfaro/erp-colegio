@@ -1,0 +1,75 @@
+<h2 mat-dialog-title>Editar Información del Estudiante (NO ESTA LISTO)</h2>
+<form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Primer Nombre</mat-label>
+        <input matInput formControlName="primer_nombre_alumno" />
+        <mat-error *ngIf="editForm.get('primer_nombre_alumno')?.invalid">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Segundo Nombre</mat-label>
+        <input matInput formControlName="segundo_nombre_alumno" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Primer Apellido</mat-label>
+        <input matInput formControlName="primer_apellido_alumno" />
+        <mat-error *ngIf="editForm.get('primer_apellido_alumno')?.invalid">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Segundo Apellido</mat-label>
+        <input matInput formControlName="segundo_apellido_alumno" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha de Nacimiento</mat-label>
+        <input matInput formControlName="fecha_nacimiento_alumno" [matDatepicker]="picker1" />
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha de Matrícula</mat-label>
+        <input matInput formControlName="fecha_matricula" [matDatepicker]="picker2" />
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>RUT</mat-label>
+        <input matInput formControlName="rut" />
+        <mat-error *ngIf="editForm.get('rut')?.invalid">RUT inválido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Género</mat-label>
+        <mat-select formControlName="genero_alumno">
+          <mat-option value="F">Femenino</mat-option>
+          <mat-option value="M">Masculino</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="autorizacion_fotografias">
+        ¿Autoriza Fotografías?
+      </mat-checkbox>
+
+      <mat-checkbox formControlName="apto_educacion_fisica">
+        ¿Apto para Educación Física?
+      </mat-checkbox>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button type="button" (click)="closeModal()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="editForm.invalid">
+      Guardar
+    </button>
+  </mat-dialog-actions>
+</form>

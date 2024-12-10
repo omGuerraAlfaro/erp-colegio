@@ -25,7 +25,8 @@
 
     <hr>
     <div class="d-flex justify-content-center">
-      <button mat-button class="boton" (click)="openModalNuevaMatricula()">Nueva Matrícula</button>
+      <button mat-button class="boton mx-2" (click)="openModalNuevaMatricula()">Nueva Matrícula</button>
+      <button mat-button class="boton mx-2">Nueva Matrícula con Apoderado Existente</button>
     </div>
     <hr>
 
@@ -44,11 +45,11 @@
       </ng-container>
 
       <!-- Fecha de Nacimiento Column -->
-      <ng-container matColumnDef="fecha_nacimiento">
+      <!-- <ng-container matColumnDef="fecha_nacimiento">
         <th mat-header-cell *matHeaderCellDef class="text-center"> Fecha de Nacimiento </th>
         <td mat-cell *matCellDef="let element" class="text-center"> {{element.fecha_nacimiento_alumno | date:
           'dd/MM/yyyy'}} </td>
-      </ng-container>
+      </ng-container> -->
 
       <!-- RUT Column -->
       <ng-container matColumnDef="rut">
@@ -57,10 +58,10 @@
       </ng-container>
 
       <!-- Género Column -->
-      <ng-container matColumnDef="genero">
+      <!-- <ng-container matColumnDef="genero">
         <th mat-header-cell *matHeaderCellDef class="text-center"> Género </th>
         <td mat-cell *matCellDef="let element" class="text-center"> {{element.genero_alumno}} </td>
-      </ng-container>
+      </ng-container> -->
 
       <!-- Vive con Column -->
       <ng-container matColumnDef="vive_con">
@@ -69,10 +70,10 @@
       </ng-container>
 
       <!-- Previsión Column -->
-      <ng-container matColumnDef="prevision">
+      <!-- <ng-container matColumnDef="prevision">
         <th mat-header-cell *matHeaderCellDef class="text-center"> Previsión </th>
         <td mat-cell *matCellDef="let element" class="text-center"> {{element.prevision_alumno}} </td>
-      </ng-container>
+      </ng-container> -->
 
       <!-- Autorización de Fotografías Column -->
       <ng-container matColumnDef="autorizacion_fotografias">
@@ -85,6 +86,27 @@
       <ng-container matColumnDef="curso">
         <th mat-header-cell *matHeaderCellDef class="text-center"> Curso </th>
         <td mat-cell *matCellDef="let element" class="text-center"> {{element.curso[0]?.nombre}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="estado_estudiante">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Estado estudiante </th>
+        <td mat-cell *matCellDef="let element" class="text-center">
+          <mat-chip-list class="chip-list-centered">
+            <mat-chip
+              [ngClass]="element.estado_estudiante ? 'chip-matriculado' : 'chip-retirado'"
+              selected
+            >
+              {{ element.estado_estudiante ? 'Matriculado' : 'Retirado' }}
+            </mat-chip>
+          </mat-chip-list>
+        </td>
+      </ng-container>            
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
+        <td mat-cell *matCellDef="let element" class="text-center">
+          <button class="boton" (click)="openModalEditEstudiante(element)">Ver</button>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

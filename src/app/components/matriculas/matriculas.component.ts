@@ -5,6 +5,7 @@ import { ModalIngresarMatriculaComponent } from '../modal-ingresar-matricula/mod
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { IEstudiante2 } from 'src/app/interfaces/apoderadoInterface';
+import { ModalEditEstudianteComponent } from '../modal-edit-estudiante/modal-edit-estudiante.component';
 
 @Component({
   selector: 'app-matriculas',
@@ -19,13 +20,12 @@ export class MatriculasComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'nombreCompleto',
-    'fecha_nacimiento',
     'rut',
-    'genero',
     'vive_con',
-    'prevision',
     'autorizacion_fotografias',
-    'curso'
+    'curso',
+    'estado_estudiante',
+    'acciones'
   ];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(public dialog: MatDialog, private estudianteService: EstudianteService) { }
@@ -68,6 +68,26 @@ export class MatriculasComponent implements OnInit {
     });
 
     dialogRef.componentInstance.inscripcionOK.subscribe(() => {
+      this.iniciarContadoresAlumnos();
+      this.loadEstudiantes();
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('El modal se cerró');
+    });
+
+  }
+
+  openModalEditEstudiante(element: any) {
+    const dialogRef = this.dialog.open(ModalEditEstudianteComponent, {
+      width: '70%',
+      height: '100%',
+      maxHeight: '100%',
+      panelClass: 'full-height-dialog',
+      data: element
+    });
+
+    dialogRef.componentInstance.editOk.subscribe(() => {
       this.iniciarContadoresAlumnos();
       this.loadEstudiantes();
     });

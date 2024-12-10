@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./boletas-mantenedor.component.css']
 })
 export class BoletasMantenedorComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'nombreCompleto', 'rut', 'correo', 'telefono', 'direccion', 'comuna', 'acciones'];
+  displayedColumns: string[] = ['id', 'nombreCompleto', 'rut', 'correo', 'telefono', 'comuna', 'acciones'];
   dataSource!: MatTableDataSource<IApoderado2>;
   
   @ViewChild(MatPaginator) paginator!: MatPaginator; // Añade el paginador

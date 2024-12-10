@@ -3,7 +3,7 @@
 }
 
 .posicion {
-    margin-left: 2px; 
+    margin-left: 2px;
     min-height: 100vh;
     min-width: 100vh;
 }
@@ -42,4 +42,28 @@
 .boton:active {
     transform: translateY(1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chip-list-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+mat-chip.chip-matriculado {
+    background-color: #4caf50 !important;
+    color: white !important;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 8px;
+}
+
+mat-chip.chip-retirado {
+    background-color: #f44336 !important;
+    color: white !important;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 8px;
 }

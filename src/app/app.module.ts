@@ -66,6 +66,8 @@ import { CursosNotasComponent } from './components/cursos-notas/cursos-notas.com
 import { CalendarioEscolarComponent } from './components/calendario-escolar/calendario-escolar.component';
 import { ModalCalendarioComponent } from './components/calendario-escolar/modal-calendario/modal-calendario.component';
 import { CustomDateAdapter } from 'src/conf/custom-date-adapter';
+import { ModalEditEstudianteComponent } from './components/modal-edit-estudiante/modal-edit-estudiante.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 
@@ -97,7 +99,8 @@ import { CustomDateAdapter } from 'src/conf/custom-date-adapter';
     CursosAsistenciaComponent,
     CursosNotasComponent,
     CalendarioEscolarComponent,
-    ModalCalendarioComponent
+    ModalCalendarioComponent,
+    ModalEditEstudianteComponent,
   ],
   imports: [
     BrowserModule,
@@ -128,8 +131,8 @@ import { CustomDateAdapter } from 'src/conf/custom-date-adapter';
     MatMenuModule,
     MatCardModule,
     MatBottomSheetModule,
-    MatSlideToggleModule
-
+    MatSlideToggleModule,
+    MatChipsModule
 
   ],
   providers: [
