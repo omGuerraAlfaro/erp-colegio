@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EstudianteService } from 'src/app/services/estudianteService/estudiante.service';
-import { ModalIngresarMatriculaComponent } from '../modal-ingresar-matricula/modal-ingresar-matricula.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { IEstudiante2 } from 'src/app/interfaces/apoderadoInterface';
+import { ModalIngresarMatriculaComponent } from '../modal-ingresar-matricula/modal-ingresar-matricula.component';
 import { ModalEditEstudianteComponent } from '../modal-edit-estudiante/modal-edit-estudiante.component';
 
 @Component({
@@ -16,20 +16,23 @@ export class MatriculasComponent implements OnInit {
   totalEstudiantes: number = 0;
   totalHombres: number = 0;
   totalMujeres: number = 0;
-  estudiantes: MatTableDataSource<IEstudiante2> = new MatTableDataSource();
   displayedColumns: string[] = [
+    'count',
     'id',
     'nombreCompleto',
     'rut',
     'vive_con',
     'autorizacion_fotografias',
-    'curso',
     'estado_estudiante',
     'acciones'
   ];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  constructor(public dialog: MatDialog, private estudianteService: EstudianteService) { }
 
+  dataSourceCursos: { [key: string]: { dataSource: MatTableDataSource<IEstudiante2>, nombreCurso: string } } = {};
+  hasLoadedData = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(public dialog: MatDialog, private estudianteService: EstudianteService) {}
 
   ngOnInit(): void {
     this.iniciarContadoresAlumnos();
@@ -37,17 +40,35 @@ export class MatriculasComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    // Asignar el paginador aquí
-    this.estudiantes.paginator = this.paginator;
+    Object.values(this.dataSourceCursos).forEach(course => {
+      course.dataSource.paginator = this.paginator;
+    });
   }
+
   loadEstudiantes(): void {
-    this.estudianteService.getAllEstudiantes().subscribe(data => {
-      console.log(data);
+    this.estudianteService.getAllEstudiantes().subscribe({
+      next: (estudiantes: IEstudiante2[]) => {
+        const groupedByCurso = estudiantes.reduce((acc, estudiante) => {
+          const cursoId = estudiante.curso[0]?.id || 'Sin Curso';
+          if (!acc[cursoId]) {
+            acc[cursoId] = { estudiantes: [], nombreCurso: estudiante.curso[0]?.nombre || 'Sin Curso' };
+          }
+          acc[cursoId].estudiantes.push(estudiante);
+          return acc;
+        }, {} as { [key: string]: { estudiantes: IEstudiante2[], nombreCurso: string } });
 
-      this.estudiantes.data = data;
+        Object.entries(groupedByCurso).forEach(([cursoId, { estudiantes, nombreCurso }]) => {
+          this.dataSourceCursos[cursoId] = {
+            dataSource: new MatTableDataSource<IEstudiante2>(estudiantes),
+            nombreCurso
+          };
+        });
 
-    }, error => {
-      console.error('Error al cargar estudiantes:', error);
+        this.hasLoadedData = true;
+      },
+      error: (error) => {
+        console.error('Error al cargar estudiantes:', error);
+      }
     });
   }
 
@@ -60,41 +81,22 @@ export class MatriculasComponent implements OnInit {
   }
 
   openModalNuevaMatricula() {
-    const dialogRef = this.dialog.open(ModalIngresarMatriculaComponent, {
-      width: '70%',
-      height: '100%',
-      maxHeight: '100%',
-      panelClass: 'full-height-dialog',
-    });
-
-    dialogRef.componentInstance.inscripcionOK.subscribe(() => {
+    const dialogRef = this.dialog.open(ModalIngresarMatriculaComponent, { width: '70%', panelClass: 'full-height-dialog' });
+    dialogRef.afterClosed().subscribe(() => {
       this.iniciarContadoresAlumnos();
       this.loadEstudiantes();
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('El modal se cerró');
-    });
-
   }
 
   openModalEditEstudiante(element: any) {
-    const dialogRef = this.dialog.open(ModalEditEstudianteComponent, {
-      width: '70%',
-      height: '100%',
-      maxHeight: '100%',
-      panelClass: 'full-height-dialog',
-      data: element
-    });
-
-    dialogRef.componentInstance.editOk.subscribe(() => {
+    const dialogRef = this.dialog.open(ModalEditEstudianteComponent, { width: '70%', data: element });
+    dialogRef.afterClosed().subscribe(() => {
       this.iniciarContadoresAlumnos();
       this.loadEstudiantes();
     });
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('El modal se cerró');
-    });
-
+  getCursoKeys(): string[] {
+    return Object.keys(this.dataSourceCursos);
   }
 }
