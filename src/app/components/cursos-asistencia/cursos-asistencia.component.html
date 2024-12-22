@@ -1,16 +1,36 @@
-<div class="container mt-3">
-  <h1><b>Registro de Asistencia</b></h1>
-  <mat-divider></mat-divider>
+<div class="color posicion border">
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!-- Cabecera dinámica -->
-    <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
-      <th mat-header-cell *matHeaderCellDef> {{ column }} </th>
-      <td mat-cell *matCellDef="let element"> {{ element[column] || '' }} </td>
-    </ng-container>
-
-    <!-- Encabezados y filas -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+  <div class="container mt-3">
+    <h1><b>Registro de Asistencia</b></h1>
+    <mat-divider></mat-divider>
+  
+    <mat-tab-group [(selectedIndex)]="semanaActualIndex">
+      <mat-tab *ngFor="let semana of semanas; let i = index" [label]="'Semana ' + (i + 1)">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <!-- Cabecera dinámica -->
+          <ng-container *ngFor="let column of semana.columns" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ column === 'alumno' ? 'Alumno' : (getFormattedDate(column)) }}
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <ng-container *ngIf="column === 'alumno'">
+                {{ element[column] }}
+              </ng-container>
+              <ng-container *ngIf="column !== 'alumno'">
+                <mat-checkbox [(ngModel)]="element[column]" [disabled]="!isDiaActivo(column)"
+                  (change)="toggleAsistencia(element, column)">
+                  {{ element[column] ? 'Presente' : 'Ausente' }}
+                </mat-checkbox>
+  
+              </ng-container>
+            </td>
+          </ng-container>
+  
+          <!-- Encabezados y filas -->
+          <tr mat-header-row *matHeaderRowDef="semana.columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: semana.columns;"></tr>
+        </table>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>
