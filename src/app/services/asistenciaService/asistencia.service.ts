@@ -24,6 +24,13 @@ export class AsistenciaService {
       );
   }
 
+  getAsistenciaByCurso(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.api}/asistencia/buscar`, data, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
