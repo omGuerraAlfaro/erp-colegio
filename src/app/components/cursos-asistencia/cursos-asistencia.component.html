@@ -5,7 +5,7 @@
 
     <!-- Selector de cursos y botón de búsqueda -->
     <div class="d-flex align-items-center mb-3">
-      <mat-form-field appearance="fill" class="mr-3" style="width: 300px;">
+      <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
         <mat-label>Seleccionar Curso</mat-label>
         <mat-select [(value)]="cursoSeleccionado" placeholder="Curso">
           <mat-option *ngFor="let curso of cursos" [value]="curso.id">
@@ -19,8 +19,9 @@
     </div>
 
     <!-- Spinner mientras se cargan los datos -->
-    <div *ngIf="cargando" class="text-center mt-3">
+    <div *ngIf="cargando" class="loading-spinner">
       <mat-spinner></mat-spinner>
+      <p>Cargando Datos...</p>
     </div>
 
     <!-- Tab group de asistencia -->

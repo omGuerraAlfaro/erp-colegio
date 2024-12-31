@@ -114,10 +114,33 @@ export interface IEstudiante2 {
   primer_apellido_alumno: string;
   segundo_apellido_alumno: string;
   fecha_nacimiento_alumno: string;
+  fecha_matricula:string;
   rut: string;
   genero_alumno: string;
   vive_con: string;
   prevision_alumno: string;
   autorizacion_fotografias: boolean;
   curso: Array<{ id: number; nombre: string; descripcion: string; nivel_grado: string }>;
+}
+
+export interface IUpdateEstudiante {
+  primer_nombre_alumno?: string;
+  segundo_nombre_alumno?: string;
+  primer_apellido_alumno?: string;
+  segundo_apellido_alumno?: string;
+  fecha_nacimiento_alumno?: string; // Formato ISO string (YYYY-MM-DD)
+  fecha_matricula?: string; // Formato ISO string (YYYY-MM-DD)
+  genero_alumno?: string;
+  alergia_alimento_alumno?: string;
+  alergia_medicamento_alumno?: string;
+  vive_con?: string;
+  enfermedad_cronica_alumno?: string;
+  prevision_alumno?: string;
+  nacionalidad?: string;
+  es_pae?: boolean;
+  consultorio_clinica_alumno?: string;
+  autorizacion_fotografias?: boolean;
+  apto_educacion_fisica?: boolean;
+  observaciones_alumno?: string;
+  estado_estudiante?: boolean;
 }

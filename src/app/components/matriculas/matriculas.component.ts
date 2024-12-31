@@ -48,6 +48,12 @@ export class MatriculasComponent implements OnInit {
   loadEstudiantes(): void {
     this.estudianteService.getAllEstudiantes().subscribe({
       next: (estudiantes: IEstudiante2[]) => {
+        // Ajustar las fechas de cada estudiante
+        estudiantes.forEach((estudiante) => {
+          estudiante.fecha_nacimiento_alumno = this.adjustDate(estudiante.fecha_nacimiento_alumno);
+          estudiante.fecha_matricula = this.adjustDate(estudiante.fecha_matricula);
+        });
+  
         const groupedByCurso = estudiantes.reduce((acc, estudiante) => {
           const cursoId = estudiante.curso[0]?.id || 'Sin Curso';
           if (!acc[cursoId]) {
@@ -56,14 +62,14 @@ export class MatriculasComponent implements OnInit {
           acc[cursoId].estudiantes.push(estudiante);
           return acc;
         }, {} as { [key: string]: { estudiantes: IEstudiante2[], nombreCurso: string } });
-
+  
         Object.entries(groupedByCurso).forEach(([cursoId, { estudiantes, nombreCurso }]) => {
           this.dataSourceCursos[cursoId] = {
             dataSource: new MatTableDataSource<IEstudiante2>(estudiantes),
             nombreCurso
           };
         });
-
+  
         this.hasLoadedData = true;
       },
       error: (error) => {
@@ -71,6 +77,20 @@ export class MatriculasComponent implements OnInit {
       }
     });
   }
+  
+  adjustDate(date: string): string {
+    if (!date) return '';
+  
+    // Convertir la fecha recibida en un objeto Date
+    const localDate = new Date(date);
+  
+    // Sumar un día para corregir el desfase (si es necesario)
+    localDate.setDate(localDate.getDate() + 1);
+  
+    // Retornar la fecha ajustada en formato ISO (o el formato deseado)
+    return localDate.toISOString().split('T')[0]; // Retorna solo la parte de la fecha
+  }
+  
 
   iniciarContadoresAlumnos(): void {
     this.estudianteService.getCountByGenero().subscribe(data => {

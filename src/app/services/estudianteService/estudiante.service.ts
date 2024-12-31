@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
-import { EstudianteConBoletas, IEstudiante } from 'src/app/interfaces/apoderadoInterface';
+import { EstudianteConBoletas, IEstudiante, IUpdateEstudiante } from 'src/app/interfaces/apoderadoInterface';
 import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
@@ -58,6 +58,17 @@ export class EstudianteService {
         catchError(this.handleError)
       );
   }
+
+  updateEstudiante(id: number, estudianteActualizado: IUpdateEstudiante): Observable<IUpdateEstudiante> {
+    return this.http.put<IUpdateEstudiante>(
+      `${environment.api}/estudiante/${id}`, 
+      estudianteActualizado, 
+      this.httpOptions
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
