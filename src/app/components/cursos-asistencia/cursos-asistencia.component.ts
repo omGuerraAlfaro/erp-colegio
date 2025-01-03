@@ -30,7 +30,7 @@ export class CursosAsistenciaComponent implements OnInit {
     private cursoService: CursosService,
     private cdRef: ChangeDetectorRef,
     private appRef: ApplicationRef // opcional, si quieres usar isStable
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getAllCursos();
@@ -183,15 +183,15 @@ export class CursosAsistenciaComponent implements OnInit {
   toggleAsistencia(alumno: any, fecha: string, dia: any, newValue: boolean): void {
     // 1) Asegúrate de reflejar el valor en el dataSource (opcional si confías 100% en ngModel).
     alumno[fecha] = newValue;
-    
+
     // 2) Guarda el cambio en tu mapa de “cambios” (para enviar al backend).
     const key = `${alumno.estudianteId}_${dia.id_dia}`;
     this.cambiosAsistencia.set(key, newValue);
-  
+
     // 3) Con OnPush, forzar la detección de cambios.
     this.cdRef.markForCheck();
   }
-  
+
 
   getFormattedDate(fecha: string): string {
     const date = this.parseFechaLocal(fecha);
@@ -216,16 +216,19 @@ export class CursosAsistenciaComponent implements OnInit {
     // Retorna una propiedad única de la fila (por ej. row.estudianteId)
     return row.estudianteId;
   }
-  
+
 
   guardarAsistencia(): void {
-    const asistenciasPayload: any[] = [];
-
+    const asistenciasPayload = {
+      asistencias: [] as any[],
+    };
+  
     this.cambiosAsistencia.forEach((valor, key) => {
       const [estudianteId, calendarioId] = key.split('_');
       const estado = valor ? 1 : 0;
-
-      asistenciasPayload.push({
+  
+      // Agregamos cada asistencia directamente al array "asistencias".
+      asistenciasPayload.asistencias.push({
         estudianteId: +estudianteId,
         calendarioId: +calendarioId,
         cursoId: this.cursoSeleccionado,
@@ -233,26 +236,27 @@ export class CursosAsistenciaComponent implements OnInit {
         estado: estado
       });
     });
-
-    if (asistenciasPayload.length === 0) {
+  
+    if (asistenciasPayload.asistencias.length === 0) {
       alert('No hay cambios para guardar.');
       return;
     }
 
     console.log(asistenciasPayload);
-    
-    // this.asistenciaService.bulkSaveAsistencias(asistenciasPayload).subscribe({
-    //   next: (resp) => {
-    //     console.log('Respuesta del backend:', resp);
-    //     alert('Cambios de asistencia guardados exitosamente.');
-    //     // Limpiamos el map
-    //     this.cambiosAsistencia.clear();
-    //     this.cdRef.markForCheck();
-    //   },
-    //   error: (err) => {
-    //     console.error('Error al guardar asistencia:', err);
-    //     alert('Ocurrió un error al guardar la asistencia.');
-    //   }
-    // });
+
+    this.asistenciaService.updateAsistencias(asistenciasPayload).subscribe({
+      next: (resp) => {
+        console.log('Respuesta del backend:', resp);
+        alert('Cambios de asistencia guardados exitosamente.');
+        // Limpiamos el map
+        this.cambiosAsistencia.clear();
+        this.cdRef.markForCheck();
+        // this.getAllCursos();
+      },
+      error: (err) => {
+        console.error('Error al guardar asistencia:', err);
+        alert('Ocurrió un error al guardar la asistencia.');
+      }
+    });
   }
 }

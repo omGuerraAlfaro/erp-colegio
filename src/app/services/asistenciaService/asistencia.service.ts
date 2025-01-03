@@ -31,6 +31,13 @@ export class AsistenciaService {
       );
   }
 
+  updateAsistencias(data: any): Observable<any> {
+    return this.http.put<any>(`${environment.api}/asistencia/`, data, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
