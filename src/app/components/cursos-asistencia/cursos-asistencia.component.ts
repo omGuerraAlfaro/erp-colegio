@@ -1,50 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  ApplicationRef
+} from '@angular/core';
 import { AsistenciaService } from 'src/app/services/asistenciaService/asistencia.service';
 import { CursosService } from 'src/app/services/cursoService/cursos.service';
+// Si vas a usar isStable, importa también 'filter', 'take' de rxjs y lo usas opcionalmente
 
 @Component({
   selector: 'app-cursos-asistencia',
   templateUrl: './cursos-asistencia.component.html',
-  styleUrls: ['./cursos-asistencia.component.css']
+  styleUrls: ['./cursos-asistencia.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CursosAsistenciaComponent implements OnInit {
   dataSource: any[] = [];
   semanas: { columns: string[]; fechas: any[] }[] = [];
-  cursos: any[] = []; // Lista de cursos disponibles
-  cursoSeleccionado: number | null = null; // Curso seleccionado por el usuario
-  cargando: boolean = false; // Controla la visualización del spinner
+  cursos: any[] = [];
+  cursoSeleccionado: number | null = null;
+  cargando: boolean = false;
   semanaActualIndex: number = 0;
+
+  private cambiosAsistencia: Map<string, boolean> = new Map<string, boolean>();
 
   constructor(
     private asistenciaService: AsistenciaService,
-    private cursoService: CursosService
+    private cursoService: CursosService,
+    private cdRef: ChangeDetectorRef,
+    private appRef: ApplicationRef // opcional, si quieres usar isStable
   ) {}
 
   ngOnInit(): void {
     this.getAllCursos();
   }
 
-  // Obtiene la lista de cursos desde el servicio
   getAllCursos(): void {
     this.cursoService.getAllCursos().subscribe({
       next: (cursos) => {
-        this.cursos = cursos; // Supongamos que cursos es un array de objetos { id, nombre }
+        this.cursos = cursos;
+        this.cdRef.markForCheck(); // Forzar re-render si usas OnPush
       },
       error: (err) => console.error('Error al obtener los cursos:', err)
     });
   }
 
-  // Inicia la búsqueda de asistencia para el curso seleccionado
   buscarAsistencia(): void {
     if (!this.cursoSeleccionado) {
       alert('Por favor, selecciona un curso antes de buscar.');
       return;
     }
 
-    this.cargando = true; // Mostrar el spinner
+    this.cargando = true;
+    this.cdRef.markForCheck();
 
     const data = { cursoId: this.cursoSeleccionado, semestreId: 1 };
-
     this.asistenciaService.getAsistenciaByCurso(data).subscribe({
       next: (response: any) => {
         this.dataSource = response.map((estudiante: any) => {
@@ -58,22 +69,43 @@ export class CursosAsistenciaComponent implements OnInit {
           }, {});
 
           return {
+            estudianteId: estudiante.estudianteId,
             alumno: nombre,
             ...asistencias
           };
         });
 
-        this.obtenerFechasCalendario(); // Actualizar las semanas
-        this.cargando = false; // Ocultar el spinner
+        // Limpiamos los cambios pendientes
+        this.cambiosAsistencia.clear();
+
+        // Obtenemos calendario
+        this.obtenerFechasCalendario();
+
+        // IMPORTANTE:
+        // Usamos requestAnimationFrame para dar un "tick" extra antes de ocultar el spinner
+        requestAnimationFrame(() => {
+          this.cargando = false;
+          this.cdRef.markForCheck();
+        });
+
+        // OPCIONAL: si quisieras usar isStable
+        /*
+        this.appRef.isStable
+          .pipe(filter(stable => stable), take(1))
+          .subscribe(() => {
+            this.cargando = false;
+            this.cdRef.markForCheck();
+          });
+        */
       },
       error: (error) => {
         console.error('Error al cargar la asistencia:', error);
-        this.cargando = false; // Ocultar el spinner incluso en caso de error
+        this.cargando = false;
+        this.cdRef.markForCheck();
       }
     });
   }
 
-  // Obtiene las fechas del calendario de asistencia
   obtenerFechasCalendario(): void {
     this.asistenciaService.getAllFechasCalendarioAsistencia().subscribe({
       next: (fechas) => {
@@ -96,18 +128,18 @@ export class CursosAsistenciaComponent implements OnInit {
         if (this.semanaActualIndex === -1) {
           this.semanaActualIndex = 0;
         }
+
+        this.cdRef.markForCheck();
       },
       error: (err) => console.error('Error al obtener las fechas:', err)
     });
   }
 
-  // Función para parsear "YYYY-MM-DD" como fecha local
   private parseFechaLocal(fechaIso: string): Date {
     const [year, month, day] = fechaIso.split('-');
     return new Date(+year, +month - 1, +day, 0, 0, 0);
   }
 
-  // Función para determinar el número de semana
   getWeekNumber(date: Date): number {
     const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
     const pastDaysOfYear =
@@ -115,7 +147,6 @@ export class CursosAsistenciaComponent implements OnInit {
     return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   }
 
-  // Agrupar las fechas del calendario por semana (Lunes→Domingo)
   agruparPorSemana(dias: any[]): any[] {
     const diasOrdenados = dias.sort((a: any, b: any) => {
       const fechaA = this.parseFechaLocal(a.fecha).getTime();
@@ -149,12 +180,19 @@ export class CursosAsistenciaComponent implements OnInit {
     return semanas;
   }
 
-  // Al hacer clic, alterna la asistencia en memoria
-  toggleAsistencia(alumno: any, fecha: string): void {
-    alumno[fecha] = !alumno[fecha];
+  toggleAsistencia(alumno: any, fecha: string, dia: any, newValue: boolean): void {
+    // 1) Asegúrate de reflejar el valor en el dataSource (opcional si confías 100% en ngModel).
+    alumno[fecha] = newValue;
+    
+    // 2) Guarda el cambio en tu mapa de “cambios” (para enviar al backend).
+    const key = `${alumno.estudianteId}_${dia.id_dia}`;
+    this.cambiosAsistencia.set(key, newValue);
+  
+    // 3) Con OnPush, forzar la detección de cambios.
+    this.cdRef.markForCheck();
   }
+  
 
-  // Formatear fecha para la cabecera
   getFormattedDate(fecha: string): string {
     const date = this.parseFechaLocal(fecha);
     const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
@@ -166,12 +204,55 @@ export class CursosAsistenciaComponent implements OnInit {
     return `${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${day}/${month < 10 ? '0' + month : month}`;
   }
 
-  // Determinar si un día está activo o no
   isDiaActivo(fecha: string): boolean {
     const dia = this.semanas
       .flatMap((semana) => semana.fechas)
       .find((d) => d.fecha === fecha);
 
     return dia ? !!dia.es_clase : false;
+  }
+
+  trackByRowId(index: number, row: any): number | string {
+    // Retorna una propiedad única de la fila (por ej. row.estudianteId)
+    return row.estudianteId;
+  }
+  
+
+  guardarAsistencia(): void {
+    const asistenciasPayload: any[] = [];
+
+    this.cambiosAsistencia.forEach((valor, key) => {
+      const [estudianteId, calendarioId] = key.split('_');
+      const estado = valor ? 1 : 0;
+
+      asistenciasPayload.push({
+        estudianteId: +estudianteId,
+        calendarioId: +calendarioId,
+        cursoId: this.cursoSeleccionado,
+        semestreId: 1,
+        estado: estado
+      });
+    });
+
+    if (asistenciasPayload.length === 0) {
+      alert('No hay cambios para guardar.');
+      return;
+    }
+
+    console.log(asistenciasPayload);
+    
+    // this.asistenciaService.bulkSaveAsistencias(asistenciasPayload).subscribe({
+    //   next: (resp) => {
+    //     console.log('Respuesta del backend:', resp);
+    //     alert('Cambios de asistencia guardados exitosamente.');
+    //     // Limpiamos el map
+    //     this.cambiosAsistencia.clear();
+    //     this.cdRef.markForCheck();
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al guardar asistencia:', err);
+    //     alert('Ocurrió un error al guardar la asistencia.');
+    //   }
+    // });
   }
 }

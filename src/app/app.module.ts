@@ -68,6 +68,7 @@ import { ModalCalendarioComponent } from './components/calendario-escolar/modal-
 import { CustomDateAdapter } from 'src/conf/custom-date-adapter';
 import { ModalEditEstudianteComponent } from './components/modal-edit-estudiante/modal-edit-estudiante.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 
@@ -132,7 +133,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatCardModule,
     MatBottomSheetModule,
     MatSlideToggleModule,
-    MatChipsModule
+    MatChipsModule,
+    ScrollingModule
 
   ],
   providers: [
