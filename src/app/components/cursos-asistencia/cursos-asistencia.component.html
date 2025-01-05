@@ -36,7 +36,7 @@
         <!-- Recorremos las semanas -->
         <mat-tab *ngFor="let semana of semanas; let i = index" [label]="'Semana ' + (i + 1)">
           <ng-template matTabContent>
-            <cdk-virtual-scroll-viewport itemSize="48" style="height: 650px;">
+            <cdk-virtual-scroll-viewport itemSize="48" style="height: 600px;">
               <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 
                 <!-- Iteramos sobre las columnas dinámicas -->
