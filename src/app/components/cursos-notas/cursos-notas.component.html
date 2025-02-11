@@ -1,9 +1,74 @@
-<div class="color posicion border">
-    <div class="container mt-3">
-      <h1><b>Registro de Notas</b></h1>
-      <mat-divider></mat-divider>
-  
-      
-    </div>
-  
+<div class="container mt-3">
+  <h1><b>Registro de Notas</b></h1>
+  <mat-divider></mat-divider>
+
+  <!-- Selectores para curso y asignatura -->
+  <div class="d-flex align-items-center mb-3">
+    <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
+      <mat-label>Seleccionar Curso</mat-label>
+      <mat-select [(value)]="cursoSeleccionado" placeholder="Curso">
+        <mat-option *ngFor="let curso of cursos" [value]="curso.id">
+          {{ curso.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
+      <mat-label>Seleccionar Asignatura</mat-label>
+      <mat-select [(value)]="asignaturaSeleccionada" placeholder="Asignatura">
+        <mat-option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">
+          {{ asignatura.nombre_asignatura }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="buscarNotas()">Buscar</button>
   </div>
+
+  <!-- Spinner mientras se cargan los datos -->
+  <div *ngIf="cargando" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Cargando Notas...</p>
+  </div>
+
+  <!-- Tabla de Notas -->
+  <div *ngIf="!cargando && dataSourceNotas.length > 0">
+    <table mat-table [dataSource]="dataSourceNotas" class="mat-elevation-z8">
+
+      <!-- Columna Alumno -->
+      <ng-container matColumnDef="alumno">
+        <th mat-header-cell *matHeaderCellDef style="width: 400px;">Alumno</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.primerNombre }} {{ element.primerApellido }}
+        </td>
+      </ng-container>
+
+      <!-- Notas Parciales -->
+      <ng-container *ngFor="let i of maxNotasParcialArray; let idx = index" [matColumnDef]="'parcial' + (idx + 1)">
+        <th mat-header-cell *matHeaderCellDef style="width: 70px;">Parcial {{ idx + 1 }}</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.parciales[idx] || '-' }}
+        </td>
+      </ng-container>
+
+      <!-- Notas Finales -->
+      <ng-container *ngFor="let i of maxNotasFinalArray; let idx = index" [matColumnDef]="'final' + (idx + 1)">
+        <th mat-header-cell *matHeaderCellDef style="width: 70px;">Final {{ idx + 1 }}</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.finales[idx] || '-' }}
+        </td>
+      </ng-container>
+
+      <!-- Notas Tareas -->
+      <ng-container *ngFor="let i of maxNotasTareaArray; let idx = index" [matColumnDef]="'tarea' + (idx + 1)">
+        <th mat-header-cell *matHeaderCellDef style="width: 70px;">Tarea {{ idx + 1 }}</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.tareas[idx] || '-' }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsNotas"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsNotas;"></tr>
+    </table>
+  </div>
+</div>
