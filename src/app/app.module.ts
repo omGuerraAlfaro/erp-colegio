@@ -69,6 +69,7 @@ import { CustomDateAdapter } from 'src/conf/custom-date-adapter';
 import { ModalEditEstudianteComponent } from './components/modal-edit-estudiante/modal-edit-estudiante.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ModalIngresarMatriculaApoderadoExistComponent } from './components/modal-ingresar-matricula-apoderado-exist/modal-ingresar-matricula-apoderado-exist.component';
 
 
 
@@ -97,6 +98,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     EditBoletaComponent,
     CreateBoletaComponent,
     ModalIngresarMatriculaComponent,
+    ModalIngresarMatriculaApoderadoExistComponent,
     CursosAsistenciaComponent,
     CursosNotasComponent,
     CalendarioEscolarComponent,
