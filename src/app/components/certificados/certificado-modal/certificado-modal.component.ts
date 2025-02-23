@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { EstudianteService } from 'src/app/services/estudianteService/estudiante.service';
 import { PdfgeneratorService } from 'src/app/services/pdfGeneratorService/pdfgenerator.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-certificado-modal',
@@ -34,7 +35,17 @@ export class CertificadoModalComponent {
       this.estudianteService.getInfoEstudiante(rut).subscribe({
         next: (data: any) => {
           console.log("Datos del estudiante obtenidos:", data);
-
+          if (!data) {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Estudiante no existe',
+              text: `Verificar rut ingresado.`,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Entendido'
+            });
+            return;
+          }
           // Construcción del objeto `certificado`
           const certificado = {
             numero_matricula: data.id,
@@ -51,7 +62,7 @@ export class CertificadoModalComponent {
           };
 
           console.log(certificado);
-          
+
           // Llamada al servicio para generar el PDF
           this.pdfService.getPdfCertificado(certificado).subscribe({
             next: (blob) => {
