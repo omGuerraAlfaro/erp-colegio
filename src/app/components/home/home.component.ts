@@ -119,7 +119,7 @@ export class HomeComponent implements OnInit {
     }
 
     this.filteredVars = this.vars.filter(v => v.roles.includes(this.rolUser));
-    this.loadChart();
+    // this.loadChart();
   }
 
   loadChart(): void {

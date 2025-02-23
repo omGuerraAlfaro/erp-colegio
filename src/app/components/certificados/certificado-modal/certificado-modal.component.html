@@ -1,0 +1,26 @@
+<!-- Contenido del modal -->
+<h2 mat-dialog-title>Generar {{ data.certificado }}</h2>
+<mat-divider></mat-divider>
+
+<div mat-dialog-content>
+    <p>Ingrese el RUN del alumno:</p>
+    <mat-form-field class="full-width">
+        <mat-label>RUN</mat-label>
+        <input matInput [formControl]="rutControl" placeholder="Ej: 12345678-9" [disabled]="isLoading">
+        <mat-error *ngIf="rutControl.hasError('required')">Este campo es obligatorio</mat-error>
+        <mat-error *ngIf="rutControl.hasError('pattern')">Formato inválido (Ej: 12345678-9)</mat-error>
+    </mat-form-field>
+</div>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()" [disabled]="isLoading">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="generatePDF()" [disabled]="rutControl.invalid || isLoading">
+        Generar
+    </button>
+</mat-dialog-actions>
+
+<!-- Pantalla de carga sobre el modal -->
+<div class="loading-overlay" *ngIf="isLoading">
+    <mat-progress-spinner diameter="50" mode="indeterminate"></mat-progress-spinner>
+    <p>Generando PDF...</p>
+</div>

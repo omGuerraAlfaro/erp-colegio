@@ -24,6 +24,13 @@ export class PdfgeneratorService {
       );
   }
 
+  getPdfCertificado(data: any): Observable<Blob> {
+    return this.http.post<Blob>(`${environment.api}/pdf/generate/alumno-regular`, data, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
     console.error(errorMessage);

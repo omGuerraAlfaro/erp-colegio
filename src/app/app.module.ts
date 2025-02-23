@@ -69,6 +69,8 @@ import { CustomDateAdapter } from 'src/conf/custom-date-adapter';
 import { ModalEditEstudianteComponent } from './components/modal-edit-estudiante/modal-edit-estudiante.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CertificadosComponent } from './components/certificados/certificados.component';
+import { CertificadoModalComponent } from './components/certificados/certificado-modal/certificado-modal.component';
 
 
 
@@ -102,6 +104,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     CalendarioEscolarComponent,
     ModalCalendarioComponent,
     ModalEditEstudianteComponent,
+    CertificadosComponent,
+    CertificadoModalComponent,
   ],
   imports: [
     BrowserModule,

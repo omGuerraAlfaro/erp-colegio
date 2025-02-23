@@ -19,6 +19,7 @@ import { BoletasMantenedorComponent } from './components/boletas-mantenedor/bole
 import { CursosAsistenciaComponent } from './components/cursos-asistencia/cursos-asistencia.component';
 import { CursosNotasComponent } from './components/cursos-notas/cursos-notas.component';
 import { CalendarioEscolarComponent } from './components/calendario-escolar/calendario-escolar.component';
+import { CertificadosComponent } from './components/certificados/certificados.component';
 
 
 const routes: Routes = [
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'remuneraciones', component: RemuneracionesComponent},
 
   { path: 'matriculas', component: MatriculasComponent},
+  { path: 'certificados', component: CertificadosComponent},
   { path: 'bandeja-inscripciones', component: InscripcionMatriculaComponent}
 
 
