@@ -71,6 +71,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CertificadosComponent } from './components/certificados/certificados.component';
 import { CertificadoModalComponent } from './components/certificados/certificado-modal/certificado-modal.component';
+import { ModalIngresarMatriculaApoderadoExistComponent } from './components/modal-ingresar-matricula-apoderado-exist/modal-ingresar-matricula-apoderado-exist.component';
 
 
 
@@ -99,6 +100,7 @@ import { CertificadoModalComponent } from './components/certificados/certificado
     EditBoletaComponent,
     CreateBoletaComponent,
     ModalIngresarMatriculaComponent,
+    ModalIngresarMatriculaApoderadoExistComponent,
     CursosAsistenciaComponent,
     CursosNotasComponent,
     CalendarioEscolarComponent,

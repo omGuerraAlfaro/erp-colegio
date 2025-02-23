@@ -1,0 +1,108 @@
+.close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.mat-dialog-title {
+    position: relative;
+}
+
+.mat-dialog-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.modal-title {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+}
+
+.modal-content {
+    max-height: 90vh;
+    /* Ajusta esta altura según sea necesario */
+    overflow-y: auto;
+}
+
+/* Ajuste general del modal */
+.mat-dialog-container {
+    max-width: 80vw;
+    /* Ajusta esta anchura según sea necesario */
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-container {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.back {
+    background-color: rgb(223, 223, 223);
+    margin: 5px;
+    padding: 30px;
+}
+
+.boton {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #ff4757;
+    border: none;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.boton:hover {
+    background-color: #ff6b81;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.boton:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.spinner-overlay {
+    position: fixed;
+    /* Cambia a fixed para que cubra toda la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Fondo semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    /* Asegúrate de que esté por encima del contenido */
+}
+
+.busqueda-apoderado {
+    display: flex;
+    align-items: center; /* Alinea los elementos verticalmente */
+    gap: 50px; /* Espaciado entre los dos bloques */
+}
+
+.apoderado-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre el input y el botón */
+}

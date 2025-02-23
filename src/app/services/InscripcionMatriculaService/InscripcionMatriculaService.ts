@@ -38,6 +38,14 @@ export class InscripcionMatriculaService {
         catchError(this.handleError)
       );
   }
+
+  postAgregarEstudiante(matricula: any): Observable<any> {
+    return this.http.post<any>(`${environment.api}/inscripcion-matricula/crear-matricula/agregar-estudiante`, matricula, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
     console.error(errorMessage);

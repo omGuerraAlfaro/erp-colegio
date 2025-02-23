@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IEstudiante2 } from 'src/app/interfaces/apoderadoInterface';
 import { ModalIngresarMatriculaComponent } from '../modal-ingresar-matricula/modal-ingresar-matricula.component';
 import { ModalEditEstudianteComponent } from '../modal-edit-estudiante/modal-edit-estudiante.component';
+import { ModalIngresarMatriculaApoderadoExistComponent } from '../modal-ingresar-matricula-apoderado-exist/modal-ingresar-matricula-apoderado-exist.component';
 
 @Component({
   selector: 'app-matriculas',
@@ -102,6 +103,14 @@ export class MatriculasComponent implements OnInit {
 
   openModalNuevaMatricula() {
     const dialogRef = this.dialog.open(ModalIngresarMatriculaComponent, { width: '70%', panelClass: 'full-height-dialog' });
+    dialogRef.afterClosed().subscribe(() => {
+      this.iniciarContadoresAlumnos();
+      this.loadEstudiantes();
+    });
+  }
+
+  openModalNuevaMatriculaApoderadoExist() {
+    const dialogRef = this.dialog.open(ModalIngresarMatriculaApoderadoExistComponent, { width: '70%', panelClass: 'full-height-dialog' });
     dialogRef.afterClosed().subscribe(() => {
       this.iniciarContadoresAlumnos();
       this.loadEstudiantes();
