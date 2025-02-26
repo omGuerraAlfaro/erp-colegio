@@ -1,11 +1,12 @@
-<div class="color posicion border">
+<div class="background-container">
     <div class="container mt-3">
         <h1><b>Certificados</b></h1>
         <mat-divider></mat-divider>
-        
-        <small><b>Seleccione que documento desea generar ➔</b></small>
+
+        <small><b>Seleccione qué documento desea generar ➔</b></small>
+
         <div class="cardContenedor">
-            <div class="card text-center m-2" *ngFor="let var1 of vars" [ngClass]="var1.color">
+            <div class="card text-center" *ngFor="let var1 of vars" [ngClass]="var1.color">
                 <div class="card-body">
                     <div class="card-content">
                         <h2>{{ var1.name }}</h2>
@@ -19,6 +20,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>

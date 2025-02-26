@@ -60,13 +60,12 @@ export class CursosAsistenciaComponent implements OnInit {
     const data = { cursoId: this.cursoSeleccionado, semestreId: 1 };
     this.asistenciaService.getAsistenciaByCurso(data).subscribe({
       next: (response: any) => {
-        // Asumimos que ya viene ordenado desde el backend
+        // Map the response to dataSource
         this.dataSource = response.map((estudiante: any) => {
           const nombre = estudiante.nombreCompleto
             ? estudiante.nombreCompleto.trim()
             : 'Desconocido';
 
-          // Convertimos el estado en boolean (true/false) si es necesario
           const asistencias = estudiante.asistencias.reduce((acc: any, item: any) => {
             acc[item.fecha] = item.estado === 1;
             return acc;
@@ -79,11 +78,11 @@ export class CursosAsistenciaComponent implements OnInit {
           };
         });
 
-        // Limpiamos los cambios pendientes
+        // Clear pending changes
         this.cambiosAsistencia.clear();
 
-        // Obtenemos calendario
-        this.obtenerFechasCalendario();
+        // Fetch the calendar and set the current week
+        this.obtenerFechasCalendarioConSemanaActual();
 
         requestAnimationFrame(() => {
           this.cargando = false;
@@ -98,36 +97,38 @@ export class CursosAsistenciaComponent implements OnInit {
     });
   }
 
-  obtenerFechasCalendario(): void {
+  obtenerFechasCalendarioConSemanaActual(): void {
     this.asistenciaService.getAllFechasCalendarioAsistencia().subscribe({
       next: (fechas) => {
         const semanasAgrupadas = this.agruparPorSemana(fechas);
-  
-        // Construyes this.semanas
+
+        // Build this.semanas
         this.semanas = semanasAgrupadas.map((semana) => ({
           columns: ['index', 'alumno', ...semana.map((dia: any) => dia.fecha)],
           fechas: semana,
         }));
-  
-        if (this.fechaCursada) {
-        const semanaCursada = this.getWeekNumber(this.fechaCursada);
+
+        // Set the current week as active (based on today's date)
+        const today = new Date(); // Today is February 26, 2025, per your context
+        const currentWeekNumber = this.getWeekNumber(today);
+
+        // Find the week that contains today's date
         this.semanaActualIndex = this.semanas.findIndex((semana) => {
-          const fechaInicio = this.parseFechaLocal(semana.fechas[0].fecha);
-          const semanaNumero = this.getWeekNumber(fechaInicio);
-          return semanaNumero === semanaCursada;
+          const firstDate = this.parseFechaLocal(semana.fechas[0].fecha);
+          const lastDate = this.parseFechaLocal(semana.fechas[semana.fechas.length - 1].fecha);
+          return today >= firstDate && today <= lastDate;
         });
-      }
-  
+
+        // If no exact match is found, default to week 9 (index 8)
         if (this.semanaActualIndex === -1) {
-          this.semanaActualIndex = 0;
+          this.semanaActualIndex = 8; // Index 8 corresponds to week 9 (0-based index)
         }
-  
+
         this.cdRef.markForCheck();
       },
       error: (err) => console.error('Error al obtener las fechas:', err),
     });
   }
-  
 
   private parseFechaLocal(fechaIso: string): Date {
     const [year, month, day] = fechaIso.split('-');
@@ -142,8 +143,6 @@ export class CursosAsistenciaComponent implements OnInit {
   }
 
   agruparPorSemana(dias: any[]): any[] {
-    // Asumimos que el backend ya está devolviendo las fechas en cierto orden.
-    // Si no, podrías ordenarlas aquí. Pero lo removemos, según tu petición.
     const semanas: any[] = [];
     let semana: any[] = [];
 
@@ -212,11 +211,11 @@ export class CursosAsistenciaComponent implements OnInit {
     const asistenciasPayload = {
       asistencias: [] as any[],
     };
-  
+
     this.cambiosAsistencia.forEach((valor, key) => {
       const [estudianteId, calendarioId] = key.split('_');
       const estado = valor ? 1 : 0;
-  
+
       asistenciasPayload.asistencias.push({
         estudianteId: +estudianteId,
         calendarioId: +calendarioId,
@@ -225,10 +224,9 @@ export class CursosAsistenciaComponent implements OnInit {
         estado: estado,
       });
     });
-  
+
     // Validamos si hay cambios
     if (asistenciasPayload.asistencias.length === 0) {
-      // En vez de alert:
       Swal.fire({
         title: 'No hay cambios',
         text: 'No hay cambios para guardar.',
@@ -237,20 +235,20 @@ export class CursosAsistenciaComponent implements OnInit {
       });
       return;
     }
-  
+
     // Activamos spinner
     this.guardando = true;
     this.cdRef.markForCheck();
-  
+
     // Llamada al servicio
     this.asistenciaService.updateAsistencias(asistenciasPayload).subscribe({
       next: (resp) => {
         console.log('Respuesta del backend:', resp);
-  
+
         // Desactivamos spinner
         this.guardando = false;
         this.cdRef.markForCheck();
-  
+
         // SweetAlert2: éxito
         Swal.fire({
           title: '¡Listo!',
@@ -258,17 +256,17 @@ export class CursosAsistenciaComponent implements OnInit {
           icon: 'success',
           confirmButtonText: 'Ok'
         });
-  
+
         // Limpiamos mapa de cambios
         this.cambiosAsistencia.clear();
       },
       error: (err) => {
         console.error('Error al guardar asistencia:', err);
-  
+
         // Desactivamos spinner
         this.guardando = false;
         this.cdRef.markForCheck();
-  
+
         // SweetAlert2: error
         Swal.fire({
           title: 'Error',
@@ -279,5 +277,4 @@ export class CursosAsistenciaComponent implements OnInit {
       },
     });
   }
-  
 }
