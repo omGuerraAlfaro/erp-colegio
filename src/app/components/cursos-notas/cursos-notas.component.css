@@ -3,7 +3,15 @@
 }
 
 .posicion {
-    margin-left: 2px; 
+    margin-left: 2px;
     min-height: 100vh;
     min-width: 100vh;
+}
+
+.nota-baja {
+    color: red !important;
+}
+
+.nota-normal {
+    color: black !important;
 }

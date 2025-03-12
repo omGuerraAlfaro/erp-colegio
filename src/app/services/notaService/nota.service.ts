@@ -115,31 +115,80 @@ export class NotasService {
    * Obtiene las notas por curso y asignatura para un semestre específico.
    * Endpoint: GET /notas/curso/:cursoId/asignatura/:asignaturaId/semestre/:semestreId
    */
-  getNotasByCursoAsignatura(cursoId: number, asignaturaId: number, semestreId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.api}/notas/curso/${cursoId}/asignatura/${asignaturaId}/semestre/${semestreId}`, this.httpOptions)
+  getNotasByCursoAsignatura(
+    cursoId: number,
+    asignaturaId: number,
+    semestreId: number
+  ): Observable<any[]> {
+    return this.http
+      .get<any[]>(
+        `${environment.api}/notas/curso/${cursoId}/asignatura/${asignaturaId}/semestre/${semestreId}`,
+        this.httpOptions
+      )
       .pipe(
-        tap(notas => {
-          notas.forEach(nota => {
-            const notasParciales: any = [];
-            const notasFinales: any = [];
-            const notasTareas: any = [];
+        tap((alumnos) => {
+          // "alumnos" es un array de objetos; cada objeto representa un estudiante.
+          alumnos.forEach((alumno) => {
+            // Si "evaluaciones" es null o está vacío, no hacemos nada
+            if (!alumno.evaluaciones || !Array.isArray(alumno.evaluaciones)) {
+              alumno.parciales = [];
+              alumno.finales = [];
+              alumno.tareas = [];
+              return;
+            }
 
-            nota.notasAgrupadas = JSON.parse(nota.notasAgrupadas); // Convertimos el JSON string en array real
+            const notasParciales: number[] = [];
+            const notasFinales: number[] = [];
+            const notasTareas: number[] = [];
 
-            nota.notasAgrupadas.forEach((n: any) => {
-              if (n.tipo === 'Parcial') notasParciales.push(n.nota);
-              else if (n.tipo === 'Final') notasFinales.push(n.nota);
-              else if (n.tipo === 'Tarea') notasTareas.push(n.nota);
+            // Recorremos cada evaluación para clasificarla según su tipo
+            alumno.evaluaciones.forEach((evalItem: any) => {
+              const tipo = evalItem?.tipoEvaluacion?.tipo_evaluacion;
+              switch (tipo) {
+                case 'Parcial':
+                  notasParciales.push(evalItem.nota);
+                  break;
+                case 'Final':
+                  notasFinales.push(evalItem.nota);
+                  break;
+                case 'Tarea':
+                  notasTareas.push(evalItem.nota);
+                  break;
+                default:
+                  // Si no coincide con ninguno, lo ignoramos o creamos otra categoría
+                  break;
+              }
             });
 
-            // Asignamos las notas a su respectiva categoría
-            nota.parciales = notasParciales;
-            nota.finales = notasFinales;
-            nota.tareas = notasTareas;
+            // Guardamos estos arreglos para que el componente los use
+            alumno.parciales = notasParciales;
+            alumno.finales = notasFinales;
+            alumno.tareas = notasTareas;
           });
         }),
         catchError(this.handleError)
       );
+  }
+
+
+
+  // Ejemplo para crear una evaluación
+  createEvaluacion(evaluacionData: any) {
+    return this.http.post(`${environment.api}/evaluaciones`, evaluacionData);
+  }
+
+  // // Ejemplo para crear una nota
+  // createNota(notaData: any) {
+  //   return this.http.post(`${environment.api}/notas`, notaData);
+  // }
+
+  actualizarNotas(data: any[]): Observable<any> {
+    // Aquí "data" es el array de alumnos con sus evaluaciones actualizadas.
+    // Dependiendo de tu API, podrías necesitar transformarlo para que el backend sepa
+    // qué estudiante y qué evaluación se está modificando.
+    console.log(data);
+    
+    return this.http.put(`${environment.api}/notas/actualizar`, data, this.httpOptions);
   }
 
 
