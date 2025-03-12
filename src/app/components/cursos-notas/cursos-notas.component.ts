@@ -3,6 +3,7 @@ import { CursosService } from 'src/app/services/cursoService/cursos.service';
 import { AsignaturaService } from 'src/app/services/asignaturaService/asignatura.service';
 import { NotasService } from 'src/app/services/notaService/nota.service';
 import Swal from 'sweetalert2';
+import { SemestreService } from 'src/app/services/semestreService/semestre.service';
 
 @Component({
   selector: 'app-cursos-notas',
@@ -14,7 +15,6 @@ export class CursosNotasComponent implements OnInit {
   asignaturas: any[] = [];
   cursoSeleccionado: number | null = null;
   asignaturaSeleccionada: number | null = null;
-
   dataSourceNotas: any[] = [];         // [{ estudiante, evaluaciones: [...], ... }, ...]
   displayedColumns: string[] = [];     // ['alumno', ...evaluaciones, 'acciones']
   distinctEvaluaciones: string[] = []; // ['Algoritmos', 'Estructuras', etc.]
@@ -25,6 +25,7 @@ export class CursosNotasComponent implements OnInit {
     private notasService: NotasService,
     private cursoService: CursosService,
     private asignaturaService: AsignaturaService,
+    private semestreService: SemestreService,
     private cdRef: ChangeDetectorRef
   ) { }
 
@@ -58,7 +59,10 @@ export class CursosNotasComponent implements OnInit {
       Swal.fire('Error', 'Por favor, selecciona un curso y una asignatura.', 'error');
       return;
     }
-
+    
+    this.dataSourceNotas = [];
+    this.displayedColumns = [];
+    this.distinctEvaluaciones = [];
     this.cargando = true;
     this.cdRef.markForCheck();
 
@@ -66,10 +70,24 @@ export class CursosNotasComponent implements OnInit {
       .getNotasByCursoAsignatura(this.cursoSeleccionado, this.asignaturaSeleccionada, 1)
       .subscribe({
         next: (respuesta) => {
-          this.dataSourceNotas = respuesta;
-          this.configurarColumnas();
+          // En cuanto recibimos respuesta, detenemos el spinner
           this.cargando = false;
           this.cdRef.markForCheck();
+
+          // Verificamos si no hay evaluaciones
+          if (!respuesta || respuesta.length === 0) {
+            Swal.fire(
+              'Sin Evaluaciones',
+              'No existen evaluaciones para este curso y asignatura. Por favor, crea una nueva evaluación para poder registrar las notas.',
+              'info'
+            );
+            // Cortamos el proceso aquí
+            return;
+          }
+
+          // Si hay evaluaciones, seguimos con el proceso normal
+          this.dataSourceNotas = respuesta;
+          this.configurarColumnas();
         },
         error: (err) => {
           console.error('Error al obtener notas:', err);
@@ -79,6 +97,7 @@ export class CursosNotasComponent implements OnInit {
         },
       });
   }
+
 
   configurarColumnas(): void {
     const evaluacionesSet = new Set<string>();
@@ -137,8 +156,6 @@ export class CursosNotasComponent implements OnInit {
       notaNumber = NaN;
     }
 
-    // You could remove this console.log in production
-    console.log('Valor:', valor, '-> notaNumber:', notaNumber);
     return !isNaN(notaNumber) && notaNumber < 4;
   }
 
@@ -183,43 +200,82 @@ export class CursosNotasComponent implements OnInit {
     Swal.fire('Editar Nota', `Alumno: ${alumno.estudiante}`, 'info');
   }
 
-  /**
-   * Llama al servicio para crear una nueva evaluación. 
-   * (Ya lo tienes implementado, lo dejamos como ejemplo.)
-   */
   agregarEvaluacion(): void {
+    if (!this.cursoSeleccionado || !this.asignaturaSeleccionada) {
+      Swal.fire('Advertencia', 'Por favor, selecciona un curso y una asignatura.', 'warning');
+      return;
+    }
+
     Swal.fire({
       title: 'Agregar Evaluación',
-      input: 'text',
-      inputLabel: 'Nombre de la evaluación (ej: Ev1, Tarea1, etc.)',
+      html: `
+        <input id="nombreEvaluacion" class="swal2-input" placeholder="Nombre de la evaluación">
+        <select id="tipoEvaluacion" class="swal2-select">
+          <option value="1">Nota Parcial</option>
+          <option value="2">Nota Tarea</option>
+        </select>
+      `,
       showCancelButton: true,
-    }).then((result) => {
-      if (result.isConfirmed && result.value) {
-        const nombre = result.value.trim();
-        if (nombre) {
-          this.notasService
-            .createEvaluacion({
-              nombreEvaluacion: nombre,
-              asignaturaId: this.asignaturaSeleccionada,
-              semestreId: 1,
-              tipoEvaluacionId: 1, // Ajusta según tu lógica
-              // cursoId: this.cursoSeleccionado, etc.
-            })
-            .subscribe({
-              next: (res) => {
-                Swal.fire('OK', 'Evaluación creada con éxito.', 'success');
-                // Recargamos la tabla para que aparezca la nueva columna
-                this.buscarNotas();
-              },
-              error: (err) => {
-                console.error('Error al crear evaluación:', err);
-                Swal.fire('Error', 'No se pudo crear la evaluación.', 'error');
-              },
-            });
+      confirmButtonText: 'Guardar',
+      preConfirm: () => {
+        const nombreInput = document.getElementById('nombreEvaluacion') as HTMLInputElement;
+        const tipoEvaluacionSelect = document.getElementById('tipoEvaluacion') as HTMLSelectElement;
+
+        if (!nombreInput.value.trim()) {
+          Swal.showValidationMessage('El nombre de la evaluación es obligatorio');
+          return false;
         }
+
+        return {
+          nombre: nombreInput.value.trim(),
+          tipoEvaluacionId: parseInt(tipoEvaluacionSelect.value, 10),
+        };
       }
+    }).then((result) => {
+      if (!result.isConfirmed || !result.value) {
+        return; // Si el usuario cancela o hay un error, salimos.
+      }
+
+      const { nombre, tipoEvaluacionId } = result.value; // Ahora TypeScript reconoce que result.value tiene datos.
+
+      // Obtener el semestre actual a través de getSemestre()
+      const fechaActual = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+      this.semestreService.getSemestre(fechaActual).subscribe({
+        next: (res) => {
+          const semestreId = res.id_semestre;
+
+          if (!this.cursoSeleccionado || !this.asignaturaSeleccionada) {
+            Swal.fire('Error', 'Debe seleccionar un curso y una asignatura.', 'error');
+            return;
+          }
+
+          // Crear la evaluación con los datos obtenidos
+          this.notasService.createEvaluacion({
+            nombreEvaluacion: nombre,
+            asignaturaId: this.asignaturaSeleccionada,
+            cursoId: this.cursoSeleccionado,
+            semestreId: semestreId,
+            tipoEvaluacionId: tipoEvaluacionId,
+          }).subscribe({
+            next: () => {
+              Swal.fire('OK', 'Evaluación creada con éxito.', 'success');
+              this.buscarNotas(); // Recargar tabla
+            },
+            error: (err) => {
+              console.error('Error al crear evaluación:', err);
+              Swal.fire('Error', 'No se pudo crear la evaluación.', 'error');
+            },
+          });
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
+        }
+      });
     });
   }
+
+
 
   /**
    * Guarda los cambios de notas en el backend.
@@ -227,17 +283,6 @@ export class CursosNotasComponent implements OnInit {
    * o un objeto transformado para el backend.
    */
   guardarNotas(): void {
-    // Ejemplo de estructura a enviar:
-    // [
-    //   {
-    //     estudiante: "ALONSO VÁSQUEZ",
-    //     evaluaciones: [
-    //       { nombre_evaluacion: "Algoritmos", nota: 7.5, ... },
-    //       { nombre_evaluacion: "Estructuras", nota: 6.0, ... }
-    //     ]
-    //   },
-    //   ...
-    // ]
     // Podrías necesitar estudianteId, evaluacionId, etc., dependiendo de tu API.
     this.notasService.actualizarNotas(this.dataSourceNotas).subscribe({
       next: () => {
