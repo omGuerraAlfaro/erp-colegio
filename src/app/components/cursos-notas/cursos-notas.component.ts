@@ -63,19 +63,9 @@ export class CursosNotasComponent implements OnInit {
     this.cdRef.markForCheck();
 
     this.notasService
-      .getNotasByCursoAsignatura(this.cursoSeleccionado, this.asignaturaSeleccionada, 1) // Asume semestreId=1
+      .getNotasByCursoAsignatura(this.cursoSeleccionado, this.asignaturaSeleccionada, 1)
       .subscribe({
         next: (respuesta) => {
-          // Estructura esperada: 
-          // [
-          //   { 
-          //     estudiante: "ALONSO VÁSQUEZ",
-          //     evaluaciones: [
-          //       { nombre_evaluacion, nota, fecha, tipoEvaluacion: { ... } }, ...
-          //     ]
-          //   },
-          //   ...
-          // ]
           this.dataSourceNotas = respuesta;
           this.configurarColumnas();
           this.cargando = false;
@@ -167,9 +157,9 @@ export class CursosNotasComponent implements OnInit {
 
       // Aplicar color directamente al elemento input
       if (!isNaN(newValue)) {
-        event.target.style.color = (newValue < 4) ? 'red' : 'black';
+        event.target.style.color = (newValue < 4) ? 'red' : 'blue';
       } else {
-        event.target.style.color = 'black';
+        event.target.style.color = 'blue';
       }
 
       this.cdRef.detectChanges();
