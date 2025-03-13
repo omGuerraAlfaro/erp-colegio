@@ -129,7 +129,7 @@ export class CursosNotasComponent implements OnInit {
       });
     }
 
-    this.displayedColumns = ['alumno', ...this.distinctEvaluaciones, 'acciones'];
+    this.displayedColumns = ['numero', 'alumno', ...this.distinctEvaluaciones, 'acciones'];
   }
 
 
@@ -276,17 +276,30 @@ export class CursosNotasComponent implements OnInit {
   }
 
 
-
-  /**
-   * Guarda los cambios de notas en el backend.
-   * Necesitas un método en tu servicio que reciba la estructura de "dataSourceNotas"
-   * o un objeto transformado para el backend.
-   */
   guardarNotas(): void {
-    // Podrías necesitar estudianteId, evaluacionId, etc., dependiendo de tu API.
-    this.notasService.actualizarNotas(this.dataSourceNotas).subscribe({
+    const notasAGuardar: any = [];
+
+    this.dataSourceNotas.forEach((estudiante) => {
+      estudiante.evaluaciones.forEach((evaluacion: any) => {
+        if (evaluacion.nota !== null && evaluacion.nota !== undefined) {
+          notasAGuardar.push({
+            estudianteId: estudiante.id_estudiante,
+            evaluacionId: evaluacion.id_evaluacion,
+            nota: evaluacion.nota,
+            fecha: evaluacion.fecha ? new Date(evaluacion.fecha) : new Date(),
+          });
+        }
+      });
+    });
+
+    if (notasAGuardar.length === 0) {
+      Swal.fire('Aviso', 'No hay notas para guardar', 'info');
+      return;
+    }
+
+    this.notasService.createNota(notasAGuardar).subscribe({
       next: () => {
-        Swal.fire('Guardado', 'Notas guardadas exitosamente', 'success');
+        Swal.fire('Guardado', 'Todas las notas se guardaron exitosamente', 'success');
       },
       error: (err) => {
         console.error('Error al guardar notas:', err);
@@ -294,6 +307,8 @@ export class CursosNotasComponent implements OnInit {
       },
     });
   }
+
+
 
   getEvaluacionId(nombreEvaluacion: string): number | null {
     // Buscar en el primer estudiante una evaluación con ese nombre para obtener su ID

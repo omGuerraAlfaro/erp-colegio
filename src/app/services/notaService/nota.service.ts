@@ -56,14 +56,11 @@ export class NotasService {
    */
   createNota(data: {
     estudianteId: number;
-    cursoId: number;
-    asignaturaId: number;
     evaluacionId: number;
-    semestreId: number;
     nota: number;
     fecha: Date;
   }): Observable<any> {
-    return this.http.post<any>(`${environment.api}/notas`, data, this.httpOptions)
+    return this.http.post<any>(`${environment.api}/notas/nuevas-notas`, data, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
