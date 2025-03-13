@@ -52,6 +52,10 @@
       <ng-container *ngFor="let evaluacion of distinctEvaluaciones; let i = index" [matColumnDef]="evaluacion">
         <th mat-header-cell *matHeaderCellDef style="width: 100px; text-align: center;">
           {{ evaluacion }}
+          <button mat-icon-button color="warn"
+            (click)="abrirOpcionesEvaluacion(getEvaluacionId(evaluacion), evaluacion)">
+            <mat-icon>more_vert</mat-icon>
+          </button>
         </th>
         <td mat-cell *matCellDef="let element" style="width: 100px; height: 80px; text-align: center;">
           <input matInput type="number" min="1" max="7" step="0.1"
@@ -61,7 +65,7 @@
             (ngModelChange)="onNotaChange($event, element, evaluacion)" />
         </td>
       </ng-container>
-      
+
 
 
       <!-- Columna Acciones (por fila, si deseas acciones individuales) -->

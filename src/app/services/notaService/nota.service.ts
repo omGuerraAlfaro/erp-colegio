@@ -187,8 +187,19 @@ export class NotasService {
     // Dependiendo de tu API, podrías necesitar transformarlo para que el backend sepa
     // qué estudiante y qué evaluación se está modificando.
     console.log(data);
-    
+
     return this.http.put(`${environment.api}/notas/actualizar`, data, this.httpOptions);
+  }
+
+
+
+  editarNombreEvaluacion(id: number, nuevoNombre: string): Observable<any> {
+    return this.http.put<any>(`${environment.api}/evaluaciones/modificar/${id}`, { nombreEvaluacion: nuevoNombre }, this.httpOptions);
+  }
+
+  eliminarEvaluacion(id: number) {
+    const url = `${environment.api}/evaluaciones/eliminar/${id}`;
+    return this.http.delete(url, this.httpOptions);
   }
 
 

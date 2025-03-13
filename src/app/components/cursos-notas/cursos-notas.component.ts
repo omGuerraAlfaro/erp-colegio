@@ -59,7 +59,7 @@ export class CursosNotasComponent implements OnInit {
       Swal.fire('Error', 'Por favor, selecciona un curso y una asignatura.', 'error');
       return;
     }
-    
+
     this.dataSourceNotas = [];
     this.displayedColumns = [];
     this.distinctEvaluaciones = [];
@@ -294,5 +294,97 @@ export class CursosNotasComponent implements OnInit {
       },
     });
   }
+
+  getEvaluacionId(nombreEvaluacion: string): number | null {
+    // Buscar en el primer estudiante una evaluación con ese nombre para obtener su ID
+    const estudiante = this.dataSourceNotas.find(e => e.evaluaciones.some((ev: any) => ev.nombre_evaluacion === nombreEvaluacion));
+    if (estudiante) {
+      const evaluacion = estudiante.evaluaciones.find((ev: any) => ev.nombre_evaluacion === nombreEvaluacion);
+      return evaluacion ? evaluacion.id_evaluacion : null;
+    }
+    return null;
+  }
+
+
+
+  abrirOpcionesEvaluacion(idEvaluacion: number | null, nombreEvaluacion: string): void {
+    if (!idEvaluacion) {
+      Swal.fire('Error', 'No se encontró el ID de la evaluación.', 'error');
+      return;
+    }
+
+    Swal.fire({
+      title: `Opciones para ${nombreEvaluacion}`,
+      showCancelButton: true,
+      confirmButtonText: 'Editar Nombre',
+      cancelButtonText: 'Eliminar Evaluación',
+      showDenyButton: true,
+      denyButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.editarNombreEvaluacion(idEvaluacion, nombreEvaluacion);
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        this.eliminarEvaluacion(idEvaluacion);
+      }
+    });
+  }
+
+  editarNombreEvaluacion(idEvaluacion: number, nombreEvaluacion: string): void {
+    Swal.fire({
+      title: 'Editar Nombre de Evaluación',
+      input: 'text',
+      inputLabel: 'Nuevo Nombre',
+      inputValue: nombreEvaluacion,
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      preConfirm: (nuevoNombre) => {
+        if (!nuevoNombre.trim()) {
+          Swal.showValidationMessage('El nombre no puede estar vacío.');
+          return false;
+        }
+        return nuevoNombre.trim();
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const nuevoNombre = result.value;
+        this.notasService.editarNombreEvaluacion(idEvaluacion, nuevoNombre).subscribe({
+          next: () => {
+            Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
+            this.buscarNotas(); // Recargar la lista
+          },
+          error: (err) => {
+            console.error('Error al actualizar evaluación:', err);
+            Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  eliminarEvaluacion(idEvaluacion: number): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará la evaluación y sus notas asociadas.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.notasService.eliminarEvaluacion(idEvaluacion).subscribe({
+          next: () => {
+            Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
+            this.buscarNotas(); // Recargar la lista
+          },
+          error: (err) => {
+            console.error('Error al eliminar evaluación:', err);
+            Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
+          }
+        });
+      }
+    });
+  }
+
+
 
 }
