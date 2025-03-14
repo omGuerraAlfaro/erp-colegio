@@ -153,9 +153,10 @@ export class CursosNotasComponent implements OnInit {
       ...this.parciales.map(ev => ev.nombre_evaluacion),
       'separator',
       ...this.tareas.map(ev => ev.nombre_evaluacion),
-      'separatorFinal',
+      'separatorFinal1',
       ...this.finalParciales.map(ev => ev.nombre_evaluacion),
       ...this.finalTareas.map(ev => ev.nombre_evaluacion),
+      'separatorFinal2',
       ...this.final.map(ev => ev.nombre_evaluacion),
     ];
 
