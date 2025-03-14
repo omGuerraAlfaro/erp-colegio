@@ -20,6 +20,9 @@ export class CursosNotasComponent implements OnInit {
   distinctEvaluaciones: string[] = []; // ['Algoritmos', 'Estructuras', etc.]
   parciales: any[] = [];
   tareas: any[] = [];
+  finalParciales: any[] = [];
+  finalTareas: any[] = [];
+  final: any[] = [];
   displayedColumnsParciales: string[] = [];
   displayedColumnsTareas: string[] = [];
 
@@ -136,6 +139,9 @@ export class CursosNotasComponent implements OnInit {
     // 4. Separar evaluaciones en parciales y tareas
     this.parciales = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 1);
     this.tareas = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 2);
+    this.finalParciales = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 3);
+    this.finalTareas = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 4);
+    this.final = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 5);
 
     // 5. Configurar las columnas para la tabla:
     // Se incluye 'numero' y 'alumno' al principio,
@@ -146,7 +152,11 @@ export class CursosNotasComponent implements OnInit {
       'alumno',
       ...this.parciales.map(ev => ev.nombre_evaluacion),
       'separator',
-      ...this.tareas.map(ev => ev.nombre_evaluacion)
+      ...this.tareas.map(ev => ev.nombre_evaluacion),
+      'separatorFinal',
+      ...this.finalParciales.map(ev => ev.nombre_evaluacion),
+      ...this.finalTareas.map(ev => ev.nombre_evaluacion),
+      ...this.final.map(ev => ev.nombre_evaluacion),
     ];
 
     // 6. Completar evaluaciones faltantes para cada alumno (para asegurar que tengan todas las columnas)
@@ -229,14 +239,6 @@ export class CursosNotasComponent implements OnInit {
     if (!pattern.test(inputValue) && inputValue !== '') {
       event.target.value = inputValue.slice(0, -1);
     }
-  }
-
-
-  /**
-   * Ejemplo de acción para Editar/Calcular la nota de un alumno (por fila).
-   */
-  editarNota(alumno: any): void {
-    Swal.fire('Editar Nota', `Alumno: ${alumno.estudiante}`, 'info');
   }
 
   agregarEvaluacion(): void {
@@ -442,6 +444,133 @@ export class CursosNotasComponent implements OnInit {
       }
     });
   }
+
+  cierreSemestre(): void {
+    // Primero, confirmamos con SweetAlert si el usuario desea continuar
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Se generarán las notas finales para este curso y asignatura.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cerrar semestre',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // El usuario confirmó, proceder a calcular y guardar
+        this.calcularYGuardarFinales();
+      }
+    });
+  }
+
+
+  calcularYGuardarFinales(): void {
+    const fechaActual = new Date().toISOString().split('T')[0];
+    this.semestreService.getSemestre(fechaActual).subscribe({
+      next: (res) => {
+        const semestreId = res.id_semestre;
+
+        // Se construye el array de estudiantes con sus notas finales
+        const estudiantesData = this.dataSourceNotas.map((alumno: any) => {
+          const evaluacionesParciales = alumno.evaluaciones.filter((ev: any) => ev.tipoEvaluacion?.id === 1 && ev.nota != null);
+          const evaluacionesTareas = alumno.evaluaciones.filter((ev: any) => ev.tipoEvaluacion?.id === 2 && ev.nota != null);
+
+          // Calculamos los promedios según cada tipo de evaluación
+          const promedioParciales = this.calcularPromedio(evaluacionesParciales);
+          const promedioTareas = this.calcularPromedio(evaluacionesTareas);
+
+          // Se calcula la nota final (puedes ajustar la lógica según tus reglas)
+          let notaFinal = null;
+          if (promedioParciales !== null && promedioTareas !== null) {
+            notaFinal = (promedioParciales + promedioTareas) / 2;
+          } else if (promedioParciales !== null) {
+            notaFinal = promedioParciales;
+          } else if (promedioTareas !== null) {
+            notaFinal = promedioTareas;
+          }
+
+          return {
+            estudianteId: alumno.id_estudiante,
+            notaFinalParcial: promedioParciales,
+            notaFinalTarea: promedioTareas,
+            notaFinal: notaFinal
+          };
+        });
+
+        // Verificamos que al menos uno de los estudiantes tenga una nota
+        const tieneNotas = estudiantesData.some(est =>
+          est.notaFinalParcial !== null || est.notaFinalTarea !== null || est.notaFinal !== null
+        );
+        if (!tieneNotas) {
+          Swal.fire('Aviso', 'No hay notas para generar finales.', 'info');
+          return;
+        }
+
+        // Construimos el DTO según la definición en el backend
+        const cierreSemestreDto = {
+          cursoId: this.cursoSeleccionado,
+          asignaturaId: this.asignaturaSeleccionada,
+          semestreId: semestreId,
+          estudiantes: estudiantesData
+        };
+
+        // Llamamos al servicio para cerrar el semestre enviando el DTO
+        this.notasService.cierreSemestre(cierreSemestreDto).subscribe({
+          next: () => {
+            Swal.fire('Éxito', 'Se han generado las notas finales correctamente.', 'success');
+            this.buscarNotas(); // Opcional: recargar la tabla o actualizar la vista
+          },
+          error: (err) => {
+            console.error('Error al guardar notas finales:', err);
+            Swal.fire('Error', 'No se pudieron guardar las notas finales.', 'error');
+          }
+        });
+      },
+      error: () => {
+        Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
+      }
+    });
+  }
+
+
+  private calcularPromedio(evaluaciones: any[]): number | null {
+    if (!evaluaciones || evaluaciones.length === 0) {
+      return null;
+    }
+
+    let suma = 0;
+    let count = 0;
+
+    for (const ev of evaluaciones) {
+      let notaNumber: number;
+
+      if (typeof ev.nota === 'number') {
+        // Si ya es número, lo tomamos tal cual
+        notaNumber = ev.nota;
+      } else if (typeof ev.nota === 'string') {
+        // Convertir coma a punto, si existiera
+        const cleanedValue = ev.nota.replace(',', '.');
+        // Intentar parsear
+        notaNumber = parseFloat(cleanedValue);
+      } else {
+        notaNumber = NaN; // Tipo desconocido o null
+      }
+
+      // Si es un número válido, lo sumamos
+      if (!isNaN(notaNumber)) {
+        suma += notaNumber;
+        count++;
+      }
+    }
+
+    if (count === 0) {
+      return null;
+    }
+
+    const promedio = suma / count;
+    // Redondear a 2 decimales (opcional)
+    return +promedio.toFixed(2);
+  }
+
 
 
 

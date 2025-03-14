@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CierreSemestreRequest } from 'src/app/interfaces/alumnoInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +67,11 @@ export class NotasService {
       );
   }
 
+  cierreSemestre(data: any): Observable<any> {
+    return this.http
+      .post<any>(`${environment.api}/notas/cierre-semestre`, data, this.httpOptions)
+      .pipe(catchError(this.handleError));
+  }
   /**
    * Actualiza una nota existente.
    * Endpoint: PUT /notas/:notaId
