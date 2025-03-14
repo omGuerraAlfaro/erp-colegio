@@ -18,6 +18,11 @@ export class CursosNotasComponent implements OnInit {
   dataSourceNotas: any[] = [];         // [{ estudiante, evaluaciones: [...], ... }, ...]
   displayedColumns: string[] = [];     // ['alumno', ...evaluaciones, 'acciones']
   distinctEvaluaciones: string[] = []; // ['Algoritmos', 'Estructuras', etc.]
+  parciales: any[] = [];
+  tareas: any[] = [];
+  displayedColumnsParciales: string[] = [];
+  displayedColumnsTareas: string[] = [];
+
 
   cargando = false;
 
@@ -100,38 +105,69 @@ export class CursosNotasComponent implements OnInit {
 
 
   configurarColumnas(): void {
-    const evaluacionesSet = new Set<string>();
+    // 1. Recolectar todas las evaluaciones de todos los alumnos
+    const allEvaluations: any[] = [];
+    this.dataSourceNotas.forEach(alumno => {
+      if (Array.isArray(alumno.evaluaciones)) {
+        allEvaluations.push(...alumno.evaluaciones);
+      }
+    });
+
+    // 2. Eliminar evaluaciones duplicadas usando el id_evaluacion como clave
+    const distinctEvalMap = new Map<number, any>();
+    allEvaluations.forEach(ev => {
+      if (!distinctEvalMap.has(ev.id_evaluacion)) {
+        distinctEvalMap.set(ev.id_evaluacion, ev);
+      }
+    });
+    const distinctEvaluations = Array.from(distinctEvalMap.values());
+
+    // 3. Ordenar evaluaciones:
+    //    Primero por tipo (1 = Parcial, 2 = Tarea) y luego por id_evaluacion
+    distinctEvaluations.sort((a, b) => {
+      const tipoA = a.tipoEvaluacion?.id ?? Infinity;
+      const tipoB = b.tipoEvaluacion?.id ?? Infinity;
+      if (tipoA !== tipoB) {
+        return tipoA - tipoB;
+      }
+      return a.id_evaluacion - b.id_evaluacion;
+    });
+
+    // 4. Separar evaluaciones en parciales y tareas
+    this.parciales = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 1);
+    this.tareas = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 2);
+
+    // 5. Configurar las columnas para la tabla:
+    // Se incluye 'numero' y 'alumno' al principio,
+    // luego las evaluaciones parciales, después una columna separadora 'separator'
+    // y finalmente las evaluaciones de tareas.
+    this.displayedColumns = [
+      'numero',
+      'alumno',
+      ...this.parciales.map(ev => ev.nombre_evaluacion),
+      'separator',
+      ...this.tareas.map(ev => ev.nombre_evaluacion)
+    ];
+
+    // 6. Completar evaluaciones faltantes para cada alumno (para asegurar que tengan todas las columnas)
     for (const alumno of this.dataSourceNotas) {
-      // Verifica que tenga evaluaciones como array
-      if (!alumno.evaluaciones || !Array.isArray(alumno.evaluaciones)) {
+      if (!Array.isArray(alumno.evaluaciones)) {
         alumno.evaluaciones = [];
       }
-
-      // Recorre las evaluaciones y añade sus nombres a evaluacionesSet
-      alumno.evaluaciones.forEach((evalObj: any) => {
-        evaluacionesSet.add(evalObj.nombre_evaluacion);
-      });
-    }
-
-    this.distinctEvaluaciones = Array.from(evaluacionesSet);
-
-    // (Opcional) Crear un objeto vacío si falta alguna evaluación:
-    for (const alumno of this.dataSourceNotas) {
-      this.distinctEvaluaciones.forEach(nombreEval => {
-        // Si no existe la evaluación en el array, la añadimos
-        if (!alumno.evaluaciones.find((e: any) => e.nombre_evaluacion === nombreEval)) {
+      distinctEvaluations.forEach(ev => {
+        const existe = alumno.evaluaciones.find((e: any) => e.id_evaluacion === ev.id_evaluacion);
+        if (!existe) {
           alumno.evaluaciones.push({
-            nombre_evaluacion: nombreEval,
+            id_evaluacion: ev.id_evaluacion,
+            nombre_evaluacion: ev.nombre_evaluacion,
             nota: null,
-            // otras propiedades que necesites
+            fecha: null,
+            tipoEvaluacion: ev.tipoEvaluacion,
           });
         }
       });
     }
-
-    this.displayedColumns = ['numero', 'alumno', ...this.distinctEvaluaciones, 'acciones'];
   }
-
 
   /**
   * Retorna la nota para la columna "nombreEvaluacion". Si no la encuentra, retorna '-' o null.
@@ -144,6 +180,7 @@ export class CursosNotasComponent implements OnInit {
     return evalObj ? evalObj.nota : null;
   }
 
+  // Devuelve true si la nota es baja (< 4)
   isNotaBaja(alumno: any, nombreEvaluacion: string): boolean {
     const valor = this.getNotaDeEvaluacion(alumno, nombreEvaluacion);
     let notaNumber: number;
@@ -155,12 +192,17 @@ export class CursosNotasComponent implements OnInit {
     } else {
       notaNumber = NaN;
     }
-
     return !isNaN(notaNumber) && notaNumber < 4;
   }
 
+  // Función auxiliar que retorna el color según la nota
+  getColorForNota(alumno: any, nombreEvaluacion: string): string {
+    return this.isNotaBaja(alumno, nombreEvaluacion) ? 'red' : 'blue';
+  }
 
   onNotaChange(event: any, alumno: any, nombreEvaluacion: string) {
+    console.log(event);
+
     // Reemplaza coma por punto
     const cleanedValue = event.target.value?.replace(',', '.');
     const newValue = parseFloat(cleanedValue);
@@ -172,16 +214,13 @@ export class CursosNotasComponent implements OnInit {
     if (evalObj) {
       evalObj.nota = isNaN(newValue) ? null : newValue;
 
-      // Aplicar color directamente al elemento input
-      if (!isNaN(newValue)) {
-        event.target.style.color = (newValue < 4) ? 'red' : 'blue';
-      } else {
-        event.target.style.color = 'blue';
-      }
+      // Asigna el color usando la función getColorForNota
+      event.target.style.color = isNaN(newValue) ? 'blue' : this.getColorForNota(alumno, nombreEvaluacion);
 
       this.cdRef.detectChanges();
     }
   }
+
 
   onInputMask(event: any) {
     const inputValue: string = event.target.value;
@@ -281,14 +320,17 @@ export class CursosNotasComponent implements OnInit {
 
     this.dataSourceNotas.forEach((estudiante) => {
       estudiante.evaluaciones.forEach((evaluacion: any) => {
-        if (evaluacion.nota !== null && evaluacion.nota !== undefined) {
-          notasAGuardar.push({
-            estudianteId: estudiante.id_estudiante,
-            evaluacionId: evaluacion.id_evaluacion,
-            nota: evaluacion.nota,
-            fecha: evaluacion.fecha ? new Date(evaluacion.fecha) : new Date(),
-          });
-        }
+        // Si la nota está vacía o undefined, asignar null
+        const notaValue = (evaluacion.nota === "" || evaluacion.nota === undefined || evaluacion.nota === null)
+          ? null
+          : Number(evaluacion.nota);
+
+        notasAGuardar.push({
+          estudianteId: estudiante.id_estudiante,
+          evaluacionId: evaluacion.id_evaluacion,
+          nota: notaValue,  // Si la nota está vacía, se asigna null
+          fecha: evaluacion.fecha ? new Date(evaluacion.fecha) : new Date(),
+        });
       });
     });
 
@@ -307,6 +349,7 @@ export class CursosNotasComponent implements OnInit {
       },
     });
   }
+
 
 
 
