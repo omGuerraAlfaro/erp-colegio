@@ -38,7 +38,7 @@
 
   <!-- Tabla de Notas -->
   <div *ngIf="!cargando && dataSourceNotas.length > 0">
-    <table mat-table [dataSource]="dataSourceNotas" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSourceNotas" class="mat-elevation-z8 tabla-cuadricular">
 
       <!-- Columna Número -->
       <ng-container matColumnDef="numero">
@@ -75,17 +75,6 @@
         </td>
       </ng-container>
 
-
-
-      <!-- Columna Acciones (por fila, si deseas acciones individuales) -->
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef style="width: 100px; text-align: center;"> Acciones </th>
-        <td mat-cell *matCellDef="let element" style="width: 100px; text-align: center;">
-          <button mat-button color="primary" (click)="editarNota(element)">
-            Editar/Calcular
-          </button>
-        </td>
-      </ng-container>
 
       <!-- Filas -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

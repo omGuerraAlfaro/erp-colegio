@@ -129,7 +129,7 @@ export class CursosNotasComponent implements OnInit {
       });
     }
 
-    this.displayedColumns = ['numero', 'alumno', ...this.distinctEvaluaciones, 'acciones'];
+    this.displayedColumns = ['numero', 'alumno', ...this.distinctEvaluaciones];
   }
 
 
@@ -281,14 +281,17 @@ export class CursosNotasComponent implements OnInit {
 
     this.dataSourceNotas.forEach((estudiante) => {
       estudiante.evaluaciones.forEach((evaluacion: any) => {
-        if (evaluacion.nota !== null && evaluacion.nota !== undefined) {
-          notasAGuardar.push({
-            estudianteId: estudiante.id_estudiante,
-            evaluacionId: evaluacion.id_evaluacion,
-            nota: evaluacion.nota,
-            fecha: evaluacion.fecha ? new Date(evaluacion.fecha) : new Date(),
-          });
-        }
+        // Si la nota está vacía o undefined, asignar null
+        const notaValue = (evaluacion.nota === "" || evaluacion.nota === undefined || evaluacion.nota === null)
+          ? null
+          : Number(evaluacion.nota);
+
+        notasAGuardar.push({
+          estudianteId: estudiante.id_estudiante,
+          evaluacionId: evaluacion.id_evaluacion,
+          nota: notaValue,  // Si la nota está vacía, se asigna null
+          fecha: evaluacion.fecha ? new Date(evaluacion.fecha) : new Date(),
+        });
       });
     });
 
@@ -307,6 +310,7 @@ export class CursosNotasComponent implements OnInit {
       },
     });
   }
+
 
 
 

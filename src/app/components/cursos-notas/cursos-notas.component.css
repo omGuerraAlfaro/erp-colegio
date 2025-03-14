@@ -15,3 +15,19 @@
 .nota-normal {
     color: blue !important;
 }
+
+.tabla-cuadricular {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+
+.tabla-cuadricular .mat-header-row,
+.tabla-cuadricular .mat-row {
+    border-bottom: 1px solid #ccc;
+}
+
+.tabla-cuadricular .mat-header-cell,
+.tabla-cuadricular .mat-cell {
+    border-right: 1px solid #ccc;
+    padding: 8px;
+}
