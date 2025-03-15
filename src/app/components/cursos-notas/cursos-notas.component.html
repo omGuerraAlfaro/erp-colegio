@@ -39,6 +39,16 @@
     <p>Cargando Notas...</p>
   </div>
 
+  <div *ngIf="guardando" class="spinner-overlay">
+    <mat-spinner></mat-spinner>
+    <p>Guardando Notas...</p>
+  </div>
+
+  <div *ngIf="guardando2" class="spinner-overlay">
+    <mat-spinner></mat-spinner>
+    <p>Cerrando Notas para el Semestre...</p>
+  </div>
+
   <!-- Tabla única con separación entre parciales y tareas -->
   <div *ngIf="!cargando && dataSourceNotas.length > 0">
     <table mat-table [dataSource]="dataSourceNotas" class="mat-elevation-z8 tabla-cuadricular">

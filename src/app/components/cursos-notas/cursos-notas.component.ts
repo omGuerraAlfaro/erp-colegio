@@ -25,8 +25,11 @@ export class CursosNotasComponent implements OnInit {
   final: any[] = [];
   displayedColumnsParciales: string[] = [];
   displayedColumnsTareas: string[] = [];
-
-
+  
+  
+  
+  guardando: boolean = false;
+  guardando2: boolean = false;
   cargando = false;
 
   constructor(
@@ -288,6 +291,7 @@ export class CursosNotasComponent implements OnInit {
         return; // Si el usuario cancela o hay un error, salimos.
       }
 
+      this.guardando = true;
       const { nombre, tipoEvaluacionId } = result.value; // Ahora TypeScript reconoce que result.value tiene datos.
 
       // Obtener el semestre actual a través de getSemestre()
@@ -311,16 +315,19 @@ export class CursosNotasComponent implements OnInit {
             tipoEvaluacionId: tipoEvaluacionId,
           }).subscribe({
             next: () => {
+              this.guardando = false;
               Swal.fire('OK', 'Evaluación creada con éxito.', 'success');
               this.buscarNotas(); // Recargar tabla
             },
             error: (err) => {
+              this.guardando = false;
               console.error('Error al crear evaluación:', err);
               Swal.fire('Error', 'No se pudo crear la evaluación.', 'error');
             },
           });
         },
         error: () => {
+          this.guardando = false;
           Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
         }
       });
@@ -329,6 +336,7 @@ export class CursosNotasComponent implements OnInit {
 
 
   guardarNotas(): void {
+    this.guardando = true;
     const notasAGuardar: any = [];
 
     this.dataSourceNotas.forEach((estudiante) => {
@@ -348,16 +356,19 @@ export class CursosNotasComponent implements OnInit {
     });
 
     if (notasAGuardar.length === 0) {
+      this.guardando = false;
       Swal.fire('Aviso', 'No hay notas para guardar', 'info');
       return;
     }
-
+    
     this.notasService.createNota(notasAGuardar).subscribe({
       next: () => {
+        this.guardando = false;
         Swal.fire('Guardado', 'Todas las notas se guardaron exitosamente', 'success');
         this.buscarNotas();
       },
       error: (err) => {
+        this.guardando = false;
         console.error('Error al guardar notas:', err);
         Swal.fire('Error', 'No se pudieron guardar las notas', 'error');
       },
@@ -418,13 +429,16 @@ export class CursosNotasComponent implements OnInit {
       }
     }).then((result) => {
       if (result.isConfirmed) {
+        this.guardando = true;
         const nuevoNombre = result.value;
         this.notasService.editarNombreEvaluacion(idEvaluacion, nuevoNombre).subscribe({
           next: () => {
+            this.guardando = false;
             Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
             this.buscarNotas(); // Recargar la lista
           },
           error: (err) => {
+            this.guardando = false;
             console.error('Error al actualizar evaluación:', err);
             Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
           }
@@ -443,12 +457,15 @@ export class CursosNotasComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
+        this.guardando = true;
         this.notasService.eliminarEvaluacion(idEvaluacion).subscribe({
           next: () => {
+            this.guardando = false;
             Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
             this.buscarNotas(); // Recargar la lista
           },
           error: (err) => {
+            this.guardando = false;
             console.error('Error al eliminar evaluación:', err);
             Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
           }
@@ -469,6 +486,7 @@ export class CursosNotasComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // El usuario confirmó, proceder a calcular y guardar
+        this.guardando = true;
         this.calcularYGuardarFinales();
       }
     });
@@ -490,6 +508,7 @@ export class CursosNotasComponent implements OnInit {
         });
 
         if (existeNotaVacia) {
+          this.guardando2 = false;
           Swal.fire('Aviso', 'Existen notas de parciales o tareas que están vacías. No se puede generar el cálculo.', 'info');
           return;
         }
@@ -528,6 +547,7 @@ export class CursosNotasComponent implements OnInit {
           est.notaFinalParcial !== null || est.notaFinalTarea !== null || est.notaFinal !== null
         );
         if (!tieneNotas) {
+          this.guardando2 = false;
           Swal.fire('Aviso', 'No hay notas para generar finales.', 'info');
           return;
         }
@@ -543,16 +563,19 @@ export class CursosNotasComponent implements OnInit {
         // 5. Llamamos al servicio para cerrar el semestre
         this.notasService.cierreSemestre(cierreSemestreDto).subscribe({
           next: () => {
+            this.guardando2 = false;
             Swal.fire('Éxito', 'Se han generado las notas finales correctamente.', 'success');
             this.buscarNotas(); // Para recargar la tabla o actualizar la vista
           },
           error: (err) => {
+            this.guardando2 = false;
             console.error('Error al guardar notas finales:', err);
             Swal.fire('Error', 'No se pudieron guardar las notas finales.', 'error');
           },
         });
       },
       error: () => {
+        this.guardando2 = false;
         Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
       },
     });
