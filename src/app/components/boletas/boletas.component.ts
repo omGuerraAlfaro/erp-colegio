@@ -60,7 +60,7 @@ export class BoletasComponent implements OnInit {
   displayedColumns: string[] = ['id', 'rut_apoderado2', 'nombre_apoderado', 'telefono_apoderado', 'correo_apoderado', 'detalle', 'fecha_vencimiento', 'estado_id', 'total', 'acciones'];
   dataSource = new MatTableDataSource<BoletaDetalle>();
 
-  displayedColumnsCursos: string[] = ['id', 'nombre_estudiante', 'rut_estudiante2', 'genero_estudiante', 'acciones'];
+  displayedColumnsCursos: string[] = ['numero', 'id', 'nombre_estudiante', 'rut_estudiante2', 'genero_estudiante', 'acciones'];
   dataSource2 = new MatTableDataSource<CursoDetalle>();
   dataSourceCursos: { [key: string]: { dataSource2: MatTableDataSource<CursoEstudianteDetalle>, nombreCurso: string } } = {};
 
@@ -157,14 +157,20 @@ export class BoletasComponent implements OnInit {
             const cursoId = curso.id.toString();
             const nombreCurso = curso.nombre;
             console.log(curso.estudiantes);
-            
-            const estudiantesArray = curso.estudiantes.map((estudiante: any) => ({
+
+            // Se ordenan los estudiantes por primer_apellido_alumno en orden alfabético
+            const estudiantesOrdenados = curso.estudiantes.sort((a: any, b: any) =>
+              a.primer_apellido_alumno.localeCompare(b.primer_apellido_alumno)
+            );
+
+            const estudiantesArray = estudiantesOrdenados.map((estudiante: any) => ({
               id: estudiante.id,
               nombre_estudiante: `${estudiante.primer_nombre_alumno} ${estudiante.segundo_nombre_alumno} ${estudiante.primer_apellido_alumno} ${estudiante.segundo_apellido_alumno}`,
               rut_estudiante: `${estudiante.rut}-${estudiante.dv}`,
               // telefono_estudiante: estudiante.telefono_contacto,
               genero_estudiante: estudiante.genero_alumno
             }));
+
             if (estudiantesArray.length) {
               const dataSource2 = new MatTableDataSource<CursoEstudianteDetalle>(estudiantesArray);
               this.dataSourceCursos[cursoId] = { dataSource2, nombreCurso };
@@ -177,6 +183,7 @@ export class BoletasComponent implements OnInit {
       }
     });
   }
+
 
 
   getCursoKeys(): string[] {
@@ -240,7 +247,7 @@ export class BoletasComponent implements OnInit {
   }
 
   openModalDetalleBoleta(element: BoletaDetalle): void {
-    const dialogRef = this.dialog.open( ModalBoletasEstudianteComponent, {
+    const dialogRef = this.dialog.open(ModalBoletasEstudianteComponent, {
       width: '60%',
       height: 'auto',
       data: element
@@ -277,73 +284,73 @@ export class BoletasComponent implements OnInit {
   loadDataChart(): void {
     const fecha = new Date().toISOString().slice(0, 10);
     this.boletasService.getTotalPendientePorMes(fecha).subscribe(pendienteData => {
-        this.boletasService.getTotalPagadoPorMes(fecha).subscribe(pagadoData => {
-            this.loadChart(pendienteData, pagadoData);
-        });
+      this.boletasService.getTotalPagadoPorMes(fecha).subscribe(pagadoData => {
+        this.loadChart(pendienteData, pagadoData);
+      });
     });
-}
+  }
 
-convertDateToMonthName(dateString: string): string {
+  convertDateToMonthName(dateString: string): string {
     const [year, month, day] = dateString.split('-');
     const date = new Date(Number(year), Number(month) - 1, Number(day));
     const options: Intl.DateTimeFormatOptions = { month: 'long' };
     return date.toLocaleDateString('es-ES', options);
-}
+  }
 
-loadChart(pendienteData: any, pagadoData: any): void {
+  loadChart(pendienteData: any, pagadoData: any): void {
     const labels = pendienteData.map((item: any) => this.convertDateToMonthName(item.mes));
     const pendienteValues = pendienteData.map((item: any) => item.total_pendiente_vencido);
     const pagadoValues = pagadoData.map((item: any) => item.total_pagado);
 
     const myChart = new Chart('myChart3', {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Total Pendiente Vencido',
-                    data: pendienteValues,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Total Pagado',
-                    data: pagadoValues,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }
-            ]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Total Pendiente Vencido',
+            data: pendienteValues,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Total Pagado',
+            data: pagadoValues,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
         }
+      }
     });
 
     //chart 2
     const myChart2 = new Chart('myChart4', {
-        type: 'line',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [{
-                label: 'Gasto Mensual',
-                data: [14, 12, 13, 11, 12, 13, 14],
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true
-        }
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'Gasto Mensual',
+          data: [14, 12, 13, 11, 12, 13, 14],
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true
+      }
     });
-}
+  }
 
 
 

@@ -17,6 +17,9 @@ export class MatriculasComponent implements OnInit {
   totalEstudiantes: number = 0;
   totalHombres: number = 0;
   totalMujeres: number = 0;
+  retirados: number = 0;
+  totalHombresRetirados = 0;
+  totalMujeresRetiradas = 0;
   displayedColumns: string[] = [
     'count',
     'id',
@@ -33,7 +36,7 @@ export class MatriculasComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(public dialog: MatDialog, private estudianteService: EstudianteService) {}
+  constructor(public dialog: MatDialog, private estudianteService: EstudianteService) { }
 
   ngOnInit(): void {
     this.iniciarContadoresAlumnos();
@@ -54,7 +57,7 @@ export class MatriculasComponent implements OnInit {
           estudiante.fecha_nacimiento_alumno = this.adjustDate(estudiante.fecha_nacimiento_alumno);
           estudiante.fecha_matricula = this.adjustDate(estudiante.fecha_matricula);
         });
-  
+
         const groupedByCurso = estudiantes.reduce((acc, estudiante) => {
           const cursoId = estudiante.curso[0]?.id || 'Sin Curso';
           if (!acc[cursoId]) {
@@ -63,14 +66,14 @@ export class MatriculasComponent implements OnInit {
           acc[cursoId].estudiantes.push(estudiante);
           return acc;
         }, {} as { [key: string]: { estudiantes: IEstudiante2[], nombreCurso: string } });
-  
+
         Object.entries(groupedByCurso).forEach(([cursoId, { estudiantes, nombreCurso }]) => {
           this.dataSourceCursos[cursoId] = {
             dataSource: new MatTableDataSource<IEstudiante2>(estudiantes),
             nombreCurso
           };
         });
-  
+
         this.hasLoadedData = true;
       },
       error: (error) => {
@@ -78,26 +81,29 @@ export class MatriculasComponent implements OnInit {
       }
     });
   }
-  
+
   adjustDate(date: string): string {
     if (!date) return '';
-  
+
     // Convertir la fecha recibida en un objeto Date
     const localDate = new Date(date);
-  
+
     // Sumar un día para corregir el desfase (si es necesario)
     localDate.setDate(localDate.getDate() + 1);
-  
+
     // Retornar la fecha ajustada en formato ISO (o el formato deseado)
     return localDate.toISOString().split('T')[0]; // Retorna solo la parte de la fecha
   }
-  
+
 
   iniciarContadoresAlumnos(): void {
     this.estudianteService.getCountByGenero().subscribe(data => {
       this.totalHombres = data.masculinoCount;
       this.totalMujeres = data.femeninoCount;
       this.totalEstudiantes = this.totalHombres + this.totalMujeres;
+      this.retirados = data.out;
+      this.totalHombresRetirados = data.masculinoCountOut;
+      this.totalMujeresRetiradas = data.femeninoCountOut;
     });
   }
 

@@ -157,14 +157,21 @@
 
           <table mat-table [dataSource]="dataSourceCursos[cursoId].dataSource2" class="full-width">
 
+            <ng-container matColumnDef="numero">
+              <th mat-header-cell *matHeaderCellDef style="width: 80px; text-align: center;"> # </th>
+              <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
+                {{ i + 1 }}
+              </td>
+            </ng-container>
+
             <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef> ID </th>
-              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              <th mat-header-cell *matHeaderCellDef style="width: 80px; text-align: center;"> N° Matricula </th>
+              <td mat-cell *matCellDef="let element" style="width: 80px; text-align: center;"> {{element.id}} </td>
             </ng-container>
 
             <ng-container matColumnDef="nombre_estudiante">
-              <th mat-header-cell *matHeaderCellDef style="width: 500px;"> Nombre Estudiante </th>
-              <td mat-cell *matCellDef="let element" style="width: 500px;"> {{element.nombre_estudiante}} </td>
+              <th mat-header-cell *matHeaderCellDef style="width: 400px; text-align: center;"> Nombre Estudiante </th>
+              <td mat-cell *matCellDef="let element" style="width: 400px; text-align: center;"> {{element.nombre_estudiante}} </td>
             </ng-container>
 
             <ng-container matColumnDef="rut_estudiante2">

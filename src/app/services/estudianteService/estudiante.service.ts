@@ -38,8 +38,8 @@ export class EstudianteService {
       );
   }
 
-  getCountByGenero(): Observable<{ masculinoCount: number; femeninoCount: number }> {
-    return this.http.get<{ masculinoCount: number; femeninoCount: number }>(`${environment.api}/estudiante/count-by-genero`, this.httpOptions)
+  getCountByGenero(): Observable<{ masculinoCount: number; femeninoCount: number; out: number; masculinoCountOut: number; femeninoCountOut: number }> {
+    return this.http.get<{ masculinoCount: number; femeninoCount: number; out: number; masculinoCountOut: number; femeninoCountOut: number }>(`${environment.api}/estudiante/count-by-genero`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -61,14 +61,14 @@ export class EstudianteService {
 
   updateEstudiante(id: number, estudianteActualizado: IUpdateEstudiante): Observable<IUpdateEstudiante> {
     return this.http.put<IUpdateEstudiante>(
-      `${environment.api}/estudiante/${id}`, 
-      estudianteActualizado, 
+      `${environment.api}/estudiante/${id}`,
+      estudianteActualizado,
       this.httpOptions
     ).pipe(
       catchError(this.handleError)
     );
   }
-  
+
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
