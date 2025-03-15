@@ -44,6 +44,21 @@
     <p>Guardando Notas...</p>
   </div>
 
+  <div *ngIf="guardandoEv" class="spinner-overlay">
+    <mat-spinner></mat-spinner>
+    <p>Creando Evaluación...</p>
+  </div>
+
+  <div *ngIf="borrandoEv" class="spinner-overlay">
+    <mat-spinner></mat-spinner>
+    <p>Eliminando Evaluación...</p>
+  </div>
+
+  <div *ngIf="editandoEv" class="spinner-overlay">
+    <mat-spinner></mat-spinner>
+    <p>Editando Evaluación...</p>
+  </div>
+
   <div *ngIf="guardando2" class="spinner-overlay">
     <mat-spinner></mat-spinner>
     <p>Cerrando Notas para el Semestre...</p>

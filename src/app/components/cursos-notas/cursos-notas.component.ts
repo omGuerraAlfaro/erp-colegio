@@ -25,9 +25,12 @@ export class CursosNotasComponent implements OnInit {
   final: any[] = [];
   displayedColumnsParciales: string[] = [];
   displayedColumnsTareas: string[] = [];
-  
-  
-  
+
+
+
+  editandoEv: boolean = false;
+  borrandoEv: boolean = false;
+  guardandoEv: boolean = false;
   guardando: boolean = false;
   guardando2: boolean = false;
   cargando = false;
@@ -155,23 +158,23 @@ export class CursosNotasComponent implements OnInit {
       'alumno',
       ...this.parciales.map(ev => ev.nombre_evaluacion),
     ];
-    
+
     if (this.tareas && this.tareas.length > 0) {
       this.displayedColumns.push('separator', ...this.tareas.map(ev => ev.nombre_evaluacion));
     }
-    
+
     if (this.finalParciales && this.finalParciales.length > 0) {
       this.displayedColumns.push('separatorFinal1', ...this.finalParciales.map(ev => ev.nombre_evaluacion));
     }
-    
+
     // Si se necesitan las evaluaciones de tareas finales, se agregan sin separador (o con su separador si corresponde)
     this.displayedColumns.push(...this.finalTareas.map(ev => ev.nombre_evaluacion));
-    
+
     // Se añade la última separación y evaluaciones finales
     if (this.finalParciales && this.finalParciales.length > 0) {
       this.displayedColumns.push('separatorFinal2', ...this.final.map(ev => ev.nombre_evaluacion));
     }
-    
+
 
     // 6. Completar evaluaciones faltantes para cada alumno (para asegurar que tengan todas las columnas)
     for (const alumno of this.dataSourceNotas) {
@@ -291,7 +294,7 @@ export class CursosNotasComponent implements OnInit {
         return; // Si el usuario cancela o hay un error, salimos.
       }
 
-      this.guardando = true;
+      this.guardandoEv = true;
       const { nombre, tipoEvaluacionId } = result.value; // Ahora TypeScript reconoce que result.value tiene datos.
 
       // Obtener el semestre actual a través de getSemestre()
@@ -302,6 +305,7 @@ export class CursosNotasComponent implements OnInit {
           const semestreId = res.id_semestre;
 
           if (!this.cursoSeleccionado || !this.asignaturaSeleccionada) {
+            this.guardandoEv = false;
             Swal.fire('Error', 'Debe seleccionar un curso y una asignatura.', 'error');
             return;
           }
@@ -315,19 +319,19 @@ export class CursosNotasComponent implements OnInit {
             tipoEvaluacionId: tipoEvaluacionId,
           }).subscribe({
             next: () => {
-              this.guardando = false;
+              this.guardandoEv = false;
               Swal.fire('OK', 'Evaluación creada con éxito.', 'success');
               this.buscarNotas(); // Recargar tabla
             },
             error: (err) => {
-              this.guardando = false;
+              this.guardandoEv = false;
               console.error('Error al crear evaluación:', err);
               Swal.fire('Error', 'No se pudo crear la evaluación.', 'error');
             },
           });
         },
         error: () => {
-          this.guardando = false;
+          this.guardandoEv = false;
           Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
         }
       });
@@ -360,7 +364,7 @@ export class CursosNotasComponent implements OnInit {
       Swal.fire('Aviso', 'No hay notas para guardar', 'info');
       return;
     }
-    
+
     this.notasService.createNota(notasAGuardar).subscribe({
       next: () => {
         this.guardando = false;
@@ -429,16 +433,16 @@ export class CursosNotasComponent implements OnInit {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.guardando = true;
+        this.editandoEv = true;
         const nuevoNombre = result.value;
         this.notasService.editarNombreEvaluacion(idEvaluacion, nuevoNombre).subscribe({
           next: () => {
-            this.guardando = false;
+            this.editandoEv = false;
             Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
             this.buscarNotas(); // Recargar la lista
           },
           error: (err) => {
-            this.guardando = false;
+            this.editandoEv = false;
             console.error('Error al actualizar evaluación:', err);
             Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
           }
@@ -457,15 +461,15 @@ export class CursosNotasComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.guardando = true;
+        this.borrandoEv = true;
         this.notasService.eliminarEvaluacion(idEvaluacion).subscribe({
           next: () => {
-            this.guardando = false;
+            this.borrandoEv = false;
             Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
             this.buscarNotas(); // Recargar la lista
           },
           error: (err) => {
-            this.guardando = false;
+            this.borrandoEv = false;
             console.error('Error al eliminar evaluación:', err);
             Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
           }
@@ -486,7 +490,7 @@ export class CursosNotasComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // El usuario confirmó, proceder a calcular y guardar
-        this.guardando = true;
+        this.guardando2 = true;
         this.calcularYGuardarFinales();
       }
     });
