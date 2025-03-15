@@ -151,14 +151,24 @@ export class CursosNotasComponent implements OnInit {
       'numero',
       'alumno',
       ...this.parciales.map(ev => ev.nombre_evaluacion),
-      'separator',
-      ...this.tareas.map(ev => ev.nombre_evaluacion),
-      'separatorFinal1',
-      ...this.finalParciales.map(ev => ev.nombre_evaluacion),
-      ...this.finalTareas.map(ev => ev.nombre_evaluacion),
-      'separatorFinal2',
-      ...this.final.map(ev => ev.nombre_evaluacion),
     ];
+    
+    if (this.tareas && this.tareas.length > 0) {
+      this.displayedColumns.push('separator', ...this.tareas.map(ev => ev.nombre_evaluacion));
+    }
+    
+    if (this.finalParciales && this.finalParciales.length > 0) {
+      this.displayedColumns.push('separatorFinal1', ...this.finalParciales.map(ev => ev.nombre_evaluacion));
+    }
+    
+    // Si se necesitan las evaluaciones de tareas finales, se agregan sin separador (o con su separador si corresponde)
+    this.displayedColumns.push(...this.finalTareas.map(ev => ev.nombre_evaluacion));
+    
+    // Se añade la última separación y evaluaciones finales
+    if (this.finalParciales && this.finalParciales.length > 0) {
+      this.displayedColumns.push('separatorFinal2', ...this.final.map(ev => ev.nombre_evaluacion));
+    }
+    
 
     // 6. Completar evaluaciones faltantes para cada alumno (para asegurar que tengan todas las columnas)
     for (const alumno of this.dataSourceNotas) {
@@ -345,6 +355,7 @@ export class CursosNotasComponent implements OnInit {
     this.notasService.createNota(notasAGuardar).subscribe({
       next: () => {
         Swal.fire('Guardado', 'Todas las notas se guardaron exitosamente', 'success');
+        this.buscarNotas();
       },
       error: (err) => {
         console.error('Error al guardar notas:', err);
@@ -463,23 +474,38 @@ export class CursosNotasComponent implements OnInit {
     });
   }
 
-
   calcularYGuardarFinales(): void {
     const fechaActual = new Date().toISOString().split('T')[0];
     this.semestreService.getSemestre(fechaActual).subscribe({
       next: (res) => {
         const semestreId = res.id_semestre;
 
-        // Se construye el array de estudiantes con sus notas finales
-        const estudiantesData = this.dataSourceNotas.map((alumno: any) => {
-          const evaluacionesParciales = alumno.evaluaciones.filter((ev: any) => ev.tipoEvaluacion?.id === 1 && ev.nota != null);
-          const evaluacionesTareas = alumno.evaluaciones.filter((ev: any) => ev.tipoEvaluacion?.id === 2 && ev.nota != null);
+        // 1. Verificamos si hay alguna evaluación de tipo parcial o tarea con nota vacía
+        const existeNotaVacia = this.dataSourceNotas.some((alumno: any) => {
+          return alumno.evaluaciones.some((ev: any) => {
+            const esParcialOTarea = ev.tipoEvaluacion?.id === 1 || ev.tipoEvaluacion?.id === 2;
+            const notaVacia = ev.nota === null || ev.nota === 0; // Ajusta la condición según tu criterio
+            return esParcialOTarea && notaVacia;
+          });
+        });
 
-          // Calculamos los promedios según cada tipo de evaluación
+        if (existeNotaVacia) {
+          Swal.fire('Aviso', 'Existen notas de parciales o tareas que están vacías. No se puede generar el cálculo.', 'info');
+          return;
+        }
+
+        // 2. Si pasa la verificación, calculamos los promedios
+        const estudiantesData = this.dataSourceNotas.map((alumno: any) => {
+          const evaluacionesParciales = alumno.evaluaciones.filter(
+            (ev: any) => ev.tipoEvaluacion?.id === 1 && ev.nota != null
+          );
+          const evaluacionesTareas = alumno.evaluaciones.filter(
+            (ev: any) => ev.tipoEvaluacion?.id === 2 && ev.nota != null
+          );
+
           const promedioParciales = this.calcularPromedio(evaluacionesParciales);
           const promedioTareas = this.calcularPromedio(evaluacionesTareas);
 
-          // Se calcula la nota final (puedes ajustar la lógica según tus reglas)
           let notaFinal = null;
           if (promedioParciales !== null && promedioTareas !== null) {
             notaFinal = (promedioParciales + promedioTareas) / 2;
@@ -493,11 +519,11 @@ export class CursosNotasComponent implements OnInit {
             estudianteId: alumno.id_estudiante,
             notaFinalParcial: promedioParciales,
             notaFinalTarea: promedioTareas,
-            notaFinal: notaFinal
+            notaFinal: notaFinal,
           };
         });
 
-        // Verificamos que al menos uno de los estudiantes tenga una nota
+        // 3. Verificamos que al menos uno de los estudiantes tenga una nota final
         const tieneNotas = estudiantesData.some(est =>
           est.notaFinalParcial !== null || est.notaFinalTarea !== null || est.notaFinal !== null
         );
@@ -506,29 +532,29 @@ export class CursosNotasComponent implements OnInit {
           return;
         }
 
-        // Construimos el DTO según la definición en el backend
+        // 4. Construimos el DTO para enviarlo al backend
         const cierreSemestreDto = {
           cursoId: this.cursoSeleccionado,
           asignaturaId: this.asignaturaSeleccionada,
           semestreId: semestreId,
-          estudiantes: estudiantesData
+          estudiantes: estudiantesData,
         };
 
-        // Llamamos al servicio para cerrar el semestre enviando el DTO
+        // 5. Llamamos al servicio para cerrar el semestre
         this.notasService.cierreSemestre(cierreSemestreDto).subscribe({
           next: () => {
             Swal.fire('Éxito', 'Se han generado las notas finales correctamente.', 'success');
-            this.buscarNotas(); // Opcional: recargar la tabla o actualizar la vista
+            this.buscarNotas(); // Para recargar la tabla o actualizar la vista
           },
           error: (err) => {
             console.error('Error al guardar notas finales:', err);
             Swal.fire('Error', 'No se pudieron guardar las notas finales.', 'error');
-          }
+          },
         });
       },
       error: () => {
         Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
-      }
+      },
     });
   }
 
@@ -570,6 +596,40 @@ export class CursosNotasComponent implements OnInit {
     const promedio = suma / count;
     // Redondear a 2 decimales (opcional)
     return +promedio.toFixed(2);
+  }
+
+
+  validarRango(event: any): void {
+    let inputValue = event.target.value;
+
+    if (!inputValue) {
+      return;
+    }
+
+    // Reemplazar coma por punto
+    inputValue = inputValue.replace(',', '.');
+
+    // Convertir a número
+    let valorNumerico = parseFloat(inputValue);
+
+    // Si no es un número, lo vaciamos
+    if (isNaN(valorNumerico)) {
+      event.target.value = '';
+      return;
+    }
+
+    // Limitar a un decimal
+    valorNumerico = Math.round(valorNumerico * 10) / 10;
+
+    // Forzar que el valor esté entre 1 y 7
+    if (valorNumerico < 1) {
+      valorNumerico = 1;
+    } else if (valorNumerico > 7) {
+      valorNumerico = 7;
+    }
+
+    // Devolver el valor corregido al input
+    event.target.value = valorNumerico;
   }
 
 
