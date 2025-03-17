@@ -31,6 +31,13 @@ export class EstudianteService {
       );
   }
 
+  getInfoEstudianteConApoderados(rut: any): Observable<IEstudiante> {
+    return this.http.get<IEstudiante>(`${environment.api}/estudiante/${rut}/apoderados`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getInfoEstudiante2(rut: any): Observable<EstudianteConBoletas> {
     return this.http.get<EstudianteConBoletas>(`${environment.api}/estudiante/rut/${rut}`, this.httpOptions)
       .pipe(

@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit {
     },
     {
       name: 'Gestionar Anotaciones',
-      link: 'anotaciones',
+      link: 'cursos-anotaciones',
       icon: 'fas fa-clipboard-list',
       color: 'bg-yellow',
       roles: ['administrador', 'subAdministrador', 'profesor']

@@ -26,6 +26,12 @@
                     <span>Calendario Escolar</span>
                 </a>
             </mat-nav-list>
+            <mat-nav-list class="mb-1 primary-section" mat-button>
+                <a mat-list-item routerLink="/ficha-alumnos" routerLinkActive="active" class="link-dark">
+                    <i class="fas fa-file-alt icon2"></i>
+                    <span>Ficha Alumnos</span>
+                </a>
+            </mat-nav-list>
 
             <!-- Sección Matrículas -->
             <mat-list-item *ngIf="rolUser === 'administrador' || rolUser === 'subAdministrador'" class="mb-1 primary-section" mat-button (click)="toggleMatriculas()">

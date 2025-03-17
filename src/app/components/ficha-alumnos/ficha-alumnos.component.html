@@ -1,0 +1,86 @@
+<div class="color posicion border">
+    <div class="container mt-3">
+        <div *ngIf="!hasLoadedData" class="loading-spinner">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+            <p>Cargando Datos...</p>
+        </div>
+
+        <div *ngIf="hasLoadedData">
+            <h1><b>Ficha de Alumnos</b></h1>
+            <mat-divider></mat-divider>
+
+            <!-- Tabs de Cursos -->
+            <mat-tab-group class="mt-5">
+                <mat-tab *ngFor="let cursoId of getCursoKeys()" [label]="dataSourceCursos[cursoId].nombreCurso">
+                    <table mat-table [dataSource]="dataSourceCursos[cursoId].dataSource" class="mat-elevation-z8 w-100">
+
+                        <ng-container matColumnDef="count">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> N°</th>
+                            <td mat-cell *matCellDef="let element; let i = index" class="text-center"> {{ i + 1 }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> N° Matricula </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{ element.id }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombreCompleto">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Nombre Completo </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{ element.primer_nombre_alumno }} {{ element.segundo_nombre_alumno }}
+                                {{ element.primer_apellido_alumno }} {{ element.segundo_apellido_alumno }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="rut">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> RUT </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{ element.rut }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="vive_con">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Vive Con </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{ element.vive_con }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="autorizacion_fotografias">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Autorización de Fotografías </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{ element.autorizacion_fotografias ? 'Sí' : 'No' }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="curso">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Curso </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{ element.curso[0]?.nombre }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="estado_estudiante">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Estado Estudiante </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                <mat-chip-list class="chip-list-centered">
+                                    <mat-chip
+                                        [ngClass]="element.estado_estudiante ? 'chip-matriculado' : 'chip-retirado'"
+                                        selected>
+                                        {{ element.estado_estudiante ? 'Matriculado' : 'Retirado' }}
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                <button mat-raised-button color="primary" (click)="openModalVerFichaEstudiante(element)">Ver Ficha</button>
+                                <!-- <button mat-raised-button color="primary" (click)="openModalEditEstudiante(element)">Editar</button> -->
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</div>

@@ -20,6 +20,7 @@ import { CursosAsistenciaComponent } from './components/cursos-asistencia/cursos
 import { CursosNotasComponent } from './components/cursos-notas/cursos-notas.component';
 import { CalendarioEscolarComponent } from './components/calendario-escolar/calendario-escolar.component';
 import { CertificadosComponent } from './components/certificados/certificados.component';
+import { FichaAlumnosComponent } from './components/ficha-alumnos/ficha-alumnos.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'boletas', component: BoletasComponent },
   { path: 'boletas-mantenedor', component: BoletasMantenedorComponent },
 
+  { path: 'ficha-alumnos', component: FichaAlumnosComponent },
   { path: 'cursos-anotaciones', component: CursosAnotacionesComponent },
   { path: 'cursos-asistencia', component: CursosAsistenciaComponent },
   { path: 'cursos-notas', component: CursosNotasComponent },

@@ -44,7 +44,13 @@ export class CursosAnotacionesComponent implements OnInit, AfterViewInit, AfterV
     this.cursosServices.getInfoCursoConEstudiantes().subscribe({
       next: (cursos: any) => {
         if (cursos) {
+          
           cursos.forEach((curso: any) => {
+
+            curso.estudiantes.sort((a: any, b: any) =>
+              a.primer_apellido_alumno.localeCompare(b.primer_apellido_alumno)
+            );
+
             const cursoId = curso.id.toString();
             const estudiantesArray = curso.estudiantes.map((estudiante: any) => ({
               id: estudiante.id,

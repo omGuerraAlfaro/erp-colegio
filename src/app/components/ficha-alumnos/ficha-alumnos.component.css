@@ -73,7 +73,8 @@ mat-chip.chip-retirado {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Asegura que ocupe toda la altura del contenedor */
+    min-height: 100vh;
+    /* Asegura que ocupe toda la altura del contenedor */
     text-align: center;
 }
 
