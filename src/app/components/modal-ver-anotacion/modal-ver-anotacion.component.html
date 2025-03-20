@@ -24,7 +24,15 @@
                     <td>{{ annotation.anotacion_titulo }}</td>
                     <td>{{ annotation.anotacion_descripcion }}</td>
                     <td class="text-center">{{ annotation.fecha_ingreso | date: 'dd-MM-yyyy' }}</td>
-                    <td>{{ annotation.es_positiva ? 'Positiva' : 'Negativa' }}</td>
+                    <td>
+                        {{
+                        annotation.es_positiva
+                        ? 'Positiva'
+                        : annotation.es_negativa
+                        ? 'Negativa'
+                        : 'Neutra'
+                        }}
+                    </td>
                     <td>{{ annotation.asignatura?.nombre_asignatura || 'Sin Asignatura' }}</td>
                 </tr>
             </tbody>
