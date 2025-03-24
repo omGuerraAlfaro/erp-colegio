@@ -21,6 +21,7 @@ import { CursosNotasComponent } from './components/cursos-notas/cursos-notas.com
 import { CalendarioEscolarComponent } from './components/calendario-escolar/calendario-escolar.component';
 import { CertificadosComponent } from './components/certificados/certificados.component';
 import { FichaAlumnosComponent } from './components/ficha-alumnos/ficha-alumnos.component';
+import { InscripcionTalleresComponent } from './components/inscripcion-talleres/inscripcion-talleres.component';
 
 
 const routes: Routes = [
@@ -43,7 +44,8 @@ const routes: Routes = [
 
   { path: 'matriculas', component: MatriculasComponent},
   { path: 'certificados', component: CertificadosComponent},
-  { path: 'bandeja-inscripciones', component: InscripcionMatriculaComponent}
+  { path: 'bandeja-inscripciones', component: InscripcionMatriculaComponent},
+  { path: 'bandeja-talleres', component: InscripcionTalleresComponent}
 
 
 ];

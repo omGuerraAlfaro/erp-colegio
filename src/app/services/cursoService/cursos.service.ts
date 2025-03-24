@@ -44,6 +44,20 @@ export class CursosService {
       );
   }
 
+  getAllCursosPreBasica(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/curso/all/prebasica`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
+  getAllCursosBasica(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/curso/all/basica`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
     console.error(errorMessage);

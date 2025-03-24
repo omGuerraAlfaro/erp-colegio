@@ -49,7 +49,7 @@ export class CursosNotasComponent implements OnInit {
   }
 
   getAllCursos(): void {
-    this.cursoService.getAllCursos().subscribe({
+    this.cursoService.getAllCursosBasica().subscribe({
       next: (cursos) => {
         this.cursos = cursos;
         this.cdRef.markForCheck();

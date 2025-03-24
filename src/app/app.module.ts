@@ -56,6 +56,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BoletasMantenedorComponent } from './components/boletas-mantenedor/boletas-mantenedor.component';
 import { ModalBoletasMantenedorComponent } from './components/modal-boletas-mantenedor/modal-boletas-mantenedor.component';
@@ -75,6 +76,7 @@ import { CertificadoModalComponent } from './components/certificados/certificado
 import { ModalIngresarMatriculaApoderadoExistComponent } from './components/modal-ingresar-matricula-apoderado-exist/modal-ingresar-matricula-apoderado-exist.component';
 import { FichaAlumnosComponent } from './components/ficha-alumnos/ficha-alumnos.component';
 import { ModalVerFichaEstudianteComponent } from './components/modal-ver-ficha-estudiante/modal-ver-ficha-estudiante.component';
+import { InscripcionTalleresComponent } from './components/inscripcion-talleres/inscripcion-talleres.component';
 
 
 
@@ -113,6 +115,7 @@ import { ModalVerFichaEstudianteComponent } from './components/modal-ver-ficha-e
     CertificadoModalComponent,
     FichaAlumnosComponent,
     ModalVerFichaEstudianteComponent,
+    InscripcionTalleresComponent,
   ],
   imports: [
     BrowserModule,
@@ -147,7 +150,8 @@ import { ModalVerFichaEstudianteComponent } from './components/modal-ver-ficha-e
     MatChipsModule,
     ScrollingModule,
     MatGridListModule,
-    MatTableModule
+    MatTableModule,
+    MatExpansionModule
 
   ],
   providers: [
