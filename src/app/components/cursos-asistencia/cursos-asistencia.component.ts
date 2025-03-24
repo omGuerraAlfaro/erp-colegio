@@ -32,7 +32,7 @@ export class CursosAsistenciaComponent implements OnInit {
     private cursoService: CursosService,
     private cdRef: ChangeDetectorRef,
     private appRef: ApplicationRef // opcional, si quieres usar isStable
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getAllCursos();
@@ -189,9 +189,8 @@ export class CursosAsistenciaComponent implements OnInit {
     const day = date.getDate();
     const month = date.getMonth() + 1;
 
-    return `${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${day}/${
-      month < 10 ? '0' + month : month
-    }`;
+    return `${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${day}/${month < 10 ? '0' + month : month
+      }`;
   }
 
   isDiaActivo(fecha: string): boolean {
@@ -277,4 +276,15 @@ export class CursosAsistenciaComponent implements OnInit {
       },
     });
   }
+
+  isEditableDate(fecha: string): boolean {
+    const date = this.parseFechaLocal(fecha);
+    const today = new Date();
+    const currentWeek = this.getWeekNumber(today);
+    const dateWeek = this.getWeekNumber(date);
+    // Solo se permite la edición si la fecha pertenece a la semana actual o a la anterior
+    return dateWeek >= currentWeek;
+  }
+
+
 }
