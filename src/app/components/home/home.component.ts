@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
       link: 'cursos-asignaturas',
       icon: 'fas fa-book-open',
       color: 'bg-lightblue',
-      roles: ['administrador', 'subAdministrador', 'profesor']
+      roles: ['administrador', 'subAdministrador']
     },
     {
       name: 'Gestionar Notas',
@@ -71,6 +71,13 @@ export class HomeComponent implements OnInit {
       link: 'cursos-anotaciones',
       icon: 'fas fa-clipboard-list',
       color: 'bg-yellow',
+      roles: ['administrador', 'subAdministrador', 'profesor']
+    },
+    {
+      name: 'Gestionar Asistencia',
+      link: 'cursos-asistencia',
+      icon: 'fas fa-clipboard-list',
+      color: 'bg-darkblue',
       roles: ['administrador', 'subAdministrador', 'profesor']
     }
   ];

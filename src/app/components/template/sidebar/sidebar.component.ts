@@ -112,20 +112,49 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleMatriculas() {
-    this.isMatriculasOpen = !this.isMatriculasOpen;
+    if (!this.isMatriculasOpen) {
+      this.isMatriculasOpen = true;
+      this.isFinanzasOpen = false;
+      this.isAdministacionOpen = false;
+      this.isProfesorOpen = false;
+    } else {
+      this.isMatriculasOpen = false;
+    }
   }
 
   toggleFinanzas() {
-    this.isFinanzasOpen = !this.isFinanzasOpen;
+    if (!this.isFinanzasOpen) {
+      this.isFinanzasOpen = true;
+      this.isMatriculasOpen = false;
+      this.isAdministacionOpen = false;
+      this.isProfesorOpen = false;
+    } else {
+      this.isFinanzasOpen = false;
+    }
   }
-  
+
   toggleAdm() {
-    this.isAdministacionOpen = !this.isAdministacionOpen;
+    if (!this.isAdministacionOpen) {
+      this.isAdministacionOpen = true;
+      this.isMatriculasOpen = false;
+      this.isFinanzasOpen = false;
+      this.isProfesorOpen = false;
+    } else {
+      this.isAdministacionOpen = false;
+    }
   }
 
   toggleProfesor() {
-    this.isProfesorOpen = !this.isProfesorOpen;
+    if (!this.isProfesorOpen) {
+      this.isProfesorOpen = true;
+      this.isMatriculasOpen = false;
+      this.isFinanzasOpen = false;
+      this.isAdministacionOpen = false;
+    } else {
+      this.isProfesorOpen = false;
+    }
   }
+
 
 
 
