@@ -18,9 +18,10 @@ export class InscripcionTalleresComponent implements OnInit {
     'id_inscripcion',
     'nombre_alumno',
     'rut_alumno',
+    'curso',
     'fecha_matricula_inscripcion',
     'acciones'
-  ];
+  ]; 
   
   // Propiedad para controlar si los datos están listos y contador global
   dataOk: boolean = false;
@@ -110,6 +111,7 @@ export class InscripcionTalleresComponent implements OnInit {
         'ID Inscripción': i.id_inscripcion,
         'Nombre Alumno': `${i.estudiante.primer_nombre_alumno} ${i.estudiante.segundo_nombre_alumno} ${i.estudiante.primer_apellido_alumno} ${i.estudiante.segundo_apellido_alumno}`,
         'RUT Alumno': `${i.estudiante.rut}-${i.estudiante.dv}`,
+        'Curso': i.curso?.nombre || 'Sin curso',
         'Fecha Inscripción': new Date(i.fecha_matricula_inscripcion).toLocaleDateString()
       }));
   

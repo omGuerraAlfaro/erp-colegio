@@ -12,7 +12,7 @@ import { ModalVerFichaEstudianteComponent } from '../modal-ver-ficha-estudiante/
   styleUrls: ['./ficha-alumnos.component.css']
 })
 export class FichaAlumnosComponent implements OnInit {
-totalEstudiantes: number = 0; 
+  totalEstudiantes: number = 0;
   displayedColumns: string[] = [
     'count',
     'id',
@@ -92,8 +92,14 @@ totalEstudiantes: number = 0;
     console.log(element);
     console.log(element);
     console.log(element);
-    
-    const dialogRef = this.dialog.open(ModalVerFichaEstudianteComponent, { width: '70%', data: element });
+
+    const dialogRef = this.dialog.open(ModalVerFichaEstudianteComponent,
+      {
+        width: '80vw',
+        height: '90vh',
+        maxHeight: '90vh',
+        data: element
+      });
     dialogRef.afterClosed().subscribe(() => {
       this.loadEstudiantes();
     });

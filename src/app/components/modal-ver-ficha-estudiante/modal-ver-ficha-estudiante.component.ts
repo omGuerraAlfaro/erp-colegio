@@ -12,6 +12,7 @@ import { EstudianteService } from 'src/app/services/estudianteService/estudiante
 
 export class ModalVerFichaEstudianteComponent implements OnInit {
   estudiante: any;
+  isLoading: boolean = true;
   constructor(
     private estudianteService: EstudianteService,
     private dialogRef: MatDialogRef<ModalVerFichaEstudianteComponent>,
@@ -25,6 +26,7 @@ export class ModalVerFichaEstudianteComponent implements OnInit {
     this.estudianteService.getInfoEstudianteConApoderados(rut).subscribe({
       next: (data: any) => {
         this.estudiante = data;
+        this.isLoading = false;
         console.log(this.estudiante);
       },
       error: (error) => {
