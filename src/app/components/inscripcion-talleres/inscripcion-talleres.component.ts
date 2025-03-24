@@ -6,6 +6,7 @@ import { ModalTerminarFormularioMatriculaComponent } from '../modal-terminar-for
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import Swal from 'sweetalert2';
+import { KeyValue } from '@angular/common';
 
 @Component({
   selector: 'app-inscripcion-talleres',
@@ -21,9 +22,8 @@ export class InscripcionTalleresComponent implements OnInit {
     'curso',
     'fecha_matricula_inscripcion',
     'acciones'
-  ]; 
-  
-  // Propiedad para controlar si los datos están listos y contador global
+  ];
+
   dataOk: boolean = false;
   totalInscripciones: number = 0;
 
@@ -40,17 +40,13 @@ export class InscripcionTalleresComponent implements OnInit {
     this.inscripcionService.getInscripcionesTaller().subscribe({
       next: (data: any[]) => {
         const grouped: { [tallerKey: string]: any[] } = {};
-        // Contador global de inscripciones
         this.totalInscripciones = data.length;
 
         data.forEach(inscripcion => {
-          let tallerKey = 'Sin taller';
+          let tallerKey = '0 - Sin taller';
           if (inscripcion.tipo_taller && inscripcion.tipo_taller.id_taller) {
             const idTaller = inscripcion.tipo_taller.id_taller;
-            // Si la descripción está vacía, usamos 'Sin nombre'
-            const descTaller = inscripcion.tipo_taller.descripcion_taller && inscripcion.tipo_taller.descripcion_taller.trim() !== ''
-              ? inscripcion.tipo_taller.descripcion_taller
-              : 'Sin nombre';
+            const descTaller = inscripcion.tipo_taller.descripcion_taller?.trim() || 'Sin nombre';
             tallerKey = `${idTaller} - ${descTaller}`;
           }
           if (!grouped[tallerKey]) {
@@ -58,7 +54,23 @@ export class InscripcionTalleresComponent implements OnInit {
           }
           grouped[tallerKey].push(inscripcion);
         });
-        this.groupedData = grouped;
+
+        // Ordenar y reconstruir como objeto
+        const sortedEntries = Object.entries(grouped).sort((a, b) => {
+          const idA = parseInt(a[0].split(' - ')[0], 10);
+          const idB = parseInt(b[0].split(' - ')[0], 10);
+
+          if (idA === 0) return 1;
+          if (idB === 0) return -1;
+
+          return idA - idB;
+        });
+
+        this.groupedData = sortedEntries.reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {} as { [tallerKey: string]: any[] });
+
         this.dataOk = true;
       },
       error: (error) => {
@@ -67,6 +79,16 @@ export class InscripcionTalleresComponent implements OnInit {
       }
     });
   }
+
+  customSort = (a: KeyValue<string, any[]>, b: KeyValue<string, any[]>): number => {
+    const idA = parseInt(a.key.split(' - ')[0], 10);
+    const idB = parseInt(b.key.split(' - ')[0], 10);
+
+    if (idA === 0) return 1;
+    if (idB === 0) return -1;
+
+    return idA - idB;
+  };
 
   opciones(idInscripcion: number): void {
     Swal.fire({
@@ -92,7 +114,7 @@ export class InscripcionTalleresComponent implements OnInit {
                 Swal.fire('Eliminado', 'La inscripción ha sido eliminada.', 'success');
                 this.loadInscripciones();
               },
-              error: (err) => {
+              error: () => {
                 Swal.fire('Error', 'Hubo un error al eliminar la inscripción.', 'error');
               }
             });
@@ -104,9 +126,8 @@ export class InscripcionTalleresComponent implements OnInit {
 
   exportToExcel(): void {
     const wb = XLSX.utils.book_new();
-  
-    Object.keys(this.groupedData).forEach(taller => {
-      const inscripciones = this.groupedData[taller];
+
+    Object.entries(this.groupedData).forEach(([tallerKey, inscripciones]) => {
       const worksheetData = inscripciones.map(i => ({
         'ID Inscripción': i.id_inscripcion,
         'Nombre Alumno': `${i.estudiante.primer_nombre_alumno} ${i.estudiante.segundo_nombre_alumno} ${i.estudiante.primer_apellido_alumno} ${i.estudiante.segundo_apellido_alumno}`,
@@ -114,12 +135,11 @@ export class InscripcionTalleresComponent implements OnInit {
         'Curso': i.curso?.nombre || 'Sin curso',
         'Fecha Inscripción': new Date(i.fecha_matricula_inscripcion).toLocaleDateString()
       }));
-  
+
       const ws = XLSX.utils.json_to_sheet(worksheetData);
-      // El nombre de la hoja no debe exceder 31 caracteres
-      XLSX.utils.book_append_sheet(wb, ws, taller.substring(0, 31));
+      XLSX.utils.book_append_sheet(wb, ws, tallerKey.substring(0, 31));
     });
-  
+
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blobData = new Blob([excelBuffer], { type: 'application/octet-stream' });
     FileSaver.saveAs(blobData, 'InscripcionesTalleres2025.xlsx');

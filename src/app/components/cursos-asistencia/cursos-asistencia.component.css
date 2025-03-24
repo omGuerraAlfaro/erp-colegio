@@ -4,24 +4,33 @@
 
 .posicion {
     margin-left: 2px;
-    min-height: 100vh; /* Keep this for full height */
-    min-width: 80vw; /* Change to vw for full width */
-    width: 100%; /* Ensure it takes full width */
-    box-sizing: border-box; /* Include padding and borders in width calculation */
+    min-height: 100%;
+    /* Keep this for full height */
+    min-width: 80vw;
+    /* Change to vw for full width */
+    box-sizing: border-box;
+    /* Include padding and borders in width calculation */
 }
 
 .container {
-    margin: 20px auto; /* Center the container with auto margins */
-    max-width: 100%; /* Ensure it doesn’t exceed the viewport width */
-    width: 100%; /* Full width */
-    padding: 0 20px; /* Add padding instead of fixed margins for responsiveness */
-    box-sizing: border-box; /* Include padding in width calculation */
+    margin: 20px auto;
+    /* Center the container with auto margins */
+    max-width: 100%;
+    /* Ensure it doesn’t exceed the viewport width */
+    width: 100%;
+    /* Full width */
+    padding: 0 20px;
+    /* Add padding instead of fixed margins for responsiveness */
+    box-sizing: border-box;
+    /* Include padding in width calculation */
 }
 
 table {
-    width: 100%; /* Full width of the parent container */
+    width: 100%;
+    /* Full width of the parent container */
     margin-top: 20px;
-    table-layout: fixed; /* Helps with consistent column widths */
+    table-layout: fixed;
+    /* Helps with consistent column widths */
 }
 
 .mat-header-cell {
@@ -106,7 +115,8 @@ h1 {
         font-size: 20px;
     }
 
-    .mat-cell, .mat-header-cell {
+    .mat-cell,
+    .mat-header-cell {
         font-size: 12px;
     }
 
@@ -114,4 +124,11 @@ h1 {
         padding: 6px 12px;
         font-size: 14px;
     }
+}
+
+.mat-column-index {
+    width: 50px !important;
+}
+.mat-column-alumno {
+    width: 350px !important;
 }
