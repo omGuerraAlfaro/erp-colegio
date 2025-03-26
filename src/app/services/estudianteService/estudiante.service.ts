@@ -66,6 +66,22 @@ export class EstudianteService {
       );
   }
 
+  // Método DELETE: elimina la anotación de un estudiante específico
+  deleteAnotacion(estudianteId: any, anotacionId: any): Observable<any> {
+    return this.http.delete<any>(`${environment.api}/anotaciones/estudiantes/${estudianteId}/anotaciones/${anotacionId}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  // Método PUT: actualiza una anotación existente
+  updateAnotacion(anotacionId: any, anotacion: any): Observable<any> {
+    return this.http.put<any>(`${environment.api}/anotaciones/anotaciones/${anotacionId}`, anotacion, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   updateEstudiante(id: number, estudianteActualizado: IUpdateEstudiante): Observable<IUpdateEstudiante> {
     return this.http.put<IUpdateEstudiante>(
       `${environment.api}/estudiante/${id}`,
