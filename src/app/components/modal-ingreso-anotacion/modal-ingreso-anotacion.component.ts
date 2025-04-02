@@ -12,8 +12,9 @@ import Swal from 'sweetalert2';
 })
 export class ModalIngresoAnotacionComponent implements OnInit {
   anotacionForm: FormGroup;
-  asignaturas: { id: number, nombre: string }[] = [];
+  asignaturas: any[] = [];
   estudiante: { nombre: string, rut: string, telefono: string, genero: string } | null = null;
+  cursoSeleccionado: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -22,6 +23,9 @@ export class ModalIngresoAnotacionComponent implements OnInit {
     private dialogRef: MatDialogRef<ModalIngresoAnotacionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+
+    this.cursoSeleccionado = data.cursoId || null;
+
     this.anotacionForm = this.fb.group({
       anotacion_titulo: ['', Validators.required],
       anotacion_descripcion: ['', Validators.required],
@@ -42,7 +46,7 @@ export class ModalIngresoAnotacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadAsignaturas();
+    this.getAllAsignaturas();
   }
 
   setTipo(tipo: 'positiva' | 'negativa' | 'neutra'): void {
@@ -58,12 +62,18 @@ export class ModalIngresoAnotacionComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log('Curso seleccionado:', this.cursoSeleccionado);
+
     if (this.anotacionForm.valid) {
-      const anotacionData = this.anotacionForm.value;
+      const anotacionData = { ...this.anotacionForm.value };
       const idEstudiante = this.data.id;
 
-      if (anotacionData.asignaturaId != null) {
+      if (this.cursoSeleccionado == 1 || this.cursoSeleccionado == 2) {
+        anotacionData.asignaturaPreBasicaId = Number(anotacionData.asignaturaId);
+        delete anotacionData.asignaturaId;
+      } else {
         anotacionData.asignaturaId = Number(anotacionData.asignaturaId);
+        delete anotacionData.asignaturaPreBasicaId;
       }
 
       this.estudianteService.postNuevaAnotacion(idEstudiante, anotacionData)
@@ -97,17 +107,25 @@ export class ModalIngresoAnotacionComponent implements OnInit {
     }
   }
 
-  private loadAsignaturas(): void {
-    this.asignaturaService.getAllAsignaturas().subscribe(
-      (data: any) => {
-        this.asignaturas = data.map((asignatura: any) => ({
-          id: asignatura.id,
-          nombre: asignatura.nombre_asignatura
-        }));
-      },
-      error => {
-        console.error('Error al cargar asignaturas', error);
-      }
-    );
+
+  getAllAsignaturas(): void {
+    console.log('Curso seleccionado:', this.cursoSeleccionado);
+
+    if (this.cursoSeleccionado == 1 || this.cursoSeleccionado == 2) {
+      this.asignaturaService.getAllAsignaturasPreBasica().subscribe({
+        next: (asignaturas) => {
+          this.asignaturas = asignaturas;
+        },
+        error: (err) => console.error('Error al obtener asignaturas:', err),
+      });
+    } else {
+      this.asignaturaService.getAllAsignaturasBasica().subscribe({
+        next: (asignaturas) => {
+          this.asignaturas = asignaturas;
+        },
+        error: (err) => console.error('Error al obtener asignaturas:', err),
+      });
+    }
   }
+
 }

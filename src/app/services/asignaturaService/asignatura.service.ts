@@ -24,6 +24,20 @@ export class AsignaturaService {
       );
   }
 
+  getAllAsignaturasPreBasica(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/asignatura/all-prebasica`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getAllAsignaturasBasica(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/asignatura/all-basica`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;

@@ -44,3 +44,31 @@
     align-items: center;
     z-index: 2000;
 }
+
+.legend-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    background-color: #e0f7fa;
+    /* Fondo suave */
+    border-radius: 8px;
+    margin: 5px 0;
+}
+
+.legend-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.legend-code {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #00796b;
+}
+
+.legend-description {
+    font-size: 0.9em;
+    color: #004d40;
+}

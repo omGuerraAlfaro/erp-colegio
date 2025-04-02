@@ -57,7 +57,7 @@
         <mat-label>Asignatura</mat-label>
         <mat-select formControlName="asignaturaId">
           <mat-option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">
-            {{ asignatura.nombre }}
+            {{ asignatura.nombre_asignatura }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="anotacionForm.get('asignaturaId')?.hasError('required')">

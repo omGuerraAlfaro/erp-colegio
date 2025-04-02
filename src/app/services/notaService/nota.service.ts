@@ -51,21 +51,23 @@ export class NotasService {
 
   /**
    * Crea una nueva nota.
-   * Endpoint: POST /notas
-   * Se espera enviar un objeto con:
-   * { estudianteId, cursoId, asignaturaId, evaluacionId, semestreId, nota, fecha }
+   * Endpoint: POST /notas/nueva-nota
    */
-  createNota(data: {
-    estudianteId: number;
-    evaluacionId: number;
-    nota: number;
-    fecha: Date;
+  createNotas(data: {
+    cursoId: number;
+    notas: {
+      estudianteId: number;
+      evaluacionId: number;
+      nota: number | null;
+      fecha: Date;
+    }[];
   }): Observable<any> {
     return this.http.post<any>(`${environment.api}/notas/nuevas-notas`, data, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
+
 
   cierreSemestre(data: any): Observable<any> {
     return this.http

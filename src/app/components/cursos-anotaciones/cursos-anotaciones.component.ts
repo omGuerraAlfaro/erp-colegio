@@ -21,7 +21,7 @@ export class CursosAnotacionesComponent implements OnInit, AfterViewInit, AfterV
     private cursosServices: CursosService,
     private cdr: ChangeDetectorRef,
     public dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCursosConEstudiantes();
@@ -44,7 +44,7 @@ export class CursosAnotacionesComponent implements OnInit, AfterViewInit, AfterV
     this.cursosServices.getInfoCursoConEstudiantes().subscribe({
       next: (cursos: any) => {
         if (cursos) {
-          
+
           cursos.forEach((curso: any) => {
 
             curso.estudiantes.sort((a: any, b: any) =>
@@ -60,9 +60,9 @@ export class CursosAnotacionesComponent implements OnInit, AfterViewInit, AfterV
               genero_estudiante: estudiante.genero
             }));
             if (estudiantesArray.length) {
-              this.dataSourceCursos[cursoId] = { 
-                dataSource: new MatTableDataSource<CursoEstudianteDetalle>(estudiantesArray), 
-                nombreCurso: curso.nombre 
+              this.dataSourceCursos[cursoId] = {
+                dataSource: new MatTableDataSource<CursoEstudianteDetalle>(estudiantesArray),
+                nombreCurso: curso.nombre
               };
             }
           });
@@ -90,7 +90,7 @@ export class CursosAnotacionesComponent implements OnInit, AfterViewInit, AfterV
 
   restoreActiveTab(): void {
     const tabElements = document.querySelectorAll('.nav-tabs .nav-link');
-    let activeTab: HTMLElement | null = this.activeTabId 
+    let activeTab: HTMLElement | null = this.activeTabId
       ? document.querySelector(`[data-bs-target="${this.activeTabId}"]`) as HTMLElement
       : null;
 
@@ -111,12 +111,15 @@ export class CursosAnotacionesComponent implements OnInit, AfterViewInit, AfterV
     this.activeTabId = tabId;
   }
 
-  openModalIngresoAnotacion(element: any): void {
-    this.setActiveTab(this.getActiveTabId());  // Save active tab before opening modal
+  openModalIngresoAnotacion(element: any, cursoId: string): void {
+    this.setActiveTab(this.getActiveTabId());
     const dialogRef = this.dialog.open(ModalIngresoAnotacionComponent, {
       width: '60%',
       height: 'auto',
-      data: element
+      data: {
+        ...element,
+        cursoId
+      }
     });
     dialogRef.afterClosed().subscribe(() => {
       console.log('El modal se cerró');

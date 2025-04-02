@@ -4,6 +4,7 @@ import { AsignaturaService } from 'src/app/services/asignaturaService/asignatura
 import { NotasService } from 'src/app/services/notaService/nota.service';
 import Swal from 'sweetalert2';
 import { SemestreService } from 'src/app/services/semestreService/semestre.service';
+import * as e from 'cors';
 
 @Component({
   selector: 'app-cursos-notas',
@@ -27,6 +28,7 @@ export class CursosNotasComponent implements OnInit {
   displayedColumnsTareas: string[] = [];
 
 
+  isPreBasica: boolean = false;
 
   editandoEv: boolean = false;
   borrandoEv: boolean = false;
@@ -49,7 +51,7 @@ export class CursosNotasComponent implements OnInit {
   }
 
   getAllCursos(): void {
-    this.cursoService.getAllCursosBasica().subscribe({
+    this.cursoService.getAllCursos().subscribe({
       next: (cursos) => {
         this.cursos = cursos;
         this.cdRef.markForCheck();
@@ -59,13 +61,27 @@ export class CursosNotasComponent implements OnInit {
   }
 
   getAllAsignaturas(): void {
-    this.asignaturaService.getAllAsignaturas().subscribe({
-      next: (asignaturas) => {
-        this.asignaturas = asignaturas;
-        this.cdRef.markForCheck();
-      },
-      error: (err) => console.error('Error al obtener asignaturas:', err),
-    });
+    console.log('Curso seleccionado:', this.cursoSeleccionado);
+
+    this.asignaturaSeleccionada = null;
+
+    if (this.cursoSeleccionado == 1 || this.cursoSeleccionado == 2) {
+      this.asignaturaService.getAllAsignaturasPreBasica().subscribe({
+        next: (asignaturas) => {
+          asignaturas.pop();
+          this.asignaturas = asignaturas;
+        },
+        error: (err) => console.error('Error al obtener asignaturas:', err),
+      });
+    } else {
+      this.asignaturaService.getAllAsignaturasBasica().subscribe({
+        next: (asignaturas) => {
+          asignaturas.pop();
+          this.asignaturas = asignaturas;
+        },
+        error: (err) => console.error('Error al obtener asignaturas:', err),
+      });
+    }
   }
 
   buscarNotas(): void {
@@ -73,6 +89,8 @@ export class CursosNotasComponent implements OnInit {
       Swal.fire('Error', 'Por favor, selecciona un curso y una asignatura.', 'error');
       return;
     }
+
+    this.isPreBasica = (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2);
 
     this.dataSourceNotas = [];
     this.displayedColumns = [];
@@ -111,7 +129,6 @@ export class CursosNotasComponent implements OnInit {
         },
       });
   }
-
 
   configurarColumnas(): void {
     // 1. Recolectar todas las evaluaciones de todos los alumnos
@@ -228,26 +245,29 @@ export class CursosNotasComponent implements OnInit {
   }
 
   onNotaChange(event: any, alumno: any, nombreEvaluacion: string) {
-    console.log(event);
-
-    // Reemplaza coma por punto
-    const cleanedValue = event.target.value?.replace(',', '.');
-    const newValue = parseFloat(cleanedValue);
+    let newValue;
+    // Verificamos si el evento viene de un mat-select (usamos event.value)
+    if (event.value !== undefined) {
+      newValue = event.value; // Será "L", "ML" o "PL"
+    } else {
+      // Caso del input numérico: reemplazamos coma por punto y convertimos a número
+      const cleanedValue = event.target.value?.replace(',', '.');
+      newValue = parseFloat(cleanedValue);
+    }
 
     if (!alumno.evaluaciones) return;
     const evalObj = alumno.evaluaciones.find(
       (e: any) => e.nombre_evaluacion === nombreEvaluacion
     );
     if (evalObj) {
-      evalObj.nota = isNaN(newValue) ? null : newValue;
-
-      // Asigna el color usando la función getColorForNota
-      event.target.style.color = isNaN(newValue) ? 'blue' : this.getColorForNota(alumno, nombreEvaluacion);
-
+      evalObj.nota = newValue;
+      // Para números, podrías seguir aplicando estilos o validaciones adicionales
+      if (typeof newValue === 'number' && !isNaN(newValue)) {
+        event.target.style.color = this.getColorForNota(alumno, nombreEvaluacion);
+      }
       this.cdRef.detectChanges();
     }
   }
-
 
   onInputMask(event: any) {
     const inputValue: string = event.target.value;
@@ -345,15 +365,22 @@ export class CursosNotasComponent implements OnInit {
 
     this.dataSourceNotas.forEach((estudiante) => {
       estudiante.evaluaciones.forEach((evaluacion: any) => {
-        // Si la nota está vacía o undefined, asignar null
-        const notaValue = (evaluacion.nota === "" || evaluacion.nota === undefined || evaluacion.nota === null)
-          ? null
-          : Number(evaluacion.nota);
+        const notaRaw = evaluacion.nota;
+        let notaValue;
+        // Si la nota está vacía, undefined o null, asignamos null
+        if (notaRaw === "" || notaRaw === undefined || notaRaw === null) {
+          notaValue = null;
+        } else {
+          // Intentamos convertir a número
+          const parsed = Number(notaRaw);
+          // Si no es un número, se conserva la sigla (L, ML, PL)
+          notaValue = isNaN(parsed) ? notaRaw : parsed;
+        }
 
         notasAGuardar.push({
           estudianteId: estudiante.id_estudiante,
           evaluacionId: evaluacion.id_evaluacion,
-          nota: notaValue,  // Si la nota está vacía, se asigna null
+          nota: notaValue, // La nota se deja como número o como sigla, según corresponda
           fecha: evaluacion.fecha ? new Date(evaluacion.fecha) : new Date(),
         });
       });
@@ -365,22 +392,24 @@ export class CursosNotasComponent implements OnInit {
       return;
     }
 
-    this.notasService.createNota(notasAGuardar).subscribe({
+    const createNotasDto = {
+      cursoId: this.cursoSeleccionado!,
+      notas: notasAGuardar,
+    };
+
+    this.notasService.createNotas(createNotasDto).subscribe({
       next: () => {
         this.guardando = false;
         Swal.fire('Guardado', 'Todas las notas se guardaron exitosamente', 'success');
         this.buscarNotas();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.guardando = false;
         console.error('Error al guardar notas:', err);
         Swal.fire('Error', 'No se pudieron guardar las notas', 'error');
       },
     });
   }
-
-
-
 
   getEvaluacionId(nombreEvaluacion: string): number | null {
     // Buscar en el primer estudiante una evaluación con ese nombre para obtener su ID
@@ -491,12 +520,144 @@ export class CursosNotasComponent implements OnInit {
       if (result.isConfirmed) {
         // El usuario confirmó, proceder a calcular y guardar
         this.guardando2 = true;
-        this.calcularYGuardarFinales();
+        if (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2) {
+          this.calcularYGuardarFinalesPreBasica();
+        } else {
+          this.calcularYGuardarFinalesBasica();
+        }
       }
     });
   }
 
-  calcularYGuardarFinales(): void {
+  calcularYGuardarFinalesPreBasica(): void {
+    const fechaActual = new Date().toISOString().split('T')[0];
+    this.semestreService.getSemestre(fechaActual).subscribe({
+      next: (res) => {
+        const semestreId = res.id_semestre;
+  
+        // 1. Verificar que no existan evaluaciones parciales sin concepto asignado
+        const existeConceptoVacio = this.dataSourceNotas.some((alumno: any) => {
+          return alumno.evaluaciones.some((ev: any) => {
+            // Sólo evaluaciones parciales (tipoEvaluacion.id === 1)
+            const esParcial = ev.tipoEvaluacion?.id === 1;
+            // Suponemos que si la propiedad "nota" es una cadena vacía o nula, no se asignó un concepto
+            const conceptoVacio = !ev.nota || ev.nota.trim() === "";
+            return esParcial && conceptoVacio;
+          });
+        });
+  
+        if (existeConceptoVacio) {
+          this.guardando2 = false;
+          Swal.fire(
+            'Aviso',
+            'Existen evaluaciones parciales sin concepto asignado. No se puede generar el cálculo.',
+            'info'
+          );
+          return;
+        }
+  
+        // 2. Calcular el "promedio conceptual" para cada estudiante considerando solo evaluaciones parciales
+        const estudiantesData = this.dataSourceNotas.map((alumno: any) => {
+          const evaluacionesParciales = alumno.evaluaciones.filter(
+            (ev: any) => ev.tipoEvaluacion?.id === 1 && ev.nota
+          );
+  
+          const conceptoParciales = this.calcularPromedioConceptual(evaluacionesParciales);
+  
+          return {
+            estudianteId: alumno.id_estudiante,
+            conceptoFinalParcial: conceptoParciales,
+          };
+        });
+  
+        // 4. Construir el DTO para enviarlo al backend
+        const cierreSemestreDto = {
+          cursoId: this.cursoSeleccionado,
+          asignaturaId: this.asignaturaSeleccionada,
+          semestreId: semestreId,
+          estudiantes: estudiantesData,
+        };
+
+        console.log('DTO de cierre de semestre:', cierreSemestreDto);
+        return;
+        
+  
+        // 5. Llamar al servicio para cerrar el semestre
+        this.notasService.cierreSemestre(cierreSemestreDto).subscribe({
+          next: () => {
+            this.guardando2 = false;
+            Swal.fire('Éxito', 'Se han generado los conceptos finales correctamente.', 'success');
+            this.buscarNotas(); // Actualizar la vista
+          },
+          error: (err) => {
+            this.guardando2 = false;
+            console.error('Error al guardar conceptos finales:', err);
+            Swal.fire('Error', 'No se pudieron guardar los conceptos finales.', 'error');
+          },
+        });
+      },
+      error: () => {
+        this.guardando2 = false;
+        Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
+      },
+    });
+  }
+
+  private convertirConceptoANumero(concepto: string): number {
+    switch (concepto) {
+      case 'PL':
+        return 1;
+      case 'ML':
+        return 2;
+      case 'L':
+        return 3;
+      default:
+        return 0; // En caso de un concepto no reconocido
+    }
+  }
+
+  private obtenerConceptoFinal(promedio: number): string {
+    if (promedio >= 2.5) {
+      return 'L';
+    } else if (promedio >= 1.5) {
+      return 'ML';
+    } else {
+      return 'PL';
+    }
+  }
+
+  private calcularPromedioConceptual(evaluaciones: any[]): string | null {
+    console.log('evaluaciones:', evaluaciones);
+    
+    if (!evaluaciones || evaluaciones.length === 0) {
+      return null;
+    }
+
+    let suma = 0;
+    let count = 0;
+
+    for (const ev of evaluaciones) {
+      if (ev.nota) {
+        const notaNumerica = this.convertirConceptoANumero(ev.nota);
+        console.log('notaNumerica:', notaNumerica);
+        
+        // Solo contamos si el concepto es reconocido (valor mayor a 0)
+        if (notaNumerica > 0) {
+          suma += notaNumerica;
+          count++;
+        }
+      }
+    }
+
+    if (count === 0) {
+      return null;
+    }
+
+    const promedio = suma / count;
+    return this.obtenerConceptoFinal(promedio);
+  }
+
+  calcularYGuardarFinalesBasica(): void {
     const fechaActual = new Date().toISOString().split('T')[0];
     this.semestreService.getSemestre(fechaActual).subscribe({
       next: (res) => {
@@ -585,7 +746,6 @@ export class CursosNotasComponent implements OnInit {
     });
   }
 
-
   private calcularPromedio(evaluaciones: any[]): number | null {
     if (!evaluaciones || evaluaciones.length === 0) {
       return null;
@@ -624,7 +784,6 @@ export class CursosNotasComponent implements OnInit {
     // Redondear a 2 decimales (opcional)
     return +promedio.toFixed(2);
   }
-
 
   validarRango(event: any): void {
     let inputValue = event.target.value;
