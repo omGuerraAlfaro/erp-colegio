@@ -30,6 +30,7 @@ export class CursosNotasComponent implements OnInit {
 
 
   isPreBasica: boolean = false;
+  isBasica: boolean = false;
 
   editandoEv: boolean = false;
   borrandoEv: boolean = false;
@@ -83,6 +84,15 @@ export class CursosNotasComponent implements OnInit {
     }
   }
 
+  onClickSelect() {
+    this.asignaturaSeleccionada = null;
+    this.isPreBasica = false;
+    this.isBasica = false;
+    this.dataSourceNotas = [];
+    this.displayedColumns = [];
+    this.distinctEvaluaciones = [];
+  }
+
   buscarNotas(): void {
     if (!this.cursoSeleccionado || !this.asignaturaSeleccionada) {
       Swal.fire('Error', 'Por favor, selecciona un curso y una asignatura.', 'error');
@@ -90,6 +100,7 @@ export class CursosNotasComponent implements OnInit {
     }
 
     this.isPreBasica = (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2);
+    this.isBasica = (this.cursoSeleccionado >= 3);
 
     this.dataSourceNotas = [];
     this.displayedColumns = [];

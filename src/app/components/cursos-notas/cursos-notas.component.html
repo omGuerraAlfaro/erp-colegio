@@ -6,7 +6,8 @@
   <div class="d-flex align-items-center mb-3">
     <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
       <mat-label>Seleccionar Curso</mat-label>
-      <mat-select [(value)]="cursoSeleccionado" placeholder="Curso" (selectionChange)="getAllAsignaturas()">
+      <mat-select [(value)]="cursoSeleccionado" placeholder="Curso" (selectionChange)="getAllAsignaturas()"
+        (click)="onClickSelect()">
         <mat-option *ngFor="let curso of cursos" [value]="curso.id">
           {{ curso.nombre }}
         </mat-option>
@@ -16,7 +17,8 @@
 
     <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
       <mat-label>Seleccionar Asignatura</mat-label>
-      <mat-select [(value)]="asignaturaSeleccionada" placeholder="Asignatura" [disabled]="!cursoSeleccionado">
+      <mat-select [(value)]="asignaturaSeleccionada" placeholder="Asignatura" [disabled]="!cursoSeleccionado"
+        (click)="onClickSelect()">
         <mat-option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">
           {{ asignatura.nombre_asignatura }}
         </mat-option>
@@ -35,6 +37,73 @@
     <button mat-raised-button color="secondary" class="ms-3" (click)="cierreSemestre()">
       Cierre de Semestre
     </button>
+  </div>
+
+
+  <div *ngIf="isPreBasica" class="legend-container2">
+    <div class="legend-item2">
+      <div class="legend-block2">
+        <div class="legend-code2">Ingreso de Conceptos:</div>
+        <div class="legend-description2">
+          Debe seleccionar el concepto correspondiente a la evaluación.<br />
+          Recuerde que los conceptos son:<br />
+          <strong>L:</strong> Logrado,<br />
+          <strong>ML:</strong> Medianamente Logrado,<br />
+          <strong>PL:</strong> Por Lograr.<br />
+        </div>
+      </div>
+
+      <div class="legend-block2">
+        <div class="legend-code2">Cierre de Semestre:</div>
+        <div class="legend-description2">
+          El cierre se ejecuta automáticamente al presionar el botón <strong>"Cierre de Semestre"</strong>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isBasica" class="legend-container2">
+    <div class="legend-item2">
+      <div class="legend-block2">
+        <div class="legend-code2">Ingreso de Notas:</div>
+        <div class="legend-description2">
+          Recuerda utilizar una coma (,) o un punto (.) para ingresar números decimales.
+        </div>
+      </div>
+
+      <div class="legend-block2">
+        <div class="legend-code2">Orientación y Religión:</div>
+        <div class="legend-description2">
+          Desde primero a octavo básico, las asignaturas de Orientación y Religión se evalúan con conceptos y no
+          influyen en el promedio final.<br />
+          Los conceptos son los siguientes:<br />
+          <strong>MB:</strong> 6.0 a 7.0,<br />
+          <strong>B:</strong> 5.0 a 5.9,<br />
+          <strong>S:</strong> 4.0 a 4.9,<br />
+          <strong>I:</strong> 2.0 a 3.9.<br />
+          Estos conceptos se verán reflejados en el informe de notas.
+        </div>
+      </div>
+
+      <div class="legend-block2">
+        <div class="legend-code2">Notas de Inglés:</div>
+        <div class="legend-description2">
+          Desde primero a cuarto básico, el promedio de Inglés se incorpora en la asignatura de Lenguaje, por lo que no
+          influye en el promedio final como asignatura independiente. A partir de quinto hasta octavo básico, Inglés se
+          considera una asignatura independiente y sí influye en el promedio final.
+        </div>
+      </div>
+
+      <div class="legend-block2">
+        <div class="legend-code2">Cierre de Semestre:</div>
+        <div class="legend-description2">
+          El cierre se ejecuta automáticamente al presionar el botón <strong>"Cierre de Semestre"</strong>.
+          <br />
+          En el caso de tener notas tipo <strong>"Tarea"</strong>, el semestre debe cerrarse dos veces:
+          una para generar la nota parcial de tareas, y otra para cerrar y calcular con esa nueva nota.
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Spinner mientras se cargan los datos -->
@@ -67,22 +136,6 @@
     <mat-spinner></mat-spinner>
     <p>Cerrando Notas para el Semestre...</p>
   </div>
-
-  <div *ngIf="isPreBasica" class="legend-container">
-    <div class="legend-item">
-      <div class="legend-code">L</div>
-      <div class="legend-description">Logrado</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-code">ML</div>
-      <div class="legend-description">Medianamente Logrado</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-code">PL</div>
-      <div class="legend-description">Por Lograr</div>
-    </div>
-  </div>
-
 
   <!-- Tabla única con separación entre parciales y tareas -->
   <div *ngIf="!cargando && dataSourceNotas.length > 0">
@@ -126,7 +179,8 @@
           </ng-container>
           <ng-template #numericInput>
             <mat-form-field appearance="outline" style="width: 80px;">
-              <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)" style="font-size: larger; font-weight: bold;"
+              <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)"
+                style="font-size: larger; font-weight: bold;"
                 [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
                 [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
                 (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
@@ -158,10 +212,10 @@
           <mat-form-field appearance="outline" style="width: 80px;">
 
             <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)"
-            style="font-size: larger; font-weight: bold;"
-            [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
-            [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
-            (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+              style="font-size: larger; font-weight: bold;"
+              [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+              [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+              (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
           </mat-form-field>
         </td>
       </ng-container>
@@ -187,7 +241,7 @@
               [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
               [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
               (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
-            </mat-form-field>
+          </mat-form-field>
         </td>
       </ng-container>
       <ng-container *ngFor="let evaluacion of finalTareas" [matColumnDef]="evaluacion.nombre_evaluacion">
@@ -201,7 +255,7 @@
               [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
               [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
               (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
-            </mat-form-field>
+          </mat-form-field>
         </td>
       </ng-container>
 
@@ -234,13 +288,14 @@
           <b>{{ evaluacion.nombre_evaluacion }}</b>
         </th>
         <td mat-cell *matCellDef="let element" style="text-align: center;">
-          <div class="custom-outline-field" style="width: 80px; padding: 8px; border: 1px solid rgba(0,0,0,0.38); border-radius: 4px; font-size: larger; font-weight: bold; text-align: center;">
+          <div class="custom-outline-field"
+            style="width: 80px; padding: 8px; border: 1px solid rgba(0,0,0,0.38); border-radius: 4px; font-size: larger; font-weight: bold; text-align: center;">
             {{ getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion) }}
           </div>
         </td>
       </ng-container>
-      
-      
+
+
 
 
       <!-- Fila de cabecera y de datos -->
