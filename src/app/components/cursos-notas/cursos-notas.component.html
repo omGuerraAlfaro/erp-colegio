@@ -234,17 +234,12 @@
           <b>{{ evaluacion.nombre_evaluacion }}</b>
         </th>
         <td mat-cell *matCellDef="let element" style="text-align: center;">
-          <span
-            [ngClass]="{
-              'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion),
-              'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)
-            }"
-            style="display: inline-block; width: 80px; height: 30px; line-height: 30px; background-color: rgb(210, 210, 210); border-radius: 25px; font-size: larger; font-weight: bold;"
-          >
+          <div class="custom-outline-field" style="width: 80px; padding: 8px; border: 1px solid rgba(0,0,0,0.38); border-radius: 4px; font-size: larger; font-weight: bold; text-align: center;">
             {{ getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion) }}
-          </span>
+          </div>
         </td>
       </ng-container>
+      
       
 
 

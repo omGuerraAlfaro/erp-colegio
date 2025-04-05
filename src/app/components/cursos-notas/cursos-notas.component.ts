@@ -285,14 +285,29 @@ export class CursosNotasComponent implements OnInit {
       return;
     }
 
-    Swal.fire({
-      title: 'Agregar Evaluación',
-      html: `
-        <input id="nombreEvaluacion" class="swal2-input" placeholder="Nombre de la evaluación">
+    let selectHtml: string;
+    if (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2) {
+      // Si el curso es 1 o 2, mostramos solo la opción "Concepto"
+      selectHtml = `
+        <select id="tipoEvaluacion" class="swal2-select">
+          <option value="1">Concepto</option>
+        </select>
+      `;
+    } else {
+      // Para otros cursos, se muestran las dos opciones
+      selectHtml = `
         <select id="tipoEvaluacion" class="swal2-select">
           <option value="1">Nota Parcial</option>
           <option value="2">Nota Tarea</option>
         </select>
+      `;
+    }
+
+    Swal.fire({
+      title: 'Agregar Evaluación',
+      html: `
+        <input id="nombreEvaluacion" class="swal2-input" placeholder="Nombre de la evaluación">
+        ${selectHtml}
       `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
@@ -467,18 +482,34 @@ export class CursosNotasComponent implements OnInit {
       if (result.isConfirmed) {
         this.editandoEv = true;
         const nuevoNombre = result.value;
-        this.notasService.editarNombreEvaluacion(idEvaluacion, nuevoNombre).subscribe({
-          next: () => {
-            this.editandoEv = false;
-            Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
-            this.buscarNotas(); // Recargar la lista
-          },
-          error: (err) => {
-            this.editandoEv = false;
-            console.error('Error al actualizar evaluación:', err);
-            Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
-          }
-        });
+        if (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2) {
+
+          this.notasService.editarNombreEvaluacionPreBasica(idEvaluacion, nuevoNombre).subscribe({
+            next: () => {
+              this.editandoEv = false;
+              Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
+              this.buscarNotas(); // Recargar la lista
+            },
+            error: (err) => {
+              this.editandoEv = false;
+              console.error('Error al actualizar evaluación:', err);
+              Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
+            }
+          });
+        } else {
+          this.notasService.editarNombreEvaluacionBasica(idEvaluacion, nuevoNombre).subscribe({
+            next: () => {
+              this.editandoEv = false;
+              Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
+              this.buscarNotas(); // Recargar la lista
+            },
+            error: (err) => {
+              this.editandoEv = false;
+              console.error('Error al actualizar evaluación:', err);
+              Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
+            }
+          });
+        }
       }
     });
   }
@@ -494,18 +525,33 @@ export class CursosNotasComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.borrandoEv = true;
-        this.notasService.eliminarEvaluacion(idEvaluacion).subscribe({
-          next: () => {
-            this.borrandoEv = false;
-            Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
-            this.buscarNotas(); // Recargar la lista
-          },
-          error: (err) => {
-            this.borrandoEv = false;
-            console.error('Error al eliminar evaluación:', err);
-            Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
-          }
-        });
+        if (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2) {
+          this.notasService.eliminarEvaluacionPreBasica(idEvaluacion).subscribe({
+            next: () => {
+              this.borrandoEv = false;
+              Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
+              this.buscarNotas(); // Recargar la lista
+            },
+            error: (err) => {
+              this.borrandoEv = false;
+              console.error('Error al eliminar evaluación:', err);
+              Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
+            }
+          });
+        } else {
+          this.notasService.eliminarEvaluacionBasica(idEvaluacion).subscribe({
+            next: () => {
+              this.borrandoEv = false;
+              Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
+              this.buscarNotas(); // Recargar la lista
+            },
+            error: (err) => {
+              this.borrandoEv = false;
+              console.error('Error al eliminar evaluación:', err);
+              Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
+            }
+          });
+        }
       }
     });
   }
@@ -537,7 +583,7 @@ export class CursosNotasComponent implements OnInit {
     this.semestreService.getSemestre(fechaActual).subscribe({
       next: (res) => {
         const semestreId = res.id_semestre;
-  
+
         // 1. Verificar que no existan evaluaciones parciales sin concepto asignado
         const existeConceptoVacio = this.dataSourceNotas.some((alumno: any) => {
           return alumno.evaluaciones.some((ev: any) => {
@@ -548,7 +594,7 @@ export class CursosNotasComponent implements OnInit {
             return esParcial && conceptoVacio;
           });
         });
-  
+
         if (existeConceptoVacio) {
           this.guardando2 = false;
           Swal.fire(
@@ -558,21 +604,21 @@ export class CursosNotasComponent implements OnInit {
           );
           return;
         }
-  
+
         // 2. Calcular el "promedio conceptual" para cada estudiante considerando solo evaluaciones parciales
         const estudiantesData = this.dataSourceNotas.map((alumno: any) => {
           const evaluacionesParciales = alumno.evaluaciones.filter(
             (ev: any) => ev.tipoEvaluacion?.id === 1 && ev.nota
           );
-  
+
           const conceptoParciales = this.calcularPromedioConceptual(evaluacionesParciales);
-  
+
           return {
             estudianteId: alumno.id_estudiante,
             conceptoFinalParcial: conceptoParciales,
           };
         });
-  
+
         // 4. Construir el DTO para enviarlo al backend
         const cierreSemestreDto = {
           cursoId: this.cursoSeleccionado,
@@ -629,7 +675,7 @@ export class CursosNotasComponent implements OnInit {
 
   private calcularPromedioConceptual(evaluaciones: any[]): string | null {
     // console.log('evaluaciones:', evaluaciones);
-    
+
     if (!evaluaciones || evaluaciones.length === 0) {
       return null;
     }
@@ -641,7 +687,7 @@ export class CursosNotasComponent implements OnInit {
       if (ev.nota) {
         const notaNumerica = this.convertirConceptoANumero(ev.nota);
         // console.log('notaNumerica:', notaNumerica);
-        
+
         // Solo contamos si el concepto es reconocido (valor mayor a 0)
         if (notaNumerica > 0) {
           suma += notaNumerica;

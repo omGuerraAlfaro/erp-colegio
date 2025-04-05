@@ -204,12 +204,21 @@ export class NotasService {
 
 
 
-  editarNombreEvaluacion(id: number, nuevoNombre: string): Observable<any> {
-    return this.http.put<any>(`${environment.api}/evaluaciones/modificar/${id}`, { nombreEvaluacion: nuevoNombre }, this.httpOptions);
+  editarNombreEvaluacionPreBasica(id: number, nuevoNombre: string): Observable<any> {
+    return this.http.put<any>(`${environment.api}/evaluaciones/modificarPreBasica/${id}`, { nombreEvaluacion: nuevoNombre }, this.httpOptions);
   }
 
-  eliminarEvaluacion(id: number) {
-    const url = `${environment.api}/evaluaciones/eliminar/${id}`;
+  editarNombreEvaluacionBasica(id: number, nuevoNombre: string): Observable<any> {
+    return this.http.put<any>(`${environment.api}/evaluaciones/modificarBasica/${id}`, { nombreEvaluacion: nuevoNombre }, this.httpOptions);
+  }
+
+  eliminarEvaluacionPreBasica(id: number) {
+    const url = `${environment.api}/evaluaciones/eliminarPreBasica/${id}`;
+    return this.http.delete(url, this.httpOptions);
+  }
+  
+  eliminarEvaluacionBasica(id: number) {
+    const url = `${environment.api}/evaluaciones/eliminarBasica/${id}`;
     return this.http.delete(url, this.httpOptions);
   }
 
