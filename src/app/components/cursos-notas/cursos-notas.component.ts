@@ -24,6 +24,7 @@ export class CursosNotasComponent implements OnInit {
   finalParciales: any[] = [];
   finalTareas: any[] = [];
   final: any[] = [];
+  conceptofinal: any[] = [];
   displayedColumnsParciales: string[] = [];
   displayedColumnsTareas: string[] = [];
 
@@ -61,8 +62,6 @@ export class CursosNotasComponent implements OnInit {
   }
 
   getAllAsignaturas(): void {
-    console.log('Curso seleccionado:', this.cursoSeleccionado);
-
     this.asignaturaSeleccionada = null;
 
     if (this.cursoSeleccionado == 1 || this.cursoSeleccionado == 2) {
@@ -165,6 +164,7 @@ export class CursosNotasComponent implements OnInit {
     this.finalParciales = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 3);
     this.finalTareas = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 4);
     this.final = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 5);
+    this.conceptofinal = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 6);
 
     // 5. Configurar las columnas para la tabla:
     // Se incluye 'numero' y 'alumno' al principio,
@@ -192,6 +192,7 @@ export class CursosNotasComponent implements OnInit {
       this.displayedColumns.push('separatorFinal2', ...this.final.map(ev => ev.nombre_evaluacion));
     }
 
+    this.displayedColumns.push(...this.conceptofinal.map(ev => ev.nombre_evaluacion));
 
     // 6. Completar evaluaciones faltantes para cada alumno (para asegurar que tengan todas las columnas)
     for (const alumno of this.dataSourceNotas) {
@@ -377,11 +378,13 @@ export class CursosNotasComponent implements OnInit {
           notaValue = isNaN(parsed) ? notaRaw : parsed;
         }
 
+        const fechaActual = new Date().toISOString().split('T')[0];
+
         notasAGuardar.push({
           estudianteId: estudiante.id_estudiante,
           evaluacionId: evaluacion.id_evaluacion,
           nota: notaValue, // La nota se deja como número o como sigla, según corresponda
-          fecha: evaluacion.fecha ? new Date(evaluacion.fecha) : new Date(),
+          fecha: fechaActual
         });
       });
     });
@@ -579,11 +582,9 @@ export class CursosNotasComponent implements OnInit {
         };
 
         console.log('DTO de cierre de semestre:', cierreSemestreDto);
-        return;
-        
-  
+
         // 5. Llamar al servicio para cerrar el semestre
-        this.notasService.cierreSemestre(cierreSemestreDto).subscribe({
+        this.notasService.cierreSemestrePreBasica(cierreSemestreDto).subscribe({
           next: () => {
             this.guardando2 = false;
             Swal.fire('Éxito', 'Se han generado los conceptos finales correctamente.', 'success');
@@ -627,7 +628,7 @@ export class CursosNotasComponent implements OnInit {
   }
 
   private calcularPromedioConceptual(evaluaciones: any[]): string | null {
-    console.log('evaluaciones:', evaluaciones);
+    // console.log('evaluaciones:', evaluaciones);
     
     if (!evaluaciones || evaluaciones.length === 0) {
       return null;
@@ -639,7 +640,7 @@ export class CursosNotasComponent implements OnInit {
     for (const ev of evaluaciones) {
       if (ev.nota) {
         const notaNumerica = this.convertirConceptoANumero(ev.nota);
-        console.log('notaNumerica:', notaNumerica);
+        // console.log('notaNumerica:', notaNumerica);
         
         // Solo contamos si el concepto es reconocido (valor mayor a 0)
         if (notaNumerica > 0) {
@@ -724,9 +725,10 @@ export class CursosNotasComponent implements OnInit {
           semestreId: semestreId,
           estudiantes: estudiantesData,
         };
+        console.log('DTO de cierre de semestre:', cierreSemestreDto);
 
         // 5. Llamamos al servicio para cerrar el semestre
-        this.notasService.cierreSemestre(cierreSemestreDto).subscribe({
+        this.notasService.cierreSemestreBasica(cierreSemestreDto).subscribe({
           next: () => {
             this.guardando2 = false;
             Swal.fire('Éxito', 'Se han generado las notas finales correctamente.', 'success');

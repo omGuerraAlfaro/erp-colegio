@@ -69,9 +69,15 @@ export class NotasService {
   }
 
 
-  cierreSemestre(data: any): Observable<any> {
+  cierreSemestreBasica(data: any): Observable<any> {
     return this.http
-      .post<any>(`${environment.api}/notas/cierre-semestre`, data, this.httpOptions)
+      .post<any>(`${environment.api}/notas/cierre-semestre-basica`, data, this.httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  cierreSemestrePreBasica(data: any): Observable<any> {
+    return this.http
+      .post<any>(`${environment.api}/notas/cierre-semestre-prebasica`, data, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
   /**
