@@ -77,6 +77,7 @@ import { ModalIngresarMatriculaApoderadoExistComponent } from './components/moda
 import { FichaAlumnosComponent } from './components/ficha-alumnos/ficha-alumnos.component';
 import { ModalVerFichaEstudianteComponent } from './components/modal-ver-ficha-estudiante/modal-ver-ficha-estudiante.component';
 import { InscripcionTalleresComponent } from './components/inscripcion-talleres/inscripcion-talleres.component';
+import { BoletaEdicionComponent } from './components/boleta-edicion/boleta-edicion.component';
 
 
 
@@ -116,6 +117,7 @@ import { InscripcionTalleresComponent } from './components/inscripcion-talleres/
     FichaAlumnosComponent,
     ModalVerFichaEstudianteComponent,
     InscripcionTalleresComponent,
+    BoletaEdicionComponent,
   ],
   imports: [
     BrowserModule,

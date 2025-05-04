@@ -1,91 +1,123 @@
-<div class="color posicion border" style="padding: 20px; margin: 20px;">
-    <div class="container">
-      <div class="cabecera">
-        <h1 class="mat-headline"><b>Bandeja de inscripciones para Talleres 2025</b></h1>
-      </div>
-  
-      <!-- Contador global de inscripciones -->
-      <h3>Total de inscripciones: {{ totalInscripciones }}</h3>
-  
-      <ng-container *ngIf="groupedData; else loading">
-        <mat-accordion>
-          <mat-expansion-panel *ngFor="let taller of groupedData | keyvalue : customSort">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                {{ taller.key }} (Total inscritos: {{ taller.value.length }})
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-  
-            <table mat-table [dataSource]="taller.value" class="mat-elevation-z8" style="width: 100%;">
-              <!-- ID Inscripción -->
-              <ng-container matColumnDef="id_inscripcion">
-                <th mat-header-cell *matHeaderCellDef class="text-center">ID Inscripción</th>
-                <td mat-cell *matCellDef="let element" class="text-center">
-                  {{ element.id_inscripcion }}
-                </td>
-              </ng-container>
-  
-              <!-- Nombre Alumno -->
-              <ng-container matColumnDef="nombre_alumno">
-                <th mat-header-cell *matHeaderCellDef class="text-center">Nombre Alumno</th>
-                <td mat-cell *matCellDef="let element" class="text-center">
-                  {{ element.estudiante.primer_nombre_alumno }}
-                  {{ element.estudiante.segundo_nombre_alumno }}
-                  {{ element.estudiante.primer_apellido_alumno }}
-                  {{ element.estudiante.segundo_apellido_alumno }}
-                </td>
-              </ng-container>
-  
-              <!-- RUT Alumno -->
-              <ng-container matColumnDef="rut_alumno">
-                <th mat-header-cell *matHeaderCellDef class="text-center">RUT Alumno</th>
-                <td mat-cell *matCellDef="let element" class="text-center">
-                  {{ element.estudiante.rut }}-{{ element.estudiante.dv }}
-                </td>
-              </ng-container>
-  
-              <!-- Curso -->
-              <ng-container matColumnDef="curso">
-                <th mat-header-cell *matHeaderCellDef class="text-center">Curso</th>
-                <td mat-cell *matCellDef="let element" class="text-center">
-                  {{ element.curso?.nombre || 'Sin curso' }}
-                </td>
-              </ng-container>
-  
-              <!-- Fecha de Inscripción -->
-              <ng-container matColumnDef="fecha_matricula_inscripcion">
-                <th mat-header-cell *matHeaderCellDef class="text-center">Fecha Inscripción</th>
-                <td mat-cell *matCellDef="let element" class="text-center">
-                  {{ element.fecha_matricula_inscripcion | date:'dd/MM/yyyy' }}
-                </td>
-              </ng-container>
-  
-              <!-- Acciones -->
-              <ng-container matColumnDef="acciones">
-                <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
-                <td mat-cell *matCellDef="let element" class="text-center">
-                  <button mat-raised-button color="primary" (click)="opciones(element.id_inscripcion)">
-                    Opciones
-                  </button>
-                </td>
-              </ng-container>
-  
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-          </mat-expansion-panel>
-        </mat-accordion>
-  
-        <div style="text-align: right; margin-top: 20px;">
-          <button mat-raised-button color="accent" (click)="exportToExcel()" [disabled]="!dataOk">
-            Exportar a Excel
-          </button>
-        </div>
-      </ng-container>
-  
-      <ng-template #loading>
-        <p class="text-center">Cargando datos...</p>
-      </ng-template>
+<div class="color posicion border accordion-wrapper">
+  <div class="container">
+    <div class="cabecera">
+      <h1><b>Bandeja de inscripciones para Talleres 2025</b></h1>
     </div>
+
+    <!-- Contador global de inscripciones -->
+    <h3>Total de inscripciones: {{ totalInscripciones }}</h3>
+
+    <ng-container *ngIf="groupedData; else loading">
+      <mat-accordion>
+        <mat-expansion-panel
+          class="custom-panel"
+          *ngFor="let taller of groupedData | keyvalue: customSort"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ taller.key }} (Total inscritos: {{ taller.value.length }})
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <table
+            mat-table
+            [dataSource]="taller.value"
+            class="mat-elevation-z8"
+            style="width: 100%;"
+          >
+            <!-- ID Inscripción -->
+            <ng-container matColumnDef="id_inscripcion">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                ID Inscripción
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.id_inscripcion }}
+              </td>
+            </ng-container>
+
+            <!-- Nombre Alumno -->
+            <ng-container matColumnDef="nombre_alumno">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Nombre Alumno
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.estudiante.primer_nombre_alumno }}
+                {{ element.estudiante.segundo_nombre_alumno }}
+                {{ element.estudiante.primer_apellido_alumno }}
+                {{ element.estudiante.segundo_apellido_alumno }}
+              </td>
+            </ng-container>
+
+            <!-- RUT Alumno -->
+            <ng-container matColumnDef="rut_alumno">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                RUT Alumno
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.estudiante.rut }}-{{ element.estudiante.dv }}
+              </td>
+            </ng-container>
+
+            <!-- Curso -->
+            <ng-container matColumnDef="curso">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Curso</th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.curso?.nombre || 'Sin curso' }}
+              </td>
+            </ng-container>
+
+            <!-- Fecha de Inscripción -->
+            <ng-container matColumnDef="fecha_matricula_inscripcion">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Fecha Inscripción
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.fecha_matricula_inscripcion | date:'dd/MM/yyyy' }}
+              </td>
+            </ng-container>
+
+            <!-- Acciones -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Acciones
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="opciones(element.id_inscripcion)"
+                >
+                  Opciones
+                </button>
+              </td>
+            </ng-container>
+
+            <tr
+              mat-header-row
+              *matHeaderRowDef="displayedColumns"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns;"
+            ></tr>
+          </table>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <div class="export-container">
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="exportToExcel()"
+          [disabled]="!dataOk"
+        >
+          Exportar a Excel
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-template #loading>
+      <p class="text-center">Cargando datos...</p>
+    </ng-template>
   </div>
-  
+</div>

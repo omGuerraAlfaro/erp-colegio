@@ -22,6 +22,7 @@ import { CalendarioEscolarComponent } from './components/calendario-escolar/cale
 import { CertificadosComponent } from './components/certificados/certificados.component';
 import { FichaAlumnosComponent } from './components/ficha-alumnos/ficha-alumnos.component';
 import { InscripcionTalleresComponent } from './components/inscripcion-talleres/inscripcion-talleres.component';
+import { BoletaEdicionComponent } from './components/boleta-edicion/boleta-edicion.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'calendario-escolar', component: CalendarioEscolarComponent },
 
   { path: 'boletas', component: BoletasComponent },
+  { path: 'boletas-edicion', component: BoletaEdicionComponent },
   { path: 'boletas-mantenedor', component: BoletasMantenedorComponent },
 
   { path: 'ficha-alumnos', component: FichaAlumnosComponent },

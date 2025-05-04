@@ -42,7 +42,7 @@
             <mat-nav-list class="secondary-section" *ngIf="isMatriculasOpen">
                 <a mat-list-item routerLink="/matriculas" routerLinkActive="active">Libro de Matrículas</a>
                 <a mat-list-item routerLink="/certificados" routerLinkActive="active">Certificados</a>
-                <a mat-list-item routerLink="/bandeja-inscripciones" routerLinkActive="active">Inscripciones Matrícula</a>
+                <!-- <a mat-list-item routerLink="/bandeja-inscripciones" routerLinkActive="active">Inscripciones Matrícula</a> -->
                 <a mat-list-item routerLink="/bandeja-talleres" routerLinkActive="active">Inscripciones Talleres</a>
             </mat-nav-list>
 
@@ -53,7 +53,8 @@
                 <mat-icon class="expand-icon" aria-hidden="true">{{ isFinanzasOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
             </mat-list-item>
             <mat-nav-list class="secondary-section" *ngIf="isFinanzasOpen">
-                <a mat-list-item routerLink="/boletas" routerLinkActive="active">Detalle Boletas</a>
+                <a mat-list-item routerLink="/boletas" routerLinkActive="active">Información Finanzas</a>
+                <a mat-list-item routerLink="/boletas-edicion" routerLinkActive="active">Detalle Finanzas</a>
             </mat-nav-list>
 
             <!-- Sección Profesor -->

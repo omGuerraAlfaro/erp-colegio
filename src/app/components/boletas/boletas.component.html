@@ -1,205 +1,83 @@
 <div class="color posicion border">
   <div class="container">
+
     <div class="cabecera">
-      <h1><b>Detalle Boletas</b></h1>
+      <h1><b>Información Financiera</b></h1>
     </div>
 
-    <hr>
-
-    <!-- Material Tabs -->
-    <mat-tab-group>
-      <!-- Resumen Tab -->
-      <mat-tab label="Resumen">
-
-        <div class="cardContenedor justify-content-center">
-          <div class="card text-center m-2" *ngFor="let var1 of vars">
-            <a routerLink="/{{var1.link}}">
-              <div>
-                <h2>{{var1.name}}</h2>
-              </div>
-              <div>
-                <h5>{{var1.date | date }}</h5>
-              </div>
-              <div>
-                <h3 *ngIf="var1.name !== 'Número de Morosos'; else countTemplate">
-                  <strong>
-                    {{var1.mount | formatNumeros }}
-                  </strong>
-                </h3>
-                <ng-template #countTemplate>
-                  <h3>
+    <mat-accordion class="accordion-wrapper" multi>
+      <!-- 1. Lista de morosos -->
+      <mat-expansion-panel class="custom-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Resumen</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="accordion-content">
+          <!-- contenido de tu lista de morosos -->
+          <div class="cardContenedor justify-content-center">
+            <div class="card text-center m-2" *ngFor="let var1 of vars">
+              <a routerLink="/{{var1.link}}">
+                <div>
+                  <h2>{{var1.name}}</h2>
+                </div>
+                <div>
+                  <h5>{{var1.date | date }}</h5>
+                </div>
+                <div>
+                  <h3 *ngIf="var1.name !== 'Número de Morosos'; else countTemplate">
                     <strong>
-                      {{var1.count}}
+                      {{var1.mount | formatNumeros }}
                     </strong>
                   </h3>
-                </ng-template>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="chart-container m-3">
-          <canvas id="myChart3"></canvas>
-          <canvas id="myChart4"></canvas>
-        </div>
-
-      </mat-tab>
-
-      <!-- Detalle Boletas Tab -->
-      <mat-tab label="Detalle Boletas">
-
-        <div class="container">
-          <div class="row">
-            <div class="col-3">
-              <div class="search-bar">
-                <mat-form-field appearance="fill" style="width: 100%;">
-                  <mat-label>Buscar por rut del Apoderado</mat-label>
-                  <input matInput (keyup)="applyFilter($event)" placeholder="Buscar...">
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="col-9">
-              <div class="filters">
-                <mat-checkbox (change)="applyEstadoFilter($event.checked, 1)" class="m-2">Pendiente</mat-checkbox>
-                <mat-checkbox (change)="applyEstadoFilter($event.checked, 2)" class="m-2">Pagada</mat-checkbox>
-                <mat-checkbox (change)="applyEstadoFilter($event.checked, 4)" class="m-2">Repactada</mat-checkbox>
-                <mat-checkbox (change)="applyEstadoFilter($event.checked, 5)" class="m-2">Transferencia
-                  Pendiente</mat-checkbox>
-                <mat-checkbox (change)="applyEstadoFilter($event.checked, 6)" class="m-2">Transferencia
-                  Aprobada</mat-checkbox>
-              </div>
+                  <ng-template #countTemplate>
+                    <h3>
+                      <strong>
+                        {{var1.count}}
+                      </strong>
+                    </h3>
+                  </ng-template>
+                </div>
+              </a>
             </div>
           </div>
+          <div class="chart-container m-3">
+            <canvas id="myChart3"></canvas>
+            <canvas id="myChart4"></canvas>
+          </div>
         </div>
-
-        <mat-table mat-table [dataSource]="dataSource" matSort>
-
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef style="width: 50px;"> ID </th>
-            <td mat-cell *matCellDef="let element" style="width: 50px;"> {{element.id}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="rut_apoderado2">
-            <th mat-header-cell *matHeaderCellDef style="width: 120px;"> RUT Apoderado </th>
-            <td mat-cell *matCellDef="let element" style="width: 120px;"> {{element.rut_apoderado2}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="nombre_apoderado">
-            <th mat-header-cell *matHeaderCellDef style="width: 150px;"> Nombre Apoderado </th>
-            <td mat-cell *matCellDef="let element" style="width: 150px;"> {{element.nombre_apoderado}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="telefono_apoderado">
-            <th mat-header-cell *matHeaderCellDef style="width: 120px;"> Teléfono </th>
-            <td mat-cell *matCellDef="let element" style="width: 120px;"> {{element.telefono_apoderado}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="correo_apoderado">
-            <th mat-header-cell *matHeaderCellDef style="width: 200px;"> Correo Apoderado </th>
-            <td mat-cell *matCellDef="let element" style="width: 200px;"> {{element.correo_apoderado}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="detalle">
-            <th mat-header-cell *matHeaderCellDef style="width: 200px;"> Detalle </th>
-            <td mat-cell *matCellDef="let element" style="width: 200px;"> {{element.detalle}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="fecha_vencimiento">
-            <th mat-header-cell *matHeaderCellDef style="width: 150px;"> Fecha Vencimiento </th>
-            <td mat-cell *matCellDef="let element" style="width: 150px;"> {{element.fecha_vencimiento}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="estado_id">
-            <th mat-header-cell *matHeaderCellDef style="width: 150px;"> Estado </th>
-            <td mat-cell *matCellDef="let element" [ngClass]="{
-                'estado-pendiente': element.estado_id === 1,
-                'estado-pagada': element.estado_id === 2,
-                'estado-rechazada': element.estado_id === 3,
-                'estado-repactada': element.estado_id === 4,
-                'estado-transferenciaPendiente': element.estado_id === 5,
-                'estado-transferenciaAprobada': element.estado_id === 6
-              }" style="width: 150px;">
-              {{ element.estado_id === 1 ? 'Pendiente' :
-              element.estado_id === 2 ? 'Pagada' :
-              element.estado_id === 3 ? 'Rechazada' :
-              element.estado_id === 4 ? 'Repactada' :
-              element.estado_id === 5 ? 'Transferencia Pendiente' :
-              element.estado_id === 6 ? 'Transferencia Aprobada' : '' }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="total">
-            <th mat-header-cell *matHeaderCellDef style="width: 100px;"> Total </th>
-            <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.total}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef style="width: 150px;"> Acciones </th>
-            <td mat-cell *matCellDef="let element" style="width: 150px;">
-              <button mat-button class="boton" (click)="openModalBoletasEstudiante(element)">Ver Detalles</button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-        </mat-table>
-
-
-        <mat-paginator [pageSizeOptions]="[11, 22, 30]" showFirstLastButtons></mat-paginator>
-
-
-      </mat-tab>
-
-      <!-- Detalle Boletas por Alumno Tab -->
-      <mat-tab label="Detalle Boletas por Alumno">
-        <div *ngFor="let cursoId of getCursoKeys()" class="w-100 mb-5">
-          <h3 class="mt-5"><b>Curso: {{ dataSourceCursos[cursoId].nombreCurso }}</b></h3>
-
-          <table mat-table [dataSource]="dataSourceCursos[cursoId].dataSource2" class="full-width">
-
-            <ng-container matColumnDef="numero">
-              <th mat-header-cell *matHeaderCellDef style="width: 80px; text-align: center;"> # </th>
-              <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
-                {{ i + 1 }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef style="width: 80px; text-align: center;"> N° Matricula </th>
-              <td mat-cell *matCellDef="let element" style="width: 80px; text-align: center;"> {{element.id}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="nombre_estudiante">
-              <th mat-header-cell *matHeaderCellDef style="width: 400px; text-align: center;"> Nombre Estudiante </th>
-              <td mat-cell *matCellDef="let element" style="width: 400px; text-align: center;"> {{element.nombre_estudiante}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="rut_estudiante2">
-              <th mat-header-cell *matHeaderCellDef> RUT Estudiante </th>
-              <td mat-cell *matCellDef="let element"> {{element.rut_estudiante}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="genero_estudiante">
-              <th mat-header-cell *matHeaderCellDef> Género </th>
-              <td mat-cell *matCellDef="let element">
-                {{ element.genero_estudiante === 'F' ? 'Femenino' : element.genero_estudiante === 'M' ? 'Masculino' :
-                element.genero_estudiante }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="acciones">
-              <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
-              <td mat-cell *matCellDef="let element" class="text-center">
-                <button class="boton" (click)="openModalDetalleBoleta(element)">Ver Boletas</button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsCursos"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsCursos;"></tr>
-          </table>
+      </mat-expansion-panel>
+    
+      <!-- 2. Detalle general -->
+      <mat-expansion-panel class="custom-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Detalle general</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="accordion-content">
+          <!-- contenido de detalle general -->
         </div>
+      </mat-expansion-panel>
+    
+      <!-- 3. Detalle mensual -->
+      <mat-expansion-panel class="custom-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Detalle mensual</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="accordion-content">
+          <!-- contenido de detalle mensual -->
+        </div>
+      </mat-expansion-panel>
+    
+      <!-- 4. Detalle anual -->
+      <mat-expansion-panel class="custom-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Detalle anual</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="accordion-content">
+          <!-- contenido de detalle anual -->
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
 
-      </mat-tab>
-    </mat-tab-group>
+
+
   </div>
 </div>
