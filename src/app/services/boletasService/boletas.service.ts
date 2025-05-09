@@ -113,6 +113,13 @@ export class BoletasService {
       );
   }
 
+  getHistorialTransacciones(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/boleta/transacciones`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
     console.error(errorMessage);

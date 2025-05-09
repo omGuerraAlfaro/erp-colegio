@@ -70,7 +70,8 @@ mat-cell {
     margin-top: 2px;
     font-size: 18px;
     color: #ffffff;
-    background-color: #007bff; /* Azul */
+    background-color: #007bff;
+    /* Azul */
     border: none;
     border-radius: 50px;
     text-align: center;
@@ -81,7 +82,8 @@ mat-cell {
 }
 
 .boton2:hover {
-    background-color: #339af0; /* Azul más claro */
+    background-color: #339af0;
+    /* Azul más claro */
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
 }
@@ -97,7 +99,8 @@ mat-cell {
     margin-top: 2px;
     font-size: 18px;
     color: #ffffff;
-    background-color: #007bff; /* Azul */
+    background-color: #007bff;
+    /* Azul */
     border: none;
     border-radius: 50px;
     text-align: center;
@@ -108,7 +111,8 @@ mat-cell {
 }
 
 .boton3:hover {
-    background-color: #339af0; /* Azul más claro */
+    background-color: #339af0;
+    /* Azul más claro */
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
 }
@@ -129,9 +133,54 @@ mat-cell {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.8); /* Optional: to give a slight background */
-    z-index: 10; /* Ensure it's on top */
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Optional: to give a slight background */
+    z-index: 10;
+    /* Ensure it's on top */
 }
+
 .content-wrapper {
     position: relative;
+}
+
+.cabecera {
+    border-left: 4px solid #1E88E5;
+    background-color: #FFFFFF;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.cabecera h1 {
+    margin: 0;
+    color: #1E88E5;
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-transform: none;
+}
+
+.mat-row:hover {
+    background-color: #f5f5f5;
+}
+
+.subtitulo {
+    border-left: 3px solid #1E88E5;
+    /* un poco más fino */
+    background-color: #ffffff;
+    /* fondo ligeramente gris */
+    padding: 0.75rem;
+    /* algo menos de espacio */
+    margin: 0.5rem 0;
+    /* márgenes más pequeños */
+}
+
+.subtitulo h2 {
+    margin: 0;
+    color: #1E88E5;
+    font-size: 1.25rem;
+    /* tamaño intermedio */
+    font-weight: 600;
+    /* peso medio */
+    font-style: italic;
+    /* un toque de estilo */
+    text-transform: none;
 }

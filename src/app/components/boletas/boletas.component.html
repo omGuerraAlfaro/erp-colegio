@@ -18,10 +18,7 @@
           <!-- PILLS -->
           <div class="pill-container my-3">
             <mat-chip-list aria-label="Resumen rápido">
-              <mat-chip selected color="success">
-                Monto Pagado (desde marzo a la fecha): {{ sumBoletasPagadas | formatNumeros }}
-              </mat-chip>
-              <mat-chip selected color="primary">
+              <mat-chip selected color="secondary">
                 Boletas Vencidas: {{ sumBoletasVencidas }}
               </mat-chip>
               <mat-chip selected color="accent">
@@ -105,12 +102,8 @@
                     <ng-container matColumnDef="meses">
                       <th mat-header-cell *matHeaderCellDef>Meses Adeudados</th>
                       <td mat-cell *matCellDef="let m">
-                        <span
-                          class="mes-chip"
-                          *ngFor="let mes of m.morosidadPorMes"
-                          [class.vencido]="mes.tieneVencidas"
-                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}"
-                        >
+                        <span class="mes-chip" *ngFor="let mes of m.morosidadPorMes" [class.vencido]="mes.tieneVencidas"
+                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}">
                           {{ monthAbbr[mes.mes] }}
                         </span>
                       </td>
@@ -174,12 +167,8 @@
                     <ng-container matColumnDef="meses">
                       <th mat-header-cell *matHeaderCellDef>Meses Adeudados</th>
                       <td mat-cell *matCellDef="let m">
-                        <span
-                          class="mes-chip"
-                          *ngFor="let mes of m.morosidadPorMes"
-                          [class.vencido]="mes.tieneVencidas"
-                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}"
-                        >
+                        <span class="mes-chip" *ngFor="let mes of m.morosidadPorMes" [class.vencido]="mes.tieneVencidas"
+                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}">
                           {{ monthAbbr[mes.mes] }}
                         </span>
                       </td>
@@ -239,12 +228,8 @@
                     <ng-container matColumnDef="meses">
                       <th mat-header-cell *matHeaderCellDef>Meses Adeudados</th>
                       <td mat-cell *matCellDef="let m">
-                        <span
-                          class="mes-chip"
-                          *ngFor="let mes of m.morosidadPorMes"
-                          [class.vencido]="mes.tieneVencidas"
-                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}"
-                        >
+                        <span class="mes-chip" *ngFor="let mes of m.morosidadPorMes" [class.vencido]="mes.tieneVencidas"
+                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}">
                           {{ monthAbbr[mes.mes] }}
                         </span>
                       </td>
@@ -269,7 +254,7 @@
         </div>
       </mat-expansion-panel>
 
-      <!-- 3. Detalle mensual -->
+      <!-- 3. Historial de transacciones WebPay -->
       <mat-expansion-panel class="custom-panel">
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -277,8 +262,96 @@
             Historial Transacciones WebPay
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <div class="accordion-content">
-          <!-- contenido de detalle mensual -->
+        <div class="accordion-content" style="width: 100%;">
+          <div class="pill-container my-3">
+            <mat-chip-list aria-label="Resumen rápido">
+              <mat-chip selected color="warn">
+                Total de pagos Webpay: {{ sumTransaccionesTerminadas | formatNumeros }}
+              </mat-chip>
+              <mat-chip selected color="secondary">
+                Pagos WebPay este mes: {{ sumTransaccionesTerminadasMes | formatNumeros }}
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+          <table mat-table [dataSource]="historialTransaccionesDataSource" class="mat-elevation-z8">
+
+            <!-- Estado -->
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef> Estado </th>
+              <td mat-cell *matCellDef="let t">
+                <span class="pill pill-{{ getEstadoClass(t.estado_transaccion_id) }}">
+                  {{ t.estadoTransaccion.descripcion }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef> Fecha / Hora </th>
+              <td mat-cell *matCellDef="let t">
+                {{ getFechaTransaccion(t) | date:'dd/MM/yyyy HH:mm' }}
+              </td>
+            </ng-container>
+
+            <!-- Apoderado (nombre completo) -->
+            <ng-container matColumnDef="apoderado">
+              <th mat-header-cell *matHeaderCellDef> Apoderado </th>
+              <td mat-cell *matCellDef="let t">
+                {{ t.apoderado.primer_nombre_apoderado.trim() }}
+                {{ t.apoderado.segundo_nombre_apoderado.trim() }}
+                {{ t.apoderado.primer_apellido_apoderado.trim() }}
+                {{ t.apoderado.segundo_apellido_apoderado.trim() }}
+              </td>
+            </ng-container>
+
+            <!-- RUT -->
+            <ng-container matColumnDef="rut">
+              <th mat-header-cell *matHeaderCellDef> RUT </th>
+              <td mat-cell *matCellDef="let t">
+                {{ t.apoderado.rut }}-{{ t.apoderado.dv }}
+              </td>
+            </ng-container>
+
+            <!-- Boleta ID -->
+            <ng-container matColumnDef="boleta">
+              <th mat-header-cell *matHeaderCellDef>ID Boleta </th>
+              <td mat-cell *matCellDef="let t">
+                {{ t.boleta.id }}
+              </td>
+            </ng-container>
+
+            <!-- Boleta Descripcion -->
+            <ng-container matColumnDef="detalle">
+              <th mat-header-cell *matHeaderCellDef> Descripción </th>
+              <td mat-cell *matCellDef="let t">
+                {{ t.boleta.detalle }}
+              </td>
+            </ng-container>
+
+            <!-- Monto -->
+            <ng-container matColumnDef="monto">
+              <th mat-header-cell *matHeaderCellDef> Monto </th>
+              <td mat-cell *matCellDef="let t">
+                {{ t.monto | formatNumeros }}
+              </td>
+            </ng-container>
+
+            <!-- Acciones -->
+            <!-- <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef> Acciones </th>
+              <td mat-cell *matCellDef="let t">
+                <button mat-button (click)="verDetalleTransaccion(t)">
+                  Ver
+                </button>
+              </td>
+            </ng-container> -->
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+
+
+          </table>
+          <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons>
+          </mat-paginator>
         </div>
       </mat-expansion-panel>
 
@@ -291,7 +364,39 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="accordion-content">
-          <!-- contenido de detalle anual -->
+
+          <div class="pill-container my-3">
+            <mat-chip-list aria-label="Resumen rápido">
+              <mat-chip selected color="secondary">
+                Monto Total Pagado en Matrículas: {{ totalMatriculasEnero | formatNumeros }}
+              </mat-chip>   
+              <mat-chip selected color="secondary">
+                Monto Total Pagado (desde marzo a la fecha): {{ sumBoletasPagadas | formatNumeros }}
+              </mat-chip>
+              <mat-chip selected color="secondary">
+                Total Webpay: {{ sumTransaccionesTerminadas | formatNumeros }}
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+
+          <div class="charts-container">
+            <!-- Pie anual -->
+                     
+            <div class="chart-wrapper">
+              <h3 class="chart-title">% Pagado vs Pendiente</h3>
+              <canvas id="annualPieChart"></canvas>
+            </div>
+            <!-- Total Terminadas -->
+            <div class="chart-terminadas">
+              <h3 class="chart-title">Transacciones WebPay Terminadas</h3>
+              <canvas id="terminadasChart"></canvas>
+            </div>
+            <!-- Nueva gráfica de Meta -->
+            <div class="chart-wrapper">
+              <h3 class="chart-title">Meta Anual vs Pagado vs Pendiente</h3>
+              <canvas id="goalChart"></canvas>
+            </div>
+          </div>
         </div>
       </mat-expansion-panel>
 

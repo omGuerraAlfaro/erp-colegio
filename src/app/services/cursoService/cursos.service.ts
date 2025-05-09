@@ -30,8 +30,8 @@ export class CursosService {
         catchError(this.handleError)
       );
   }
-  getInfoCursoConEstudiantes(): Observable<ICursoEstudiante> {
-    return this.http.get<ICursoEstudiante>(`${environment.api}/curso/estudiantes`, this.httpOptions)
+  getInfoCursoConEstudiantes(): Observable<ICursoEstudiante[]> {
+    return this.http.get<ICursoEstudiante[]>(`${environment.api}/curso/estudiantes`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
