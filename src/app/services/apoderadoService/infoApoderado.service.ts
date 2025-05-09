@@ -66,6 +66,13 @@ export class InfoApoderadoService {
       );
   }
 
+  getHistorialTransacciones(): Observable<any> {
+    return this.http.get<any>(`${environment.api}/boleta/historial-transacciones-webpay`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
     console.error(errorMessage);

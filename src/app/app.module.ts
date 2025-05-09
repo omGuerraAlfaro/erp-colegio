@@ -78,6 +78,8 @@ import { FichaAlumnosComponent } from './components/ficha-alumnos/ficha-alumnos.
 import { ModalVerFichaEstudianteComponent } from './components/modal-ver-ficha-estudiante/modal-ver-ficha-estudiante.component';
 import { InscripcionTalleresComponent } from './components/inscripcion-talleres/inscripcion-talleres.component';
 import { BoletaEdicionComponent } from './components/boleta-edicion/boleta-edicion.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ModalVerBoletasComponent } from './components/modal-ver-boletas/modal-ver-boletas.component';
 
 
 
@@ -118,6 +120,7 @@ import { BoletaEdicionComponent } from './components/boleta-edicion/boleta-edici
     ModalVerFichaEstudianteComponent,
     InscripcionTalleresComponent,
     BoletaEdicionComponent,
+    ModalVerBoletasComponent,
   ],
   imports: [
     BrowserModule,
@@ -153,7 +156,8 @@ import { BoletaEdicionComponent } from './components/boleta-edicion/boleta-edici
     ScrollingModule,
     MatGridListModule,
     MatTableModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTooltipModule
 
   ],
   providers: [

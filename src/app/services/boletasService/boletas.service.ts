@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
+import { PorcentajeMesDto, ResumenApoderadoMorosoDto } from 'src/app/interfaces/apoderadoInterface';
 import { BoletaDetalle, IBoleta, UpdateBoleta, UpdateBoletaDto } from 'src/app/interfaces/boletaInterface';
 import { environment } from 'src/environments/environment';
 
@@ -24,6 +25,18 @@ export class BoletasService {
       );
   }
 
+  getMorosos(): Observable<ResumenApoderadoMorosoDto[]> {
+    return this.http.get<ResumenApoderadoMorosoDto[]>(`${environment.api}/boleta/morosos/obtener`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  getPorcentajePagadoPorMes(fecha: any): Observable<PorcentajeMesDto[]> {
+    return this.http.get<PorcentajeMesDto[]>(`${environment.api}/boleta/porcentaje-pagado/${fecha}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
   getBoletasByRutApoderado(rut: any): Observable<BoletaDetalle[]> {
     return this.http.get<BoletaDetalle[]>(`${environment.api}/boleta/apoderado/${rut}`, this.httpOptions)
       .pipe(

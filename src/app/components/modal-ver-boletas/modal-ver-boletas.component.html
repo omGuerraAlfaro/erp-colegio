@@ -1,0 +1,12 @@
+<mat-nav-list>
+    <h3 mat-subheader>Boletas de {{ data.nombre }}</h3>
+    <mat-list-item *ngFor="let b of boletas" (click)="close()">
+      <span>{{ b.fecha | date:'dd/MM/yyyy' }}</span>
+      <span class="amount">{{ b.monto | currency:'CLP' }}</span>
+      <span [ngClass]="{ 'paid': b.pagada, 'pending': !b.pagada }">
+        {{ b.pagada ? 'Pagada' : 'Pendiente' }}
+      </span>
+    </mat-list-item>
+    <button mat-button (click)="close()">Cerrar</button>
+  </mat-nav-list>
+  

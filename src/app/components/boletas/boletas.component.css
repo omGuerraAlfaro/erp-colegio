@@ -10,7 +10,7 @@
     border-left: 4px solid #1E88E5;
     background-color: #FFFFFF;
     padding: 1rem;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
 }
 
 .cabecera h1 {
@@ -227,4 +227,84 @@
     line-height: 1.6;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+}
+
+.mes-chip {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    margin: 0 2px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    font-size: 0.75rem;
+    color: #555;
+}
+
+.mes-chip.vencido {
+    background: #d32f2f;
+    color: #fff;
+}
+
+.nivel-verde {
+    color: #388e3c;
+}
+
+.nivel-amarillo {
+    color: #fbc02d;
+}
+
+.nivel-rojo {
+    color: #d32f2f;
+}
+
+/* Tonos pastel – MÁS específicos y luego del genérico */
+.accordion-wrapper .custom-panel.pastel-verde .mat-expansion-panel-header {
+    background-color: #d4edda;
+}
+
+.accordion-wrapper .custom-panel.pastel-amarillo .mat-expansion-panel-header {
+    background-color: #fff3cd;
+}
+
+.accordion-wrapper .custom-panel.pastel-rojo .mat-expansion-panel-header {
+    background-color: #f8d7da;
+}
+
+/* Ajuste opcional de color de texto */
+.accordion-wrapper .custom-panel.pastel-verde .mat-expansion-panel-header .mat-panel-title {
+    color: #155724;
+}
+
+.accordion-wrapper .custom-panel.pastel-amarillo .mat-expansion-panel-header .mat-panel-title {
+    color: #856404;
+}
+
+.accordion-wrapper .custom-panel.pastel-rojo .mat-expansion-panel-header .mat-panel-title {
+    color: #721c24;
+}
+
+.mes-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin: 2px;
+    font-size: 0.65rem;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #555;
+    cursor: default;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mes-chip.vencido {
+    background-color: #d32f2f;
+    color: #fff;
+}
+
+.mes-chip:hover {
+    transform: scale(1.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }

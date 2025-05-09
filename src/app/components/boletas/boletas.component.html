@@ -1,43 +1,36 @@
 <div class="color posicion border">
   <div class="container">
-
     <div class="cabecera">
       <h1><b>Información Financiera</b></h1>
     </div>
 
-    <mat-accordion class="accordion-wrapper" multi>
-      <!-- 1. Lista de morosos -->
-      <mat-expansion-panel class="custom-panel">
+    <mat-accordion class="accordion-wrapper">
+
+      <!-- 1. Resumen con pills y gráficos -->
+      <mat-expansion-panel class="custom-panel" [expanded]="true">
         <mat-expansion-panel-header>
-          <mat-panel-title>Resumen</mat-panel-title>
+          <mat-panel-title>
+            <mat-icon class="accordion-icon mx-2">dashboard</mat-icon>
+            Resumen Actual
+          </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="accordion-content">
-          <!-- contenido de tu lista de morosos -->
-          <div class="cardContenedor justify-content-center">
-            <div class="card text-center m-2" *ngFor="let var1 of vars">
-              <a routerLink="/{{var1.link}}">
-                <div>
-                  <h2>{{var1.name}}</h2>
-                </div>
-                <div>
-                  <h5>{{var1.date | date }}</h5>
-                </div>
-                <div>
-                  <h3 *ngIf="var1.name !== 'Número de Morosos'; else countTemplate">
-                    <strong>
-                      {{var1.mount | formatNumeros }}
-                    </strong>
-                  </h3>
-                  <ng-template #countTemplate>
-                    <h3>
-                      <strong>
-                        {{var1.count}}
-                      </strong>
-                    </h3>
-                  </ng-template>
-                </div>
-              </a>
-            </div>
+          <!-- PILLS -->
+          <div class="pill-container my-3">
+            <mat-chip-list aria-label="Resumen rápido">
+              <mat-chip selected color="success">
+                Monto Pagado (desde marzo a la fecha): {{ sumBoletasPagadas | formatNumeros }}
+              </mat-chip>
+              <mat-chip selected color="primary">
+                Boletas Vencidas: {{ sumBoletasVencidas }}
+              </mat-chip>
+              <mat-chip selected color="accent">
+                Monto Vencido: {{ sumMontoVencido | formatNumeros }}
+              </mat-chip>
+              <mat-chip selected color="warn">
+                Morosos: {{ cantMorosos }}
+              </mat-chip>
+            </mat-chip-list>
           </div>
           <div class="chart-container m-3">
             <canvas id="myChart3"></canvas>
@@ -45,39 +38,263 @@
           </div>
         </div>
       </mat-expansion-panel>
-    
-      <!-- 2. Detalle general -->
+
+      <!-- 2. Detalle general de morosos (padre) -->
       <mat-expansion-panel class="custom-panel">
         <mat-expansion-panel-header>
-          <mat-panel-title>Detalle general</mat-panel-title>
+          <mat-panel-title>
+            <mat-icon class="accordion-icon mx-2">list_alt</mat-icon>
+            Detalle general de morosos
+          </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="accordion-content">
-          <!-- contenido de detalle general -->
+
+          <mat-accordion class="nested-accordion">
+
+            <!-- Nivel Verde -->
+            <mat-expansion-panel class="custom-panel pastel-verde">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon class="accordion-icon mx-2">check_circle</mat-icon>
+                  Nivel Verde ({{morososVerdes.length}}) / <small>(hasta 15 días)</small>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="accordion-content">
+                <ng-container *ngIf="morososVerdes.length; else noVerdes">
+                  <table mat-table [dataSource]="morososVerdes" class="mat-elevation-z8 full-width">
+
+                    <!-- Check -->
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td mat-cell *matCellDef="let m">
+                        <mat-icon>check</mat-icon>
+                      </td>
+                    </ng-container>
+
+                    <!-- Nombre -->
+                    <ng-container matColumnDef="nombre">
+                      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                      <td mat-cell *matCellDef="let m">{{ m.nombre }}</td>
+                    </ng-container>
+
+                    <!-- RUT -->
+                    <ng-container matColumnDef="rut">
+                      <th mat-header-cell *matHeaderCellDef>RUT</th>
+                      <td mat-cell *matCellDef="let m">{{ m.rut }}</td>
+                    </ng-container>
+
+                    <!-- Monto Vencido -->
+                    <ng-container matColumnDef="monto">
+                      <th mat-header-cell *matHeaderCellDef>Monto Vencido</th>
+                      <td mat-cell *matCellDef="let m">$ {{ m.montoTotalVencido | number }}</td>
+                    </ng-container>
+
+                    <!-- Boletas -->
+                    <ng-container matColumnDef="boletas">
+                      <th mat-header-cell *matHeaderCellDef>Boletas</th>
+                      <td mat-cell *matCellDef="let m">{{ m.totalBoletasVencidas }}</td>
+                    </ng-container>
+
+                    <!-- Días Mora -->
+                    <ng-container matColumnDef="dias">
+                      <th mat-header-cell *matHeaderCellDef>Días Mora</th>
+                      <td mat-cell *matCellDef="let m">{{ m.diasMoraMaximo }}</td>
+                    </ng-container>
+
+                    <!-- Meses Adeudados -->
+                    <ng-container matColumnDef="meses">
+                      <th mat-header-cell *matHeaderCellDef>Meses Adeudados</th>
+                      <td mat-cell *matCellDef="let m">
+                        <span
+                          class="mes-chip"
+                          *ngFor="let mes of m.morosidadPorMes"
+                          [class.vencido]="mes.tieneVencidas"
+                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}"
+                        >
+                          {{ monthAbbr[mes.mes] }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <!-- Acciones -->
+                    <ng-container matColumnDef="acciones">
+                      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                      <td mat-cell *matCellDef="let m">
+                        <button mat-button color="primary" (click)="verBoletas(m)">Ver boletas</button>
+                      </td>
+                    </ng-container>
+
+                    <!-- Header & Rows -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </ng-container>
+                <ng-template #noVerdes>
+                  <p class="text-center mt-3"><strong>No hay morosos en nivel Verde.</strong></p>
+                </ng-template>
+              </div>
+            </mat-expansion-panel>
+
+            <!-- Nivel Amarillo -->
+            <mat-expansion-panel class="custom-panel pastel-amarillo">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon class="accordion-icon mx-2">warning</mat-icon>
+                  Nivel Amarillo ({{morososAmarillos.length}}) / <small>(+15 días)</small>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="accordion-content">
+                <ng-container *ngIf="morososAmarillos.length; else noAmarillos">
+                  <table mat-table [dataSource]="morososAmarillos" class="mat-elevation-z8 full-width">
+                    <!-- (mismas columnas que arriba) -->
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td mat-cell *matCellDef="let m"><mat-icon>check</mat-icon></td>
+                    </ng-container>
+                    <ng-container matColumnDef="nombre">
+                      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                      <td mat-cell *matCellDef="let m">{{ m.nombre }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="rut">
+                      <th mat-header-cell *matHeaderCellDef>RUT</th>
+                      <td mat-cell *matCellDef="let m">{{ m.rut }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="monto">
+                      <th mat-header-cell *matHeaderCellDef>Monto Vencido</th>
+                      <td mat-cell *matCellDef="let m">$ {{ m.montoTotalVencido | number }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="boletas">
+                      <th mat-header-cell *matHeaderCellDef>Boletas</th>
+                      <td mat-cell *matCellDef="let m">{{ m.totalBoletasVencidas }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="dias">
+                      <th mat-header-cell *matHeaderCellDef>Días Mora</th>
+                      <td mat-cell *matCellDef="let m">{{ m.diasMoraMaximo }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="meses">
+                      <th mat-header-cell *matHeaderCellDef>Meses Adeudados</th>
+                      <td mat-cell *matCellDef="let m">
+                        <span
+                          class="mes-chip"
+                          *ngFor="let mes of m.morosidadPorMes"
+                          [class.vencido]="mes.tieneVencidas"
+                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}"
+                        >
+                          {{ monthAbbr[mes.mes] }}
+                        </span>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                      <td mat-cell *matCellDef="let m">
+                        <button mat-button color="primary" (click)="verBoletas(m)">Ver boletas</button>
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </ng-container>
+                <ng-template #noAmarillos>
+                  <p class="text-center mt-3"><strong>No hay morosos en nivel Amarillo.</strong></p>
+                </ng-template>
+              </div>
+            </mat-expansion-panel>
+
+            <!-- Nivel Rojo -->
+            <mat-expansion-panel class="custom-panel pastel-rojo">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon class="accordion-icon mx-2">error</mat-icon>
+                  Nivel Rojo ({{morososRojos.length}}) / <small>(+30 días)</small>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="accordion-content">
+                <ng-container *ngIf="morososRojos.length; else noRojos">
+                  <table mat-table [dataSource]="morososRojos" class="mat-elevation-z8 full-width">
+                    <!-- (mismas columnas que arriba) -->
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td mat-cell *matCellDef="let m"><mat-icon>check</mat-icon></td>
+                    </ng-container>
+                    <ng-container matColumnDef="nombre">
+                      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                      <td mat-cell *matCellDef="let m">{{ m.nombre }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="rut">
+                      <th mat-header-cell *matHeaderCellDef>RUT</th>
+                      <td mat-cell *matCellDef="let m">{{ m.rut }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="monto">
+                      <th mat-header-cell *matHeaderCellDef>Monto Vencido</th>
+                      <td mat-cell *matCellDef="let m">$ {{ m.montoTotalVencido | number }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="boletas">
+                      <th mat-header-cell *matHeaderCellDef>Boletas</th>
+                      <td mat-cell *matCellDef="let m">{{ m.totalBoletasVencidas }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="dias">
+                      <th mat-header-cell *matHeaderCellDef>Días Mora</th>
+                      <td mat-cell *matCellDef="let m">{{ m.diasMoraMaximo }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="meses">
+                      <th mat-header-cell *matHeaderCellDef>Meses Adeudados</th>
+                      <td mat-cell *matCellDef="let m">
+                        <span
+                          class="mes-chip"
+                          *ngFor="let mes of m.morosidadPorMes"
+                          [class.vencido]="mes.tieneVencidas"
+                          matTooltip="{{ monthAbbr[mes.mes] + ': $' + (mes.montoTotal | number) }}"
+                        >
+                          {{ monthAbbr[mes.mes] }}
+                        </span>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                      <td mat-cell *matCellDef="let m">
+                        <button mat-button color="primary" (click)="verBoletas(m)">Ver boletas</button>
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </ng-container>
+                <ng-template #noRojos>
+                  <p class="text-center mt-3"><strong>No hay morosos en nivel Rojo.</strong></p>
+                </ng-template>
+              </div>
+            </mat-expansion-panel>
+
+          </mat-accordion>
         </div>
       </mat-expansion-panel>
-    
+
       <!-- 3. Detalle mensual -->
       <mat-expansion-panel class="custom-panel">
         <mat-expansion-panel-header>
-          <mat-panel-title>Detalle mensual</mat-panel-title>
+          <mat-panel-title>
+            <mat-icon class="accordion-icon mx-2">monetization_on</mat-icon>
+            Historial Transacciones WebPay
+          </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="accordion-content">
           <!-- contenido de detalle mensual -->
         </div>
       </mat-expansion-panel>
-    
+
       <!-- 4. Detalle anual -->
       <mat-expansion-panel class="custom-panel">
         <mat-expansion-panel-header>
-          <mat-panel-title>Detalle anual</mat-panel-title>
+          <mat-panel-title>
+            <mat-icon class="accordion-icon mx-2">calendar_today</mat-icon>
+            Detalle Anual
+          </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="accordion-content">
           <!-- contenido de detalle anual -->
         </div>
       </mat-expansion-panel>
+
     </mat-accordion>
-
-
-
   </div>
 </div>

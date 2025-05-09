@@ -114,7 +114,7 @@ export interface IEstudiante2 {
   primer_apellido_alumno: string;
   segundo_apellido_alumno: string;
   fecha_nacimiento_alumno: string;
-  fecha_matricula:string;
+  fecha_matricula: string;
   rut: string;
   genero_alumno: string;
   vive_con: string;
@@ -143,4 +143,36 @@ export interface IUpdateEstudiante {
   apto_educacion_fisica?: boolean;
   observaciones_alumno?: string;
   estado_estudiante?: boolean;
+}
+
+
+export interface MorosidadMes {
+  mes: number;           // 0–11
+  tieneVencidas: boolean;
+  cantidad: number;
+  montoTotal: number;
+}
+
+export interface ResumenApoderadoMorosoDto {
+  id: number;
+  nombre: string;
+  rut: string;
+  telefono?: string;
+  correo?: string;
+  totalBoletasVencidas: number;
+  montoTotalVencido: number;
+  diasMoraMaximo: number;
+  fechaUltimoVencimiento: string;  // o Date
+  nivelAlerta: 'verde' | 'amarillo' | 'rojo';
+  morosidadPorMes: MorosidadMes[];
+}
+
+export interface PorcentajeMesDto {
+  mes: string;
+  porcentaje: number;
+}
+
+export interface TotalPagadoMes {
+  mes: string;
+  total_pagado: number;
 }
