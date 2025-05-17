@@ -40,10 +40,7 @@ export class SidebarComponent implements OnInit {
     if (this.rolUser === 'administrador') {
       this.admService.getInfoAdm(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
-          console.log(data);
           this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido + ' ' + data.segundo_apellido;
-          console.log(this.genderUser);
-
         },
         error: (error) => {
           console.error("Error al obtener datos:", error);
@@ -53,7 +50,6 @@ export class SidebarComponent implements OnInit {
     if (this.rolUser === 'subAdministrador') {
       this.admService.getInfoSubAdm(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
-          console.log(data);
           this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido + ' ' + data.segundo_apellido;
           console.log(this.genderUser);
 
@@ -66,7 +62,6 @@ export class SidebarComponent implements OnInit {
     if (this.rolUser === 'profesor') {
       this.admService.getInfoProfesor(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
-          console.log(data);
           this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido;
         },
         error: (error) => {
@@ -76,7 +71,6 @@ export class SidebarComponent implements OnInit {
     } else if (this.rolUser === 'profesor-utp') {
       this.admService.getInfoProfesor(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
-          console.log(data);
           this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido;
         },
         error: (error) => {

@@ -33,7 +33,6 @@ export class InfoAdmService {
   getInfoProfesor(rut: any): Observable<any> {
     return this.http.get<any>(`${environment.api}/profesor/rut/${rut}`, this.httpOptions)
       .pipe(
-        tap(response => console.log('Response:', response)),
         catchError(this.handleError)
       );
   }

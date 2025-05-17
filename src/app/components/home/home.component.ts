@@ -15,14 +15,14 @@ export class HomeComponent implements OnInit {
       link: 'matriculas',
       icon: 'fas fa-id-badge',
       color: 'bg-green',
-      roles: ['administrador', 'subAdministrador']
+      roles: ['administrador', 'subAdministrador', 'profesor-utp']
     },
     {
       name: 'Gestionar Profesores',
       link: 'profesores',
       icon: 'fas fa-chalkboard-teacher',
       color: 'bg-blue',
-      roles: ['administrador']
+      roles: ['administrador', 'profesor-utp']
     },
     {
       name: 'Gestionar Estudiantes',
@@ -49,36 +49,36 @@ export class HomeComponent implements OnInit {
       name: 'Gestionar Calendario',
       link: 'calendario-escolar',
       icon: 'fas fa-calendar-alt',
-      color: 'bg-lightblue',
-      roles: ['administrador', 'subAdministrador', 'profesor']
+      color: 'bg-red',
+      roles: ['administrador', 'subAdministrador', 'profesor', 'profesor-utp']
     },
     {
       name: 'Gestionar Asignaturas',
       link: 'cursos-asignaturas',
       icon: 'fas fa-book-open',
       color: 'bg-lightblue',
-      roles: ['administrador', 'subAdministrador']
+      roles: ['administrador', 'subAdministrador', 'profesor-utp']
     },
     {
       name: 'Gestionar Notas',
       link: 'cursos-notas',
       icon: 'fas fa-clipboard-list',
       color: 'bg-darkgrey',
-      roles: ['administrador', 'subAdministrador', 'profesor']
+      roles: ['administrador', 'subAdministrador', 'profesor', 'profesor-utp']
     },
     {
       name: 'Gestionar Anotaciones',
       link: 'cursos-anotaciones',
       icon: 'fas fa-clipboard-list',
       color: 'bg-yellow',
-      roles: ['administrador', 'subAdministrador', 'profesor']
+      roles: ['administrador', 'subAdministrador', 'profesor', 'profesor-utp']
     },
     {
       name: 'Gestionar Asistencia',
       link: 'cursos-asistencia',
       icon: 'fas fa-clipboard-list',
       color: 'bg-darkblue',
-      roles: ['administrador', 'subAdministrador', 'profesor']
+      roles: ['administrador', 'subAdministrador', 'profesor', 'profesor-utp']
     }
   ];
 
@@ -95,8 +95,6 @@ export class HomeComponent implements OnInit {
     if (this.rolUser === 'administrador') {
       this.admService.getInfoAdm(this.rutUser).subscribe({
         next: (data) => {
-          console.log(data);
-          
           this.nameUser = `${data.primer_nombre} ${data.primer_apellido} ${data.segundo_apellido}`;
         },
         error: (error) => {
@@ -106,8 +104,6 @@ export class HomeComponent implements OnInit {
     } else if (this.rolUser === 'subAdministrador') {
       this.admService.getInfoSubAdm(this.rutUser).subscribe({
         next: (data) => {
-          console.log(data);
-          
           this.nameUser = `${data.primer_nombre} ${data.primer_apellido} ${data.segundo_apellido}`;
         },
         error: (error) => {
@@ -123,64 +119,17 @@ export class HomeComponent implements OnInit {
           console.error("Error al obtener datos:", error);
         }
       });
+    } else if (this.rolUser === 'profesor-utp') {
+      this.admService.getInfoProfesor(this.rutUser).subscribe({
+        next: (data) => {
+          this.nameUser = `${data.primer_nombre} ${data.primer_apellido}`;
+        },
+        error: (error) => {
+          console.error("Error al obtener datos:", error);
+        }
+      });
     }
 
     this.filteredVars = this.vars.filter(v => v.roles.includes(this.rolUser));
-    // this.loadChart();
-  }
-
-  loadChart(): void {
-    const myChart = new Chart('myChart', {
-      type: 'bar',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'Saldos Caja',
-          data: [65, 59, 80, 81, 56, 55, 40],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-
-    const myChart2 = new Chart('myChart2', {
-      type: 'line',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'Gasto Mensual',
-          data: [14, 12, 13, 11, 12, 13, 14],
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true
-      }
-    });
   }
 }

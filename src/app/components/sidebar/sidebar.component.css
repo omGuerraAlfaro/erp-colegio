@@ -1,3 +1,13 @@
+.toolbar {
+    background-color: #e6f2ff;
+    /* Azul oscuro */
+    color: #003366;
+    /* Blanco */
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
 .logo {
     width: 30%;
     height: auto;

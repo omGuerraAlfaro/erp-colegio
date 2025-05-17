@@ -20,7 +20,7 @@ import { CertificadosComponent }      from './components/certificados/certificad
 
 import { LoginGuard } from './guard/login.guard';
 import { AuthGuard }  from './guard/auth.guard';
-import { SidebarComponent } from './components/template/sidebar/sidebar.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },

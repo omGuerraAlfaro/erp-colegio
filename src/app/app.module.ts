@@ -6,7 +6,7 @@ import 'bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
-import { SidebarComponent } from './components/template/sidebar/sidebar.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 //formato de fecha
 import { registerLocaleData } from '@angular/common';
