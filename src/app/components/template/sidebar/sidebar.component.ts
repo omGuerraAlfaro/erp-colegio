@@ -26,22 +26,7 @@ export class SidebarComponent implements OnInit {
     private admService: InfoAdmService,
     private router: Router,
     private activeroute: ActivatedRoute
-  ) {
-    this.isLogged = localStorage.getItem('usuario') !== null ? true : false;
-
-    this.activeroute.queryParams.subscribe(params => {
-      if (this.isLogged && this.router.getCurrentNavigation()?.extras.state) {
-        this.before = this.router.getCurrentNavigation()?.extras.state;
-        const url = this.before.url;
-        this.router.navigate(['/' + url]);
-      } else if (this.isLogged) {
-        this.router.navigate(['/home']);
-      } else {
-        this.router.navigate(['/login']);
-      }
-    });
-
-  }
+  ) { }
 
   rut: any;
   nombreUser: any;
@@ -88,6 +73,16 @@ export class SidebarComponent implements OnInit {
           console.error("Error al obtener datos:", error);
         }
       });
+    } else if (this.rolUser === 'profesor-utp') {
+      this.admService.getInfoProfesor(localStorage.getItem('rutAmbiente')).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido;
+        },
+        error: (error) => {
+          console.error("Error al obtener datos:", error);
+        }
+      });
     }
   }
 
@@ -95,17 +90,15 @@ export class SidebarComponent implements OnInit {
   logout() {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: '¿Deseas Cerrar Sesión?',
+      text: '¿Deseas cerrar sesión?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, Cerrar Sesión',
+      confirmButtonText: 'Sí, cerrar sesión',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.value) {
-        localStorage.clear();
-        localStorage.setItem('ingresado', 'false');
-        this.router.navigate(['/login']);
-        location.reload();
+        this.auth.logout();
+        
       } else if (result.dismiss === Swal.DismissReason.cancel) {
       }
     });

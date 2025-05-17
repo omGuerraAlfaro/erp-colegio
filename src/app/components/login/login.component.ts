@@ -28,67 +28,65 @@ export class LoginComponent implements OnInit {
 
   ingresar(): void {
     if (!this.validateModel(this.user)) {
-      this.showAlert('Error', 'Falta ingresar ' + this.field, 'error');
+      this.showAlert('Error', `Falta ingresar ${this.field}`, 'error');
       return;
     }
 
-    this.auth.iniciarSesion(this.user.usuario, this.user.password).subscribe({
-      next: (loginData: ILoginResponse) => {
-        if (loginData && loginData.token) {
-          this.userData = loginData.user;
-          console.log(this.userData);
-          const { username, correo_electronico, rut, administrador_id, subAdministrador_id, apoderado_id, profesor_id, genero} = this.userData;
+    this.auth.iniciarSesion(this.user.usuario, this.user.password)
+      .subscribe({
+        next: (loginData) => {
+          if (!loginData?.token) {
+            this.showAlert('Error', 'Usuario o contraseña inválidos', 'error');
+            return;
+          }
 
-          if (apoderado_id != null) {
+          const u = loginData.user;
+          if (u.apoderado_id != null) {
             this.showAlert('Acceso Denegado', 'No tienes permisos para ingresar.', 'error');
             return;
           }
 
-          var rol = '';
-          if (administrador_id != null || profesor_id != null || subAdministrador_id != null) {
-            if (administrador_id) {
-              rol = 'administrador'
-            }
-            if (subAdministrador_id) {
-              rol = 'subAdministrador'
-            }
-            if (profesor_id) {
-              rol = 'profesor'
-            }
-            this.saveUserDataToLocalStorage(username, correo_electronico, rut, loginData.token, rol, genero);
-            this.navigateToProfile(loginData.user);
+          // determinar rol
+          let rol = '';
+          if (u.administrador_id) rol = 'administrador';
+          if (u.subAdministrador_id) rol = 'subAdministrador';
+          if (u.profesor_id) rol = 'profesor';
+
+          const partes = u.username.split('.');
+          if (partes[partes.length - 1] === 'utp') {
+            rol = 'profesor-utp';
           }
-        } else {
-          this.showAlert('Error', 'El usuario y/o contraseña son inválidos', 'error');
+
+          // guardar en localStorage
+          localStorage.setItem('ingresado', 'true');
+          localStorage.setItem('usuario', u.username);
+          localStorage.setItem('email', u.correo_electronico);
+          localStorage.setItem('rutAmbiente', u.rut);
+          localStorage.setItem('token', loginData.token);
+          localStorage.setItem('rol', rol);
+          localStorage.setItem('genero', u.genero);
+          localStorage.setItem('loginTimestamp', Date.now().toString());
+
+          const SESSION_MS = 2 * 60 * 60 * 1000;
+          const SESSION_HOURS = SESSION_MS / 1000 / 60 / 60;
+          this.auth.userLoggedIn.next(true);
+          this.auth.autoLogout(SESSION_MS);
+
+          // mostrar SweetAlert informativo
+          Swal.fire({
+            title: '¡Bienvenido!',
+            text: `Por seguridad, tu sesión expirará automáticamente en ${SESSION_HOURS} hora(s).`,
+            icon: 'info',
+            confirmButtonText: 'Continuar'
+          }).then(() => {
+            const extras: NavigationExtras = { state: { user: u } };
+            this.router.navigate(['/home'], extras);
+          });
+        },
+        error: () => {
+          this.showAlert('Error', 'Error al iniciar sesión. Intenta nuevamente.', 'error');
         }
-      },
-      error: (error) => {
-        console.error("Error en el inicio de sesión:", error);
-        this.showAlert('Error', 'Error al intentar iniciar sesión. Inténtalo de nuevo.', 'error');
-      }
-    });
-  }
-
-  private navigateToProfile(data: any): void {
-    const navigationExtras: NavigationExtras = {
-      state: {
-        user: data
-      }
-    };
-    this.router.navigate(['/home'], navigationExtras);
-    location.reload();
-  }
-
-  private saveUserDataToLocalStorage(name_user: string, email_user: string, rut: string, token: string, rol: string, genero: string): void {
-    console.log(rut);
-    
-    localStorage.setItem('ingresado', 'true');
-    localStorage.setItem('usuario', name_user);
-    localStorage.setItem('email', email_user);
-    localStorage.setItem('rutAmbiente', rut);
-    localStorage.setItem('token', token);
-    localStorage.setItem('rol', rol);
-    localStorage.setItem('genero', genero);
+      });
   }
 
   validateModel(model: any): boolean {

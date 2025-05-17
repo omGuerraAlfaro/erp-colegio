@@ -25,6 +25,8 @@ export class CursosAsistenciaComponent implements OnInit {
   semanaActualIndex: number = 0;
   fechaCursada: Date | null = null;
 
+  rolUser: string = "";
+
   private cambiosAsistencia: Map<string, boolean> = new Map<string, boolean>();
 
   constructor(
@@ -35,6 +37,7 @@ export class CursosAsistenciaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.rolUser = localStorage.getItem('rol') || '';
     this.getAllCursos();
   }
 
@@ -286,5 +289,16 @@ export class CursosAsistenciaComponent implements OnInit {
     return dateWeek >= currentWeek;
   }
 
+  onCursoChange(): void {
+    // resetear estado
+    this.dataSource = [];
+    this.semanas = [];
+    this.semanaActualIndex = 0;
+    this.cambiosAsistencia.clear();
+    // opcional: ocultar spinners
+    this.cargando = false;
+    this.guardando = false;
+    this.cdRef.markForCheck();
+  }
 
 }

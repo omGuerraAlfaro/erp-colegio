@@ -1,16 +1,29 @@
-<div class="bgLogin"></div>
-<div class="form-signin card">
-  <img class="mb-4" src="../../../../assets/img/logo.png" alt="" class="logo">
-  <h1 class="h3 font-weight-normal">Inicio de Sesión</h1>
-  <small class="mb-3 text-muted">Bienvenido. Ingrese sus credeciales para acceder a su cuenta</small>
-  <label class="sr-only">Usuario</label>
-  <input type="text" class="form-control" placeholder="Ingrese su usuario" required autofocus [(ngModel)]="user.usuario">
-  <label for="inputPassword" class="sr-only">Contraseña</label>
-  <input type="password" class="form-control" placeholder="Contraseña" required [(ngModel)]="user.password">
-  <div class="checkbox mb-3">
-    <label>
-      <input type="checkbox" value="remember-me"> Mantener Sesión Iniciada
-    </label>
+<div class="bg-login"></div>
+
+<mat-card class="login-card">
+  <div class="login-header">
+    <img src="assets/img/logo.png" alt="Logo" class="login-logo">
+    <h1>Inicio de Sesión</h1>
+    <p class="subtitle">Bienvenido. Ingrese sus credenciales para acceder a su cuenta</p>
   </div>
-  <button class="btn btn-lg btn-primary btn-block" type="submit" (click)="ingresar()">Iniciar Sesión</button>
-</div>
+
+  <form class="login-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Usuario</mat-label>
+      <input matInput placeholder="Ingrese su usuario"
+             [(ngModel)]="user.usuario" name="usuario" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" placeholder="Contraseña"
+             [(ngModel)]="user.password" name="password" required>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary"
+            class="full-width btn-login"
+            (click)="ingresar()">
+      Iniciar Sesión
+    </button>
+  </form>
+</mat-card>

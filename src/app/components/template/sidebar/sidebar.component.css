@@ -4,10 +4,13 @@
     display: block;
     margin: 0 auto;
 }
+
 /* Sección primaria */
 .primary-section {
-    background-color: #e6f7ff; /* Fondo azul claro */
-    color: #003366; /* Texto azul oscuro */
+    background-color: #e6f7ff;
+    /* Fondo azul claro */
+    color: #003366;
+    /* Texto azul oscuro */
     font-weight: bold;
     border-radius: 8px;
     padding: 12px;
@@ -19,8 +22,7 @@
 }
 
 .primary-section:hover {
-    background-color: #cce7ff; /* Cambiar a un tono más claro de azul */
-    transform: scale(1.02);
+    background-color: #cce7ff;
     color: #001f4d;
 }
 
@@ -29,7 +31,7 @@
     background-color: #f0f8ff;
     padding: 8px 16px;
     margin: 5px 2px 15px 20px;
-    border-left: 4px solid #ff4d4d; /* Línea roja a la izquierda */
+    border-left: 4px solid #ff4d4d;
     border-radius: 6px;
     align-items: center;
     justify-items: center;
@@ -37,53 +39,52 @@
 
 /* Sección secundaria */
 .secondary-section a {
-    display: flex; /* Activar flexbox */
-    justify-content: center; /* Centrar horizontalmente */
-    align-items: center; /* Centrar verticalmente */
-    text-align: center; /* Centrar texto */
-    color: #003366; /* Texto azul oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #003366;
     font-size: 15px;
-    font-weight: bold; /* Opcional: para que resalte más */
-    padding: 10px 0; /* Ajustar espacio interno */
-    margin: 5px 0; /* Espaciado entre enlaces */
-    background-color: #f0f8ff; /* Fondo azul claro */
-    border-radius: 6px; /* Bordes redondeados */
+    font-weight: bold;
+    padding: 10px 0;
+    background-color: #f0f8ff;
+    border-radius: 6px;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .secondary-section a:hover {
-    background-color: #003366; /* Fondo azul oscuro al pasar el mouse */
-    color: #ffffff; /* Texto blanco al pasar el mouse */
+    background-color: #003366;
+    color: #ffffff;
 }
 
-/* Íconos */
 .icon {
     margin-right: 10px;
     font-size: 20px;
-    color: #003366; /* Azul oscuro */
+    color: #003366;
 }
 
 .icon:hover {
-    color: #001f4d; /* Más oscuro al pasar el mouse */
+    color: #001f4d;
     border-radius: 6px;
 }
 
 .icon2 {
     margin-right: 10px;
     font-size: 20px;
-    color: #001f4d;/* Azul oscuro */
+    color: #001f4d;
 }
 
 /* Links activos */
 .active {
-    background-color: #003366!important;
+    background-color: #003366 !important;
     color: white !important;
     font-weight: bold;
     border-radius: 6px;
 }
 
 a.active .icon2 {
-    color: #ffffff; /* Blanco */
+    color: #ffffff;
+    /* Blanco */
 }
 
 /* Efectos en el menú */
@@ -94,22 +95,30 @@ a.active .icon2 {
 
 /* Estilo del sidenav */
 .sidenav {
-    background-color: #e6f2ff; /* Fondo azul claro */
+    background-color: #e6f2ff;
+    /* Fondo azul claro */
     padding: 20px;
-    height: 108%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
 }
-.mat-sidenav-content{
-    height: 93vh;
+
+html,
+body,
+app-root {
+    height: 100%;
+    margin: 0;
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-    .sidenav {
-        width: 240px;
-    }
-    .primary-section {
-        padding: 10px;
-    }
+/* El contenedor de Material debe ser full-height */
+.sidenav-container {
+    height: 100vh;
+}
+
+/* Deja que el contenido interno crezca libremente */
+mat-sidenav-content {
+    height: 100%;
+}
+
+.perfil {
+    cursor: pointer;
 }

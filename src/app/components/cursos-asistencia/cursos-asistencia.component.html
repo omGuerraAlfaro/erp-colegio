@@ -9,7 +9,7 @@
     <div class="d-flex align-items-center mb-3">
       <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
         <mat-label>Seleccionar Curso</mat-label>
-        <mat-select [(value)]="cursoSeleccionado" placeholder="Curso">
+        <mat-select [(value)]="cursoSeleccionado" (selectionChange)="onCursoChange()" placeholder="Curso">
           <mat-option *ngFor="let curso of cursos" [value]="curso.id">
             {{ curso.nombre }}
           </mat-option>
@@ -83,7 +83,7 @@
                       <!-- El resto de columnas son fechas con checkbox -->
                       <mat-checkbox *ngSwitchDefault color="primary" [ngModel]="element[column]"
                         (ngModelChange)="toggleAsistencia(element, column, semana.fechas[colIndex - 2], $event)"
-                        [disabled]="!isDiaActivo(column) || !isEditableDate(column)"
+                        [disabled]="(!isDiaActivo(column) || !isEditableDate(column)) && !isDiaActivo(column) || rolUser === 'profesor-upt'"
                         [ngClass]="{
                           'presente': element[column] && isDiaActivo(column),
                           'ausente': !element[column] && isDiaActivo(column)

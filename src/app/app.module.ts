@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { SidebarComponent } from './components/template/sidebar/sidebar.component';
-import { ContentComponent } from './components/template/content/content.component';
 
 //formato de fecha
 import { registerLocaleData } from '@angular/common';
@@ -89,7 +88,6 @@ import { ModalVerBoletasComponent } from './components/modal-ver-boletas/modal-v
     SidebarComponent,
     HomeComponent,
     LoginComponent,
-    ContentComponent,
     RemuneracionesComponent,
     ColaboradoresComponent,
     BoletasComponent,
