@@ -83,7 +83,7 @@
                       <!-- El resto de columnas son fechas con checkbox -->
                       <mat-checkbox *ngSwitchDefault color="primary" [ngModel]="element[column]"
                         (ngModelChange)="toggleAsistencia(element, column, semana.fechas[colIndex - 2], $event)"
-                        [disabled]="(!isDiaActivo(column) || !isEditableDate(column)) && !isDiaActivo(column) || rolUser === 'profesor-upt'"
+                        [disabled]="!isDiaActivo(column)|| (rolUser !== 'profesor-utp' && rolUser !== 'administrador' && !isEditableDate(column))"
                         [ngClass]="{
                           'presente': element[column] && isDiaActivo(column),
                           'ausente': !element[column] && isDiaActivo(column)
