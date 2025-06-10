@@ -56,6 +56,9 @@ export class LoginComponent implements OnInit {
           if (partes[partes.length - 1] === 'utp') {
             rol = 'profesor-utp';
           }
+          if (partes[partes.length - 1] === 'pae') {
+            rol = 'profesor-pae';
+          }
 
           // guardar en localStorage
           localStorage.setItem('ingresado', 'true');

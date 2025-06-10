@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>Generar {{ data.certificado }}</h2>
+<mat-divider></mat-divider>
+
+<div mat-dialog-content>
+  <!-- Selección de Curso -->
+  <mat-form-field class="full-width mt-3">
+    <mat-label>Curso</mat-label>
+    <mat-select [(value)]="cursoSeleccionado" (selectionChange)="onCursoChange()">
+      <mat-option *ngFor="let curso of cursos" [value]="curso">{{ curso.nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Selección de Estudiante -->
+  <mat-form-field class="full-width" *ngIf="estudiantes.length">
+    <mat-label>Estudiante</mat-label>
+    <mat-select [(value)]="estudianteSeleccionado">
+      <mat-option *ngFor="let est of estudiantes" [value]="est">{{ est.primer_nombre_alumno }} {{ est.primer_apellido_alumno }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Selección de Semestre -->
+  <mat-form-field class="full-width">
+    <mat-label>Semestre</mat-label>
+    <mat-select [(value)]="semestreSeleccionado">
+      <mat-option [value]="1">Primer Semestre</mat-option>
+      <mat-option [value]="2">Segundo Semestre</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="isLoading">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="generatePDF()" [disabled]="!estudianteSeleccionado || !semestreSeleccionado || isLoading">
+    Generar
+  </button>
+</mat-dialog-actions>
+
+<!-- Carga -->
+<div class="loading-overlay" *ngIf="isLoading">
+  <mat-progress-spinner diameter="50" mode="indeterminate"></mat-progress-spinner>
+  <p>Generando PDF...</p>
+</div>

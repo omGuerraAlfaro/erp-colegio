@@ -60,16 +60,16 @@
             </mat-nav-list>
 
             <!-- Cursos (profesor/admin) -->
-            <mat-list-item *ngIf="rolUser === 'profesor' || rolUser === 'profesor-utp' || rolUser === 'administrador'"
+            <mat-list-item *ngIf="rolUser === 'profesor' || rolUser === 'profesor-utp' || rolUser === 'profesor-pae' || rolUser === 'administrador'"
                 class="mb-1 primary-section" mat-button (click)="toggleProfesor()">
                 <i class="fas fa-users icon"></i>
                 <span>Cursos</span>
                 <mat-icon class="expand-icon">{{ isProfesorOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
             </mat-list-item>
             <mat-nav-list class="secondary-section" *ngIf="isProfesorOpen">
-                <a mat-list-item routerLink="/cursos-notas" routerLinkActive="active">Registro de Notas</a>
-                <a mat-list-item routerLink="/cursos-asistencia" routerLinkActive="active">Registro de Asistencia</a>
-                <a mat-list-item routerLink="/cursos-anotaciones" routerLinkActive="active">Registro de Anotaciones</a>
+                <a *ngIf="rolUser === 'profesor' || rolUser === 'profesor-utp'|| rolUser === 'administrador'" mat-list-item routerLink="/cursos-notas" routerLinkActive="active">Registro de Notas</a>
+                <a *ngIf="rolUser === 'profesor' || rolUser === 'profesor-utp'|| rolUser === 'administrador'" mat-list-item routerLink="/cursos-asistencia" routerLinkActive="active">Registro de Asistencia</a>
+                <a *ngIf="rolUser === 'profesor' || rolUser === 'profesor-utp' || rolUser === 'profesor-pae'|| rolUser === 'administrador'" mat-list-item routerLink="/cursos-anotaciones" routerLinkActive="active">Registro de Anotaciones</a>
             </mat-nav-list>
 
             <!-- Administración (admin/subAdmin) -->
@@ -99,12 +99,13 @@
                                 {{
                                 rolUser === 'profesor-utp'
                                 ? 'UTP'
+                                : rolUser === 'profesor-pae'
+                                ? 'PAE'
                                 : rolUser === 'profesor'
                                 ? 'Profesor'
                                 : 'Administrador'
                                 }}
                             </small>
-
                         </div>
                     </a>
                     <mat-menu #userMenu="matMenu">

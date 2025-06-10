@@ -71,7 +71,7 @@ import { ModalEditEstudianteComponent } from './components/modal-edit-estudiante
 import { MatChipsModule } from '@angular/material/chips';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CertificadosComponent } from './components/certificados/certificados.component';
-import { CertificadoModalComponent } from './components/certificados/certificado-modal/certificado-modal.component';
+import { CertificadoModalComponent } from './components/certificados/certificado-alumno-regular-modal/certificado-modal.component';
 import { ModalIngresarMatriculaApoderadoExistComponent } from './components/modal-ingresar-matricula-apoderado-exist/modal-ingresar-matricula-apoderado-exist.component';
 import { FichaAlumnosComponent } from './components/ficha-alumnos/ficha-alumnos.component';
 import { ModalVerFichaEstudianteComponent } from './components/modal-ver-ficha-estudiante/modal-ver-ficha-estudiante.component';
@@ -79,6 +79,7 @@ import { InscripcionTalleresComponent } from './components/inscripcion-talleres/
 import { BoletaEdicionComponent } from './components/boleta-edicion/boleta-edicion.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalVerBoletasComponent } from './components/modal-ver-boletas/modal-ver-boletas.component';
+import { CertificadoAlumnoNotasModalComponent } from './components/certificados/certificado-alumno-notas-modal/certificado-alumno-notas-modal.component';
 
 
 
@@ -114,6 +115,7 @@ import { ModalVerBoletasComponent } from './components/modal-ver-boletas/modal-v
     ModalEditEstudianteComponent,
     CertificadosComponent,
     CertificadoModalComponent,
+    CertificadoAlumnoNotasModalComponent,
     FichaAlumnosComponent,
     ModalVerFichaEstudianteComponent,
     InscripcionTalleresComponent,

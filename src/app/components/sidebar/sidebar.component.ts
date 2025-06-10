@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { InfoAdmService } from 'src/app/services/administradorService/infoAdm.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { VtigerService } from 'src/app/services/vtiger.service';
 import Swal from 'sweetalert2';
 
 
@@ -22,7 +21,6 @@ export class SidebarComponent implements OnInit {
   isProfesorOpen = false;
   constructor(
     private auth: AuthService,
-    private datav: VtigerService,
     private admService: InfoAdmService,
     private router: Router,
     private activeroute: ActivatedRoute
@@ -69,6 +67,15 @@ export class SidebarComponent implements OnInit {
         }
       });
     } else if (this.rolUser === 'profesor-utp') {
+      this.admService.getInfoProfesor(localStorage.getItem('rutAmbiente')).subscribe({
+        next: (data) => {
+          this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido;
+        },
+        error: (error) => {
+          console.error("Error al obtener datos:", error);
+        }
+      });
+    } else if (this.rolUser === 'profesor-pae') {
       this.admService.getInfoProfesor(localStorage.getItem('rutAmbiente')).subscribe({
         next: (data) => {
           this.nombreUser = data.primer_nombre + ' ' + data.primer_apellido;

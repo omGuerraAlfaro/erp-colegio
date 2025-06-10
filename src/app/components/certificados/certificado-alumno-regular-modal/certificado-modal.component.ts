@@ -64,7 +64,7 @@ export class CertificadoModalComponent {
           console.log(certificado);
 
           // Llamada al servicio para generar el PDF
-          this.pdfService.getPdfCertificado(certificado).subscribe({
+          this.pdfService.getPdfCertificadoAlumnoRegular(certificado).subscribe({
             next: (blob) => {
               console.log("PDF generado con éxito");
 

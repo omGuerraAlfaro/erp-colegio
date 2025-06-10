@@ -71,7 +71,7 @@ export class HomeComponent implements OnInit {
       link: 'cursos-anotaciones',
       icon: 'fas fa-clipboard-list',
       color: 'bg-yellow',
-      roles: ['administrador', 'subAdministrador', 'profesor', 'profesor-utp']
+      roles: ['administrador', 'subAdministrador', 'profesor', 'profesor-utp', 'profesor-pae']
     },
     {
       name: 'Gestionar Asistencia',
@@ -120,6 +120,15 @@ export class HomeComponent implements OnInit {
         }
       });
     } else if (this.rolUser === 'profesor-utp') {
+      this.admService.getInfoProfesor(this.rutUser).subscribe({
+        next: (data) => {
+          this.nameUser = `${data.primer_nombre} ${data.primer_apellido}`;
+        },
+        error: (error) => {
+          console.error("Error al obtener datos:", error);
+        }
+      });
+    } else if (this.rolUser === 'profesor-pae') {
       this.admService.getInfoProfesor(this.rutUser).subscribe({
         next: (data) => {
           this.nameUser = `${data.primer_nombre} ${data.primer_apellido}`;
