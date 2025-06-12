@@ -28,6 +28,15 @@ export class CursosNotasComponent implements OnInit {
   displayedColumnsParciales: string[] = [];
   displayedColumnsTareas: string[] = [];
 
+  dataSourceNotas2: any[] = [];
+  displayedColumns2: string[] = [];
+  parciales2: any[] = [];
+  tareas2: any[] = [];
+  finalParciales2: any[] = [];
+  finalTareas2: any[] = [];
+  final2: any[] = [];
+  conceptofinal2: any[] = [];
+
 
   isPreBasica: boolean = false;
   isBasica: boolean = false;
@@ -39,6 +48,11 @@ export class CursosNotasComponent implements OnInit {
   guardando2: boolean = false;
   cargando = false;
 
+  perfil = "";
+
+  primerSemestreCerrado = false;
+  segundoSemestreCerrado = false;
+
   constructor(
     private notasService: NotasService,
     private cursoService: CursosService,
@@ -48,8 +62,16 @@ export class CursosNotasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.semestreService.getEstadoSemestres().subscribe({
+      next: (estado: any) => {
+        this.primerSemestreCerrado = estado.some((sem: any) => sem.id === 1 && sem.cerrado);
+        this.segundoSemestreCerrado = estado.some((sem: any) => sem.id === 2 && sem.cerrado);
+        this.cdRef.markForCheck();
+      },
+    });
     this.getAllCursos();
     this.getAllAsignaturas();
+    this.perfil = localStorage.getItem('rol') || '';
   }
 
   getAllCursos(): void {
@@ -89,11 +111,13 @@ export class CursosNotasComponent implements OnInit {
     this.isPreBasica = false;
     this.isBasica = false;
     this.dataSourceNotas = [];
+    this.dataSourceNotas2 = [];
     this.displayedColumns = [];
+    this.displayedColumns2 = [];
     this.distinctEvaluaciones = [];
   }
 
-  buscarNotas(): void {
+  buscarNotas(semestreId: number): void {
     if (!this.cursoSeleccionado || !this.asignaturaSeleccionada) {
       Swal.fire('Error', 'Por favor, selecciona un curso y una asignatura.', 'error');
       return;
@@ -103,13 +127,15 @@ export class CursosNotasComponent implements OnInit {
     this.isBasica = (this.cursoSeleccionado >= 3);
 
     this.dataSourceNotas = [];
+    this.dataSourceNotas2 = [];
     this.displayedColumns = [];
+    this.displayedColumns2 = [];
     this.distinctEvaluaciones = [];
     this.cargando = true;
     this.cdRef.markForCheck();
 
     this.notasService
-      .getNotasByCursoAsignatura(this.cursoSeleccionado, this.asignaturaSeleccionada, 1)
+      .getNotasByCursoAsignatura(this.cursoSeleccionado, this.asignaturaSeleccionada, semestreId)
       .subscribe({
         next: (respuesta) => {
           // En cuanto recibimos respuesta, detenemos el spinner
@@ -119,7 +145,7 @@ export class CursosNotasComponent implements OnInit {
           // Verificamos si no hay evaluaciones
           if (!respuesta || respuesta.length === 0) {
             Swal.fire(
-              'Sin Evaluaciones',
+              'Sin Evaluaciones ',
               'No existen evaluaciones para este curso y asignatura. Por favor, crea una nueva evaluación para poder registrar las notas.',
               'info'
             );
@@ -127,9 +153,14 @@ export class CursosNotasComponent implements OnInit {
             return;
           }
 
+          if (semestreId === 1) {
+            this.dataSourceNotas = respuesta;
+          } else {
+            this.dataSourceNotas2 = respuesta;
+          }
+
           // Si hay evaluaciones, seguimos con el proceso normal
-          this.dataSourceNotas = respuesta;
-          this.configurarColumnas();
+          this.configurarColumnas(semestreId);
         },
         error: (err) => {
           console.error('Error al obtener notas:', err);
@@ -140,76 +171,87 @@ export class CursosNotasComponent implements OnInit {
       });
   }
 
-  configurarColumnas(): void {
-    // 1. Recolectar todas las evaluaciones de todos los alumnos
+  configurarColumnas(semestreId: number): void {
     const allEvaluations: any[] = [];
-    this.dataSourceNotas.forEach(alumno => {
+    const dataSource = semestreId === 1 ? this.dataSourceNotas : this.dataSourceNotas2;
+
+    dataSource.forEach(alumno => {
       if (Array.isArray(alumno.evaluaciones)) {
         allEvaluations.push(...alumno.evaluaciones);
       }
     });
 
-    // 2. Eliminar evaluaciones duplicadas usando el id_evaluacion como clave
     const distinctEvalMap = new Map<number, any>();
     allEvaluations.forEach(ev => {
       if (!distinctEvalMap.has(ev.id_evaluacion)) {
         distinctEvalMap.set(ev.id_evaluacion, ev);
       }
     });
-    const distinctEvaluations = Array.from(distinctEvalMap.values());
 
-    // 3. Ordenar evaluaciones:
-    //    Primero por tipo (1 = Parcial, 2 = Tarea) y luego por id_evaluacion
-    distinctEvaluations.sort((a, b) => {
+    const distinctEvaluations = Array.from(distinctEvalMap.values()).sort((a, b) => {
       const tipoA = a.tipoEvaluacion?.id ?? Infinity;
       const tipoB = b.tipoEvaluacion?.id ?? Infinity;
-      if (tipoA !== tipoB) {
-        return tipoA - tipoB;
-      }
-      return a.id_evaluacion - b.id_evaluacion;
+      return tipoA !== tipoB ? tipoA - tipoB : a.id_evaluacion - b.id_evaluacion;
     });
 
-    // 4. Separar evaluaciones en parciales y tareas
-    this.parciales = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 1);
-    this.tareas = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 2);
-    this.finalParciales = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 3);
-    this.finalTareas = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 4);
-    this.final = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 5);
-    this.conceptofinal = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 6);
+    // Separar por tipo
+    const parciales = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 1);
+    const tareas = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 2);
+    const finalParciales = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 3);
+    const finalTareas = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 4);
+    const final = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 5);
+    const conceptoFinal = distinctEvaluations.filter(ev => ev.tipoEvaluacion?.id === 6);
 
-    // 5. Configurar las columnas para la tabla:
-    // Se incluye 'numero' y 'alumno' al principio,
-    // luego las evaluaciones parciales, después una columna separadora 'separator'
-    // y finalmente las evaluaciones de tareas.
-    this.displayedColumns = [
-      'numero',
-      'alumno',
-      ...this.parciales.map(ev => ev.nombre_evaluacion),
-    ];
+    if (semestreId === 1) {
+      this.parciales = parciales;
+      this.tareas = tareas;
+      this.finalParciales = finalParciales;
+      this.finalTareas = finalTareas;
+      this.final = final;
+      this.conceptofinal = conceptoFinal;
 
-    if (this.tareas && this.tareas.length > 0) {
-      this.displayedColumns.push('separator', ...this.tareas.map(ev => ev.nombre_evaluacion));
+      this.displayedColumns = ['numero', 'alumno', ...parciales.map(ev => ev.nombre_evaluacion)];
+
+      if (tareas.length > 0) {
+        this.displayedColumns.push('separator', ...tareas.map(ev => ev.nombre_evaluacion));
+      }
+      if (finalParciales.length > 0) {
+        this.displayedColumns.push('separatorFinal1', ...finalParciales.map(ev => ev.nombre_evaluacion));
+      }
+      this.displayedColumns.push(...finalTareas.map(ev => ev.nombre_evaluacion));
+      if (finalParciales.length > 0) {
+        this.displayedColumns.push('separatorFinal2', ...final.map(ev => ev.nombre_evaluacion));
+      }
+      this.displayedColumns.push(...conceptoFinal.map(ev => ev.nombre_evaluacion));
+    } else {
+      this.parciales2 = parciales;
+      this.tareas2 = tareas;
+      this.finalParciales2 = finalParciales;
+      this.finalTareas2 = finalTareas;
+      this.final2 = final;
+      this.conceptofinal2 = conceptoFinal;
+
+      this.displayedColumns2 = ['numero', 'alumno', ...parciales.map(ev => ev.nombre_evaluacion)];
+
+      if (tareas.length > 0) {
+        this.displayedColumns2.push('separator', ...tareas.map(ev => ev.nombre_evaluacion));
+      }
+      if (finalParciales.length > 0) {
+        this.displayedColumns2.push('separatorFinal1', ...finalParciales.map(ev => ev.nombre_evaluacion));
+      }
+      this.displayedColumns2.push(...finalTareas.map(ev => ev.nombre_evaluacion));
+      if (finalParciales.length > 0) {
+        this.displayedColumns2.push('separatorFinal2', ...final.map(ev => ev.nombre_evaluacion));
+      }
+      this.displayedColumns2.push(...conceptoFinal.map(ev => ev.nombre_evaluacion));
     }
 
-    if (this.finalParciales && this.finalParciales.length > 0) {
-      this.displayedColumns.push('separatorFinal1', ...this.finalParciales.map(ev => ev.nombre_evaluacion));
-    }
-
-    // Si se necesitan las evaluaciones de tareas finales, se agregan sin separador (o con su separador si corresponde)
-    this.displayedColumns.push(...this.finalTareas.map(ev => ev.nombre_evaluacion));
-
-    // Se añade la última separación y evaluaciones finales
-    if (this.finalParciales && this.finalParciales.length > 0) {
-      this.displayedColumns.push('separatorFinal2', ...this.final.map(ev => ev.nombre_evaluacion));
-    }
-
-    this.displayedColumns.push(...this.conceptofinal.map(ev => ev.nombre_evaluacion));
-
-    // 6. Completar evaluaciones faltantes para cada alumno (para asegurar que tengan todas las columnas)
-    for (const alumno of this.dataSourceNotas) {
+    // Asegurar que cada alumno tenga todas las evaluaciones
+    dataSource.forEach(alumno => {
       if (!Array.isArray(alumno.evaluaciones)) {
         alumno.evaluaciones = [];
       }
+
       distinctEvaluations.forEach(ev => {
         const existe = alumno.evaluaciones.find((e: any) => e.id_evaluacion === ev.id_evaluacion);
         if (!existe) {
@@ -222,8 +264,9 @@ export class CursosNotasComponent implements OnInit {
           });
         }
       });
-    }
+    });
   }
+
 
   /**
   * Retorna la nota para la columna "nombreEvaluacion". Si no la encuentra, retorna '-' o null.
@@ -290,7 +333,7 @@ export class CursosNotasComponent implements OnInit {
     }
   }
 
-  agregarEvaluacion(): void {
+  agregarEvaluacion(semestreId: number): void {
     if (!this.cursoSeleccionado || !this.asignaturaSeleccionada) {
       Swal.fire('Advertencia', 'Por favor, selecciona un curso y una asignatura.', 'warning');
       return;
@@ -298,28 +341,26 @@ export class CursosNotasComponent implements OnInit {
 
     let selectHtml: string;
     if (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2) {
-      // Si el curso es 1 o 2, mostramos solo la opción "Concepto"
       selectHtml = `
-        <select id="tipoEvaluacion" class="swal2-select">
-          <option value="1">Concepto</option>
-        </select>
-      `;
+      <select id="tipoEvaluacion" class="swal2-select">
+        <option value="1">Concepto</option>
+      </select>
+    `;
     } else {
-      // Para otros cursos, se muestran las dos opciones
       selectHtml = `
-        <select id="tipoEvaluacion" class="swal2-select">
-          <option value="1">Nota Parcial</option>
-          <option value="2">Nota Tarea</option>
-        </select>
-      `;
+      <select id="tipoEvaluacion" class="swal2-select">
+        <option value="1">Nota Parcial</option>
+        <option value="2">Nota Tarea</option>
+      </select>
+    `;
     }
 
     Swal.fire({
       title: 'Agregar Evaluación',
       html: `
-        <input id="nombreEvaluacion" class="swal2-input" placeholder="Nombre de la evaluación">
-        ${selectHtml}
-      `,
+      <input id="nombreEvaluacion" class="swal2-input" placeholder="Nombre de la evaluación">
+      ${selectHtml}
+    `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
       preConfirm: () => {
@@ -337,27 +378,16 @@ export class CursosNotasComponent implements OnInit {
         };
       }
     }).then((result) => {
-      if (!result.isConfirmed || !result.value) {
-        return; // Si el usuario cancela o hay un error, salimos.
-      }
+      if (!result.isConfirmed || !result.value) return;
 
       this.guardandoEv = true;
-      const { nombre, tipoEvaluacionId } = result.value; // Ahora TypeScript reconoce que result.value tiene datos.
-
-      // Obtener el semestre actual a través de getSemestre()
-      const fechaActual = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const { nombre, tipoEvaluacionId } = result.value;
+      const fechaActual = new Date().toISOString().split('T')[0];
 
       this.semestreService.getSemestre(fechaActual).subscribe({
         next: (res) => {
-          const semestreId = res.id_semestre;
+          // const idSemestre = res.id_semestre;
 
-          if (!this.cursoSeleccionado || !this.asignaturaSeleccionada) {
-            this.guardandoEv = false;
-            Swal.fire('Error', 'Debe seleccionar un curso y una asignatura.', 'error');
-            return;
-          }
-
-          // Crear la evaluación con los datos obtenidos
           this.notasService.createEvaluacion({
             nombreEvaluacion: nombre,
             asignaturaId: this.asignaturaSeleccionada,
@@ -368,13 +398,15 @@ export class CursosNotasComponent implements OnInit {
             next: () => {
               this.guardandoEv = false;
               Swal.fire('OK', 'Evaluación creada con éxito.', 'success');
-              this.buscarNotas(); // Recargar tabla
+
+              // Recargar la tabla correspondiente al semestre
+              this.buscarNotas(semestreId);
             },
             error: (err) => {
               this.guardandoEv = false;
               console.error('Error al crear evaluación:', err);
               Swal.fire('Error', 'No se pudo crear la evaluación.', 'error');
-            },
+            }
           });
         },
         error: () => {
@@ -386,21 +418,22 @@ export class CursosNotasComponent implements OnInit {
   }
 
 
-  guardarNotas(): void {
-    this.guardando = true;
-    const notasAGuardar: any = [];
 
-    this.dataSourceNotas.forEach((estudiante) => {
+  guardarNotas(semestreId: number): void {
+    this.guardando = true;
+    const notasAGuardar: any[] = [];
+
+    const dataSource = semestreId === 1 ? this.dataSourceNotas : this.dataSourceNotas2;
+
+    dataSource.forEach((estudiante) => {
       estudiante.evaluaciones.forEach((evaluacion: any) => {
         const notaRaw = evaluacion.nota;
         let notaValue;
-        // Si la nota está vacía, undefined o null, asignamos null
+
         if (notaRaw === "" || notaRaw === undefined || notaRaw === null) {
           notaValue = null;
         } else {
-          // Intentamos convertir a número
           const parsed = Number(notaRaw);
-          // Si no es un número, se conserva la sigla (L, ML, PL)
           notaValue = isNaN(parsed) ? notaRaw : parsed;
         }
 
@@ -409,8 +442,8 @@ export class CursosNotasComponent implements OnInit {
         notasAGuardar.push({
           estudianteId: estudiante.id_estudiante,
           evaluacionId: evaluacion.id_evaluacion,
-          nota: notaValue, // La nota se deja como número o como sigla, según corresponda
-          fecha: fechaActual
+          nota: notaValue,
+          fecha: fechaActual,
         });
       });
     });
@@ -430,7 +463,8 @@ export class CursosNotasComponent implements OnInit {
       next: () => {
         this.guardando = false;
         Swal.fire('Guardado', 'Todas las notas se guardaron exitosamente', 'success');
-        this.buscarNotas();
+
+        this.buscarNotas(semestreId);
       },
       error: (err: any) => {
         this.guardando = false;
@@ -439,6 +473,7 @@ export class CursosNotasComponent implements OnInit {
       },
     });
   }
+
 
   getEvaluacionId(nombreEvaluacion: string): number | null {
     // Buscar en el primer estudiante una evaluación con ese nombre para obtener su ID
@@ -452,7 +487,7 @@ export class CursosNotasComponent implements OnInit {
 
 
 
-  abrirOpcionesEvaluacion(idEvaluacion: number | null, nombreEvaluacion: string): void {
+  abrirOpcionesEvaluacion(idEvaluacion: number | null, nombreEvaluacion: string, semestreId: number): void {
     if (!idEvaluacion) {
       Swal.fire('Error', 'No se encontró el ID de la evaluación.', 'error');
       return;
@@ -467,14 +502,14 @@ export class CursosNotasComponent implements OnInit {
       denyButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.editarNombreEvaluacion(idEvaluacion, nombreEvaluacion);
+        this.editarNombreEvaluacion(idEvaluacion, nombreEvaluacion, semestreId);
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        this.eliminarEvaluacion(idEvaluacion);
+        this.eliminarEvaluacion(idEvaluacion, semestreId);
       }
     });
   }
 
-  editarNombreEvaluacion(idEvaluacion: number, nombreEvaluacion: string): void {
+  editarNombreEvaluacion(idEvaluacion: number, nombreEvaluacion: string, semestreId: number): void {
     Swal.fire({
       title: 'Editar Nombre de Evaluación',
       input: 'text',
@@ -493,39 +528,29 @@ export class CursosNotasComponent implements OnInit {
       if (result.isConfirmed) {
         this.editandoEv = true;
         const nuevoNombre = result.value;
-        if (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2) {
 
-          this.notasService.editarNombreEvaluacionPreBasica(idEvaluacion, nuevoNombre).subscribe({
-            next: () => {
-              this.editandoEv = false;
-              Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
-              this.buscarNotas(); // Recargar la lista
-            },
-            error: (err) => {
-              this.editandoEv = false;
-              console.error('Error al actualizar evaluación:', err);
-              Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
-            }
-          });
-        } else {
-          this.notasService.editarNombreEvaluacionBasica(idEvaluacion, nuevoNombre).subscribe({
-            next: () => {
-              this.editandoEv = false;
-              Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
-              this.buscarNotas(); // Recargar la lista
-            },
-            error: (err) => {
-              this.editandoEv = false;
-              console.error('Error al actualizar evaluación:', err);
-              Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
-            }
-          });
-        }
+        const peticion = (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2)
+          ? this.notasService.editarNombreEvaluacionPreBasica(idEvaluacion, nuevoNombre)
+          : this.notasService.editarNombreEvaluacionBasica(idEvaluacion, nuevoNombre);
+
+        peticion.subscribe({
+          next: () => {
+            this.editandoEv = false;
+            Swal.fire('Actualizado', 'El nombre de la evaluación se ha actualizado.', 'success');
+            this.buscarNotas(semestreId); // Recargar SOLO el semestre afectado
+          },
+          error: (err) => {
+            this.editandoEv = false;
+            console.error('Error al actualizar evaluación:', err);
+            Swal.fire('Error', 'No se pudo actualizar la evaluación.', 'error');
+          }
+        });
       }
     });
   }
 
-  eliminarEvaluacion(idEvaluacion: number): void {
+
+  eliminarEvaluacion(idEvaluacion: number, semestreId: number): void {
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esta acción eliminará la evaluación y sus notas asociadas.',
@@ -534,40 +559,31 @@ export class CursosNotasComponent implements OnInit {
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.borrandoEv = true;
-        if (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2) {
-          this.notasService.eliminarEvaluacionPreBasica(idEvaluacion).subscribe({
-            next: () => {
-              this.borrandoEv = false;
-              Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
-              this.buscarNotas(); // Recargar la lista
-            },
-            error: (err) => {
-              this.borrandoEv = false;
-              console.error('Error al eliminar evaluación:', err);
-              Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
-            }
-          });
-        } else {
-          this.notasService.eliminarEvaluacionBasica(idEvaluacion).subscribe({
-            next: () => {
-              this.borrandoEv = false;
-              Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
-              this.buscarNotas(); // Recargar la lista
-            },
-            error: (err) => {
-              this.borrandoEv = false;
-              console.error('Error al eliminar evaluación:', err);
-              Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
-            }
-          });
+      if (!result.isConfirmed) return;
+
+      this.borrandoEv = true;
+
+      const peticion = (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2)
+        ? this.notasService.eliminarEvaluacionPreBasica(idEvaluacion)
+        : this.notasService.eliminarEvaluacionBasica(idEvaluacion);
+
+      peticion.subscribe({
+        next: () => {
+          this.borrandoEv = false;
+          Swal.fire('Eliminado', 'La evaluación ha sido eliminada.', 'success');
+          this.buscarNotas(semestreId); // Recarga solo el semestre correspondiente
+        },
+        error: (err) => {
+          this.borrandoEv = false;
+          console.error('Error al eliminar evaluación:', err);
+          Swal.fire('Error', 'No se pudo eliminar la evaluación.', 'error');
         }
-      }
+      });
     });
   }
 
-  cierreSemestre(): void {
+
+  cierreSemestre(semestreId: number): void {
     // Primero, confirmamos con SweetAlert si el usuario desea continuar
     Swal.fire({
       title: '¿Estás seguro?',
@@ -581,56 +597,40 @@ export class CursosNotasComponent implements OnInit {
         // El usuario confirmó, proceder a calcular y guardar
         this.guardando2 = true;
         if (this.cursoSeleccionado === 1 || this.cursoSeleccionado === 2) {
-          this.calcularYGuardarFinalesPreBasica();
+          this.calcularYGuardarFinalesPreBasica(semestreId)
         } else {
-          this.calcularYGuardarFinalesBasica();
+          this.calcularYGuardarFinalesBasica(semestreId);
         }
       }
     });
   }
 
-  calcularYGuardarFinalesPreBasica(): void {
+  calcularYGuardarFinalesPreBasica(semestreId: number): void {
+    this.guardando2 = true;
     const fechaActual = new Date().toISOString().split('T')[0];
+
     this.semestreService.getSemestre(fechaActual).subscribe({
       next: (res) => {
-        const semestreId = res.id_semestre;
+        // const idSemestre = res.id_semestre;
 
-        // 1. Verificar que no existan evaluaciones parciales sin concepto asignado
-        const existeConceptoVacio = this.dataSourceNotas.some((alumno: any) => {
-          return alumno.evaluaciones.some((ev: any) => {
-            // Sólo evaluaciones parciales (tipoEvaluacion.id === 1)
-            const esParcial = ev.tipoEvaluacion?.id === 1;
-            // Suponemos que si la propiedad "nota" es una cadena vacía o nula, no se asignó un concepto
-            const conceptoVacio = !ev.nota || ev.nota.trim() === "";
-            return esParcial && conceptoVacio;
-          });
-        });
+        // Seleccionar el dataset correspondiente al semestre
+        const dataSource = semestreId === 1 ? this.dataSourceNotas : this.dataSourceNotas2;
 
-        if (existeConceptoVacio) {
-          this.guardando2 = false;
-          Swal.fire(
-            'Aviso',
-            'Existen evaluaciones parciales sin concepto asignado. No se puede generar el cálculo.',
-            'info'
-          );
-          return;
-        }
-
-        // 2. Calcular el "promedio conceptual" para cada estudiante considerando solo evaluaciones parciales
-        const estudiantesData = this.dataSourceNotas.map((alumno: any) => {
+        // 2. Calcular concepto final para cada estudiante
+        const estudiantesData = dataSource.map((alumno: any) => {
           const evaluacionesParciales = alumno.evaluaciones.filter(
             (ev: any) => ev.tipoEvaluacion?.id === 1 && ev.nota
           );
 
-          const conceptoParciales = this.calcularPromedioConceptual(evaluacionesParciales);
+          const conceptoFinal = this.calcularPromedioConceptual(evaluacionesParciales);
 
           return {
             estudianteId: alumno.id_estudiante,
-            conceptoFinalParcial: conceptoParciales,
+            conceptoFinalParcial: conceptoFinal,
           };
         });
 
-        // 4. Construir el DTO para enviarlo al backend
+        // 3. Construir el DTO
         const cierreSemestreDto = {
           cursoId: this.cursoSeleccionado,
           asignaturaId: this.asignaturaSeleccionada,
@@ -638,14 +638,12 @@ export class CursosNotasComponent implements OnInit {
           estudiantes: estudiantesData,
         };
 
-        console.log('DTO de cierre de semestre:', cierreSemestreDto);
-
-        // 5. Llamar al servicio para cerrar el semestre
+        // 4. Enviar al backend
         this.notasService.cierreSemestrePreBasica(cierreSemestreDto).subscribe({
           next: () => {
             this.guardando2 = false;
             Swal.fire('Éxito', 'Se han generado los conceptos finales correctamente.', 'success');
-            this.buscarNotas(); // Actualizar la vista
+            this.buscarNotas(semestreId); // Recargar solo el semestre afectado
           },
           error: (err) => {
             this.guardando2 = false;
@@ -657,7 +655,7 @@ export class CursosNotasComponent implements OnInit {
       error: () => {
         this.guardando2 = false;
         Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
-      },
+      }
     });
   }
 
@@ -715,29 +713,18 @@ export class CursosNotasComponent implements OnInit {
     return this.obtenerConceptoFinal(promedio);
   }
 
-  calcularYGuardarFinalesBasica(): void {
+  calcularYGuardarFinalesBasica(semestreId: number): void {
+    this.guardando2 = true;
     const fechaActual = new Date().toISOString().split('T')[0];
+
     this.semestreService.getSemestre(fechaActual).subscribe({
       next: (res) => {
-        const semestreId = res.id_semestre;
+        // const idSemestre = res.id_semestre;
 
-        // 1. Verificamos si hay alguna evaluación de tipo parcial o tarea con nota vacía
-        const existeNotaVacia = this.dataSourceNotas.some((alumno: any) => {
-          return alumno.evaluaciones.some((ev: any) => {
-            const esParcialOTarea = ev.tipoEvaluacion?.id === 1 || ev.tipoEvaluacion?.id === 2;
-            const notaVacia = ev.nota === null || ev.nota === 0; // Ajusta la condición según tu criterio
-            return esParcialOTarea && notaVacia;
-          });
-        });
+        const dataSource = semestreId === 1 ? this.dataSourceNotas : this.dataSourceNotas2;
 
-        if (existeNotaVacia) {
-          this.guardando2 = false;
-          Swal.fire('Aviso', 'Existen notas de parciales o tareas que están vacías. No se puede generar el cálculo.', 'info');
-          return;
-        }
-
-        // 2. Si pasa la verificación, calculamos los promedios
-        const estudiantesData = this.dataSourceNotas.map((alumno: any) => {
+        // 2. Calcular los promedios por estudiante
+        const estudiantesData = dataSource.map((alumno: any) => {
           const evaluacionesParciales = alumno.evaluaciones.filter(
             (ev: any) => ev.tipoEvaluacion?.id === 1 && ev.nota != null
           );
@@ -765,31 +752,33 @@ export class CursosNotasComponent implements OnInit {
           };
         });
 
-        // 3. Verificamos que al menos uno de los estudiantes tenga una nota final
+        // 3. Verificar si hay al menos un estudiante con notas
         const tieneNotas = estudiantesData.some(est =>
           est.notaFinalParcial !== null || est.notaFinalTarea !== null || est.notaFinal !== null
         );
+
         if (!tieneNotas) {
           this.guardando2 = false;
           Swal.fire('Aviso', 'No hay notas para generar finales.', 'info');
           return;
         }
 
-        // 4. Construimos el DTO para enviarlo al backend
+        // 4. Construir DTO
         const cierreSemestreDto = {
           cursoId: this.cursoSeleccionado,
           asignaturaId: this.asignaturaSeleccionada,
           semestreId: semestreId,
           estudiantes: estudiantesData,
         };
+
         console.log('DTO de cierre de semestre:', cierreSemestreDto);
 
-        // 5. Llamamos al servicio para cerrar el semestre
+        // 5. Llamar a servicio
         this.notasService.cierreSemestreBasica(cierreSemestreDto).subscribe({
           next: () => {
             this.guardando2 = false;
             Swal.fire('Éxito', 'Se han generado las notas finales correctamente.', 'success');
-            this.buscarNotas(); // Para recargar la tabla o actualizar la vista
+            this.buscarNotas(semestreId); // Refrescar solo el semestre correspondiente
           },
           error: (err) => {
             this.guardando2 = false;
@@ -804,6 +793,7 @@ export class CursosNotasComponent implements OnInit {
       },
     });
   }
+
 
   private calcularPromedio(evaluaciones: any[]): number | null {
     if (!evaluaciones || evaluaciones.length === 0) {
@@ -877,7 +867,36 @@ export class CursosNotasComponent implements OnInit {
     event.target.value = valorNumerico;
   }
 
+  esPermitidoUTP(): boolean {
+    return this.perfil === 'profesor-utp' || this.perfil === 'administrador';
+  }
 
+  cierreFinalSemestre(semestreId: number): void {
+    Swal.fire({
+      title: '¿Estás seguro de cerrar el semestre?',
+      html: `
+      Esta acción <b>bloqueará el guardado, modificación y cierre de notas</b>.<br><br>
+      Asegúrese de que <b>todos los promedios finales estén calculados</b> antes de continuar.
+    `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cerrar semestre',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.semestreService.cierreSemestre(semestreId).subscribe({
+          next: () => {
+            Swal.fire('Cerrado', 'El semestre ha sido cerrado exitosamente.', 'success');
+            // Aquí podrías recargar la vista o redirigir a otra página
+          },
+          error: (err: any) => {
+            console.error('Error al cerrar el semestre:', err);
+            Swal.fire('Error', 'No se pudo cerrar el semestre.', 'error');
+          }
+        });
+      }
+    });
+  }
 
 
 }

@@ -1,112 +1,9 @@
 <div class="container mt-3">
+  <!-- TÍTULO -->
   <div class="cabecera">
     <h1><b>Registro de Notas</b></h1>
   </div>
   <mat-divider></mat-divider>
-
-  <!-- Selectores para curso y asignatura -->
-  <div class="d-flex align-items-center mb-3">
-    <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
-      <mat-label>Seleccionar Curso</mat-label>
-      <mat-select [(value)]="cursoSeleccionado" placeholder="Curso" (selectionChange)="getAllAsignaturas()"
-        (click)="onClickSelect()">
-        <mat-option *ngFor="let curso of cursos" [value]="curso.id">
-          {{ curso.nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-
-    <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
-      <mat-label>Seleccionar Asignatura</mat-label>
-      <mat-select [(value)]="asignaturaSeleccionada" placeholder="Asignatura" [disabled]="!cursoSeleccionado"
-        (click)="onClickSelect()">
-        <mat-option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">
-          {{ asignatura.nombre_asignatura }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" (click)="buscarNotas()">
-      Buscar
-    </button>
-    <button mat-raised-button color="warn" class="ms-3" (click)="guardarNotas()">
-      Guardar Cambios
-    </button>
-    <button mat-raised-button color="accent" class="ms-3" (click)="agregarEvaluacion()">
-      Agregar Evaluación
-    </button>
-    <button mat-raised-button color="secondary" class="ms-3" (click)="cierreSemestre()">
-      Cierre de Semestre
-    </button>
-  </div>
-
-
-  <div *ngIf="isPreBasica" class="legend-container2">
-    <div class="legend-item2">
-      <div class="legend-block2">
-        <div class="legend-code2">Ingreso de Conceptos:</div>
-        <div class="legend-description2">
-          Debe seleccionar el concepto correspondiente a la evaluación.<br />
-          Recuerde que los conceptos son:<br />
-          <strong>L:</strong> Logrado,<br />
-          <strong>ML:</strong> Medianamente Logrado,<br />
-          <strong>PL:</strong> Por Lograr.<br />
-        </div>
-      </div>
-
-      <div class="legend-block2">
-        <div class="legend-code2">Cierre de Semestre:</div>
-        <div class="legend-description2">
-          El cierre se ejecuta automáticamente al presionar el botón <strong>"Cierre de Semestre"</strong>.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="isBasica" class="legend-container2">
-    <div class="legend-item2">
-      <div class="legend-block2">
-        <div class="legend-code2">Ingreso de Notas:</div>
-        <div class="legend-description2">
-          Recuerda utilizar una coma (,) o un punto (.) para ingresar números decimales.
-        </div>
-      </div>
-
-      <div class="legend-block2">
-        <div class="legend-code2">Orientación y Religión:</div>
-        <div class="legend-description2">
-          Desde primero a octavo básico, las asignaturas de Orientación y Religión se evalúan con conceptos y no
-          influyen en el promedio final.<br />
-          Los conceptos son los siguientes:<br />
-          <strong>MB:</strong> 6.0 a 7.0,<br />
-          <strong>B:</strong> 5.0 a 5.9,<br />
-          <strong>S:</strong> 4.0 a 4.9,<br />
-          <strong>I:</strong> 2.0 a 3.9.<br />
-          Estos conceptos se verán reflejados en el informe de notas.
-        </div>
-      </div>
-
-      <div class="legend-block2">
-        <div class="legend-code2">Notas de Inglés:</div>
-        <div class="legend-description2">
-          Desde primero a cuarto básico, el promedio de Inglés se incorpora en la asignatura de Lenguaje, por lo que no
-          influye en el promedio final como asignatura independiente. A partir de quinto hasta octavo básico, Inglés se
-          considera una asignatura independiente y sí influye en el promedio final.
-        </div>
-      </div>
-
-      <div class="legend-block2">
-        <div class="legend-code2">Cierre de Semestre:</div>
-        <div class="legend-description2">
-          El cierre se ejecuta automáticamente al presionar el botón <strong>"Cierre de Semestre"</strong>.
-          <br />
-          En el caso de tener notas tipo <strong>"Tarea"</strong>, el semestre debe cerrarse dos veces:
-          una para generar la nota parcial de tareas, y otra para cerrar y calcular con esa nueva nota.
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Spinner mientras se cargan los datos -->
   <div *ngIf="cargando" class="loading-spinner">
@@ -138,171 +35,538 @@
     <mat-spinner></mat-spinner>
     <p>Cerrando Notas para el Semestre...</p>
   </div>
+  <!-- ACCORDION GENERAL -->
+  <mat-accordion class="mt-4 accordion-wrapper" [multi]="false">
+    <!-- ACCORDION 1: Información ingreso/cálculo -->
+    <mat-expansion-panel class="custom-panel" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="mx-2">calculate</mat-icon>
+          Información de Ingreso y Cálculo de Notas
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="accordion-content">
+        <div class="accordion-content">
 
-  <!-- Tabla única con separación entre parciales y tareas -->
-  <div *ngIf="!cargando && dataSourceNotas.length > 0">
-    <table mat-table [dataSource]="dataSourceNotas" class="mat-elevation-z8 tabla-cuadricular">
-      <!-- Columna Número -->
-      <ng-container matColumnDef="numero">
-        <th mat-header-cell *matHeaderCellDef style="width: 50px; text-align: center;"> # </th>
-        <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
-          {{ i + 1 }}
-        </td>
-      </ng-container>
-
-      <!-- Columna Alumno -->
-      <ng-container matColumnDef="alumno">
-        <th mat-header-cell *matHeaderCellDef> <b>Alumno</b> </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.estudiante }}
-        </td>
-      </ng-container>
-
-      <!-- Columnas dinámicas para evaluaciones parciales -->
-      <ng-container *ngFor="let evaluacion of parciales" [matColumnDef]="evaluacion.nombre_evaluacion">
-        <th mat-header-cell *matHeaderCellDef style="text-align: center;">
-          <b>{{ evaluacion.nombre_evaluacion }}</b>
-          <button mat-icon-button color="warn"
-            (click)="abrirOpcionesEvaluacion(getEvaluacionId(evaluacion.nombre_evaluacion), evaluacion.nombre_evaluacion)">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-        </th>
-        <td mat-cell *matCellDef="let element" style="text-align: center;">
-          <ng-container *ngIf="isPreBasica; else numericInput">
-            <mat-form-field appearance="outline" style="width: 80px;">
-              <mat-select [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
-                (selectionChange)="onNotaChange($event, element, evaluacion.nombre_evaluacion)"
-                style="font-size: larger; font-weight: bold;">
-                <mat-option value="L">L</mat-option>
-                <mat-option value="ML">ML</mat-option>
-                <mat-option value="PL">PL</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </ng-container>
-          <ng-template #numericInput>
-            <mat-form-field appearance="outline" style="width: 80px;">
-              <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)"
-                style="font-size: larger; font-weight: bold;"
-                [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
-                [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
-                (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
-            </mat-form-field>
-          </ng-template>
-        </td>
-      </ng-container>
-
-      <!-- Columna separadora -->
-      <ng-container matColumnDef="separator" *ngIf="tareas && tareas.length > 0">
-        <th mat-header-cell *matHeaderCellDef
-          style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
-        </th>
-        <td mat-cell *matCellDef="let element"
-          style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
-          &nbsp;
-        </td>
-      </ng-container>
-
-      <ng-container *ngFor="let evaluacion of tareas" [matColumnDef]="evaluacion.nombre_evaluacion">
-        <th mat-header-cell *matHeaderCellDef style="text-align: center;">
-          <b>{{ evaluacion.nombre_evaluacion }}</b>
-          <button mat-icon-button color="warn"
-            (click)="abrirOpcionesEvaluacion(getEvaluacionId(evaluacion.nombre_evaluacion), evaluacion.nombre_evaluacion)">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-        </th>
-        <td mat-cell *matCellDef="let element" style="text-align: center;">
-          <mat-form-field appearance="outline" style="width: 80px;">
-
-            <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)"
-              style="font-size: larger; font-weight: bold;"
-              [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
-              [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
-              (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
-          </mat-form-field>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="separatorFinal1" *ngIf="finalParciales && finalParciales.length > 0">
-        <th mat-header-cell *matHeaderCellDef
-          style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
-        </th>
-        <td mat-cell *matCellDef="let element"
-          style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
-        </td>
-      </ng-container>
-
-      Columnas dinámicas para evaluaciones de tareas
-      <ng-container *ngFor="let evaluacion of finalParciales" [matColumnDef]="evaluacion.nombre_evaluacion">
-        <th mat-header-cell *matHeaderCellDef style="text-align: center;">
-          <b>{{ evaluacion.nombre_evaluacion }}</b>
-        </th>
-        <td mat-cell *matCellDef="let element" style="text-align: center;">
-          <mat-form-field appearance="outline" style="width: 80px;">
-            <input matInput type="number" min="1" max="7" step="0.1" disabled
-              style="font-size: larger; font-weight: bold;"
-              [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
-              [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
-              (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
-          </mat-form-field>
-        </td>
-      </ng-container>
-      <ng-container *ngFor="let evaluacion of finalTareas" [matColumnDef]="evaluacion.nombre_evaluacion">
-        <th mat-header-cell *matHeaderCellDef style="text-align: center;">
-          <b>{{ evaluacion.nombre_evaluacion }}</b>
-        </th>
-        <td mat-cell *matCellDef="let element" style="text-align: center;">
-          <mat-form-field appearance="outline" style="width: 80px;">
-            <input matInput type="number" min="1" max="7" step="0.1" disabled
-              style="font-size: larger; font-weight: bold;"
-              [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
-              [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
-              (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
-          </mat-form-field>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="separatorFinal2" *ngIf="finalParciales && finalParciales.length > 0">
-        <th mat-header-cell *matHeaderCellDef
-          style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
-        </th>
-        <td mat-cell *matCellDef="let element"
-          style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
-        </td>
-      </ng-container>
-
-      <ng-container *ngFor="let evaluacion of final" [matColumnDef]="evaluacion.nombre_evaluacion">
-        <th mat-header-cell *matHeaderCellDef style="text-align: center;">
-          <b>{{ evaluacion.nombre_evaluacion }}</b>
-        </th>
-        <td mat-cell *matCellDef="let element" style="text-align: center;">
-          <mat-form-field appearance="outline" style="width: 80px;">
-            <input matInput type="number" min="1" max="7" step="0.1" disabled
-              style="font-size: larger; font-weight: bold;"
-              [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
-              [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
-              (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
-
-          </mat-form-field>
-        </td>
-      </ng-container>
-      <ng-container *ngFor="let evaluacion of conceptofinal" [matColumnDef]="evaluacion.nombre_evaluacion">
-        <th mat-header-cell *matHeaderCellDef style="text-align: center;">
-          <b>{{ evaluacion.nombre_evaluacion }}</b>
-        </th>
-        <td mat-cell *matCellDef="let element" style="text-align: center;">
-          <div class="custom-outline-field"
-            style="width: 80px; padding: 8px; border: 1px solid rgba(0,0,0,0.38); border-radius: 4px; font-size: larger; font-weight: bold; text-align: center;">
-            {{ getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion) }}
+          <!-- CIERRE DE SEMESTRE -->
+          <div class="legend-container2">
+            <div class="legend-item2">
+              <div class="legend-block2">
+                <div class="legend-code2">Cierre de Semestre:</div>
+                <div class="legend-description2">
+                  El cierre se ejecuta automáticamente al presionar el botón <strong>"Cierre de Semestre"</strong>.
+                  <br />
+                  En el caso de tener notas tipo <strong>"Tarea"</strong>, el semestre debe cerrarse dos veces:
+                  una para generar la nota parcial de tareas, y otra para cerrar y calcular con esa nueva nota.
+                </div>
+              </div>
+            </div>
           </div>
-        </td>
-      </ng-container>
+
+          <!-- INGRESO DE NOTAS -->
+          <div class="legend-container2">
+            <div class="legend-item2">
+              <div class="legend-block2">
+                <div class="legend-code2">Ingreso de Notas:</div>
+                <div class="legend-description2">
+                  Recuerda utilizar una coma (,) o un punto (.) para ingresar números decimales.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INGRESO DE CONCEPTOS -->
+          <div class="legend-container2">
+            <div class="legend-item2">
+              <div class="legend-block2">
+                <div class="legend-code2">Ingreso de Conceptos:</div>
+                <div class="legend-description2">
+                  Debe seleccionar el concepto correspondiente a la evaluación.<br />
+                  Recuerde que los conceptos son:<br />
+                  <strong>L:</strong> Logrado,<br />
+                  <strong>ML:</strong> Medianamente Logrado,<br />
+                  <strong>PL:</strong> Por Lograr.<br />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NOTAS DE INGLÉS -->
+          <div class="legend-container2">
+            <div class="legend-item2">
+              <div class="legend-block2">
+                <div class="legend-code2">Notas de Inglés:</div>
+                <div class="legend-description2">
+                  Desde primero a cuarto básico, el promedio de Inglés se incorpora en la asignatura de Lenguaje, por lo
+                  que no influye en el promedio final como asignatura independiente. A partir de quinto hasta octavo
+                  básico,
+                  Inglés se considera una asignatura independiente y sí influye en el promedio final.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ORIENTACIÓN Y RELIGIÓN -->
+          <div class="legend-container2">
+            <div class="legend-item2">
+              <div class="legend-block2">
+                <div class="legend-code2">Orientación y Religión:</div>
+                <div class="legend-description2">
+                  Desde primero a octavo básico, las asignaturas de Orientación y Religión se evalúan con conceptos y no
+                  influyen en el promedio final.<br />
+                  Los conceptos son los siguientes:<br />
+                  <strong>MB:</strong> 6.0 a 7.0,<br />
+                  <strong>B:</strong> 5.0 a 5.9,<br />
+                  <strong>S:</strong> 4.0 a 4.9,<br />
+                  <strong>I:</strong> 2.0 a 3.9.<br />
+                  Estos conceptos se verán reflejados en el informe de notas.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- ACCORDION 2: Primer Semestre -->
+    <mat-expansion-panel class="custom-panel" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="mx-2">school</mat-icon>
+          Primer Semestre
+        </mat-panel-title>
+        <mat-panel-description>
+          <div class="btn-cierre-final-wrapper" matTooltip="Permitido solo para usuarios UTP y Administradores"
+            matTooltipPosition="above" (click)="$event.stopPropagation()">
+            <button mat-stroked-button color="primary" (click)="cierreFinalSemestre(1)" [disabled]="!esPermitidoUTP() || primerSemestreCerrado">
+              <mat-icon class="me-1">lock</mat-icon>
+              Cierre Final Semestre
+            </button>
+          </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="accordion-content">
+        <div class="d-flex align-items-center mb-3">
+          <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
+            <mat-label>Seleccionar Curso</mat-label>
+            <mat-select [(value)]="cursoSeleccionado" placeholder="Curso" (selectionChange)="getAllAsignaturas()"
+              (click)="onClickSelect()">
+              <mat-option *ngFor="let curso of cursos" [value]="curso.id">
+                {{ curso.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
 
+          <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
+            <mat-label>Seleccionar Asignatura</mat-label>
+            <mat-select [(value)]="asignaturaSeleccionada" placeholder="Asignatura" [disabled]="!cursoSeleccionado"
+              (click)="onClickSelect()">
+              <mat-option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">
+                {{ asignatura.nombre_asignatura }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="buscarNotas(1)">
+            Buscar
+          </button>
+          <button mat-raised-button color="warn" class="ms-3" (click)="guardarNotas(1)" [disabled]="primerSemestreCerrado">
+            Guardar Cambios
+          </button>
+          <button mat-raised-button color="accent" class="ms-3" (click)="agregarEvaluacion(1)" [disabled]="primerSemestreCerrado">
+            Agregar Evaluación
+          </button>
+          <button mat-raised-button color="secondary" class="ms-3" (click)="cierreSemestre(1)" [disabled]="primerSemestreCerrado">
+            Cierre Parcial Semestre
+          </button>
+        </div>
+        <!-- Tabla única con separación entre parciales y tareas -->
+        <div *ngIf="!cargando && dataSourceNotas.length > 0">
+          <table mat-table [dataSource]="dataSourceNotas" class="mat-elevation-z8 tabla-cuadricular">
+            <!-- Columna Número -->
+            <ng-container matColumnDef="numero">
+              <th mat-header-cell *matHeaderCellDef style="width: 50px; text-align: center;"> # </th>
+              <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
+                {{ i + 1 }}
+              </td>
+            </ng-container>
+
+            <!-- Columna Alumno -->
+            <ng-container matColumnDef="alumno">
+              <th mat-header-cell *matHeaderCellDef> <b>Alumno</b> </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.estudiante }}
+              </td>
+            </ng-container>
+
+            <!-- Columnas dinámicas para evaluaciones parciales -->
+            <ng-container *ngFor="let evaluacion of parciales" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+                <button mat-icon-button color="warn"
+                  (click)="abrirOpcionesEvaluacion(getEvaluacionId(evaluacion.nombre_evaluacion), evaluacion.nombre_evaluacion, 1)">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <ng-container *ngIf="isPreBasica; else numericInput">
+                  <mat-form-field appearance="outline" style="width: 80px;">
+                    <mat-select [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                      (selectionChange)="onNotaChange($event, element, evaluacion.nombre_evaluacion)"
+                      style="font-size: larger; font-weight: bold;">
+                      <mat-option value="L">L</mat-option>
+                      <mat-option value="ML">ML</mat-option>
+                      <mat-option value="PL">PL</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-container>
+                <ng-template #numericInput>
+                  <mat-form-field appearance="outline" style="width: 80px;">
+                    <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)"
+                      style="font-size: larger; font-weight: bold;"
+                      [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                      [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                      (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+                  </mat-form-field>
+                </ng-template>
+              </td>
+            </ng-container>
+
+            <!-- Columna separadora -->
+            <ng-container matColumnDef="separator" *ngIf="tareas && tareas.length > 0">
+              <th mat-header-cell *matHeaderCellDef
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </th>
+              <td mat-cell *matCellDef="let element"
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+                &nbsp;
+              </td>
+            </ng-container>
+
+            <ng-container *ngFor="let evaluacion of tareas" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+                <button mat-icon-button color="warn"
+                  (click)="abrirOpcionesEvaluacion(getEvaluacionId(evaluacion.nombre_evaluacion), evaluacion.nombre_evaluacion, 1)">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <mat-form-field appearance="outline" style="width: 80px;">
+
+                  <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)"
+                    style="font-size: larger; font-weight: bold;"
+                    [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                    [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                    (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="separatorFinal1" *ngIf="finalParciales && finalParciales.length > 0">
+              <th mat-header-cell *matHeaderCellDef
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </th>
+              <td mat-cell *matCellDef="let element"
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </td>
+            </ng-container>
+
+            Columnas dinámicas para evaluaciones de tareas
+            <ng-container *ngFor="let evaluacion of finalParciales" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <mat-form-field appearance="outline" style="width: 80px;">
+                  <input matInput type="number" min="1" max="7" step="0.1" disabled
+                    style="font-size: larger; font-weight: bold;"
+                    [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                    [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                    (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+                </mat-form-field>
+              </td>
+            </ng-container>
+            <ng-container *ngFor="let evaluacion of finalTareas" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <mat-form-field appearance="outline" style="width: 80px;">
+                  <input matInput type="number" min="1" max="7" step="0.1" disabled
+                    style="font-size: larger; font-weight: bold;"
+                    [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                    [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                    (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="separatorFinal2" *ngIf="finalParciales && finalParciales.length > 0">
+              <th mat-header-cell *matHeaderCellDef
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </th>
+              <td mat-cell *matCellDef="let element"
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </td>
+            </ng-container>
+
+            <ng-container *ngFor="let evaluacion of final" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <mat-form-field appearance="outline" style="width: 80px;">
+                  <input matInput type="number" min="1" max="7" step="0.1" disabled
+                    style="font-size: larger; font-weight: bold;"
+                    [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                    [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                    (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+
+                </mat-form-field>
+              </td>
+            </ng-container>
+            <ng-container *ngFor="let evaluacion of conceptofinal" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <div class="custom-outline-field"
+                  style="width: 80px; padding: 8px; border: 1px solid rgba(0,0,0,0.38); border-radius: 4px; font-size: larger; font-weight: bold; text-align: center;">
+                  {{ getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion) }}
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Fila de cabecera y de datos -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- ACCORDION 3: Segundo Semestre -->
+    <mat-expansion-panel class="custom-panel" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class=" mx-2">school</mat-icon>
+          Segundo Semestre
+        </mat-panel-title>
+        <mat-panel-description>
+          <div class="btn-cierre-final-wrapper" matTooltip="Permitido solo para usuarios UTP y Administradores"
+            matTooltipPosition="above" (click)="$event.stopPropagation()">
+            <button mat-stroked-button color="primary" (click)="cierreFinalSemestre(2)" [disabled]="!esPermitidoUTP() || segundoSemestreCerrado">
+              <mat-icon class="me-1">lock</mat-icon>
+              Cierre Final Semestre
+            </button>
+          </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="accordion-content">
+
+        <div class="d-flex align-items-center mb-3">
+          <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
+            <mat-label>Seleccionar Curso</mat-label>
+            <mat-select [(value)]="cursoSeleccionado" placeholder="Curso" (selectionChange)="getAllAsignaturas()"
+              (click)="onClickSelect()">
+              <mat-option *ngFor="let curso of cursos" [value]="curso.id">
+                {{ curso.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
 
-      <!-- Fila de cabecera y de datos -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-  </div>
+          <mat-form-field appearance="fill" class="mx-3 my-3" style="width: 300px;">
+            <mat-label>Seleccionar Asignatura</mat-label>
+            <mat-select [(value)]="asignaturaSeleccionada" placeholder="Asignatura" [disabled]="!cursoSeleccionado"
+              (click)="onClickSelect()">
+              <mat-option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">
+                {{ asignatura.nombre_asignatura }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="buscarNotas(2)">
+            Buscar
+          </button>
+          <button mat-raised-button color="warn" class="ms-3" (click)="guardarNotas(2)">
+            Guardar Cambios
+          </button>
+          <button mat-raised-button color="accent" class="ms-3" (click)="agregarEvaluacion(2)">
+            Agregar Evaluación
+          </button>
+          <button mat-raised-button color="secondary" class="ms-3" (click)="cierreSemestre(2)">
+            Cierre Parcial Semestre
+          </button>
+        </div>
+
+        <div *ngIf="!cargando && dataSourceNotas2.length > 0">
+          <table mat-table [dataSource]="dataSourceNotas2" class="mat-elevation-z8 tabla-cuadricular">
+            <!-- Columna Número -->
+            <ng-container matColumnDef="numero">
+              <th mat-header-cell *matHeaderCellDef style="width: 50px; text-align: center;"> # </th>
+              <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
+                {{ i + 1 }}
+              </td>
+            </ng-container>
+
+            <!-- Columna Alumno -->
+            <ng-container matColumnDef="alumno">
+              <th mat-header-cell *matHeaderCellDef> <b>Alumno</b> </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.estudiante }}
+              </td>
+            </ng-container>
+
+            <!-- Columnas dinámicas para evaluaciones parciales -->
+            <ng-container *ngFor="let evaluacion of parciales2" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+                <button mat-icon-button color="warn"
+                  (click)="abrirOpcionesEvaluacion(getEvaluacionId(evaluacion.nombre_evaluacion), evaluacion.nombre_evaluacion, 2)">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <ng-container *ngIf="isPreBasica; else numericInput">
+                  <mat-form-field appearance="outline" style="width: 80px;">
+                    <mat-select [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                      (selectionChange)="onNotaChange($event, element, evaluacion.nombre_evaluacion)"
+                      style="font-size: larger; font-weight: bold;">
+                      <mat-option value="L">L</mat-option>
+                      <mat-option value="ML">ML</mat-option>
+                      <mat-option value="PL">PL</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-container>
+                <ng-template #numericInput>
+                  <mat-form-field appearance="outline" style="width: 80px;">
+                    <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)"
+                      style="font-size: larger; font-weight: bold;"
+                      [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                      [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                      (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+                  </mat-form-field>
+                </ng-template>
+              </td>
+            </ng-container>
+
+            <!-- Columna separadora -->
+            <ng-container matColumnDef="separator" *ngIf="tareas && tareas.length > 0">
+              <th mat-header-cell *matHeaderCellDef
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </th>
+              <td mat-cell *matCellDef="let element"
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+                &nbsp;
+              </td>
+            </ng-container>
+
+            <ng-container *ngFor="let evaluacion of tareas2" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+                <button mat-icon-button color="warn"
+                  (click)="abrirOpcionesEvaluacion(getEvaluacionId(evaluacion.nombre_evaluacion), evaluacion.nombre_evaluacion, 2)">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <mat-form-field appearance="outline" style="width: 80px;">
+
+                  <input matInput type="number" min="1" max="7" step="0.1" (blur)="validarRango($event)"
+                    style="font-size: larger; font-weight: bold;"
+                    [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                    [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                    (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="separatorFinal1" *ngIf="finalParciales2 && finalParciales2.length > 0">
+              <th mat-header-cell *matHeaderCellDef
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </th>
+              <td mat-cell *matCellDef="let element"
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </td>
+            </ng-container>
+
+            Columnas dinámicas para evaluaciones de tareas
+            <ng-container *ngFor="let evaluacion of finalParciales2" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <mat-form-field appearance="outline" style="width: 80px;">
+                  <input matInput type="number" min="1" max="7" step="0.1" disabled
+                    style="font-size: larger; font-weight: bold;"
+                    [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                    [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                    (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+                </mat-form-field>
+              </td>
+            </ng-container>
+            <ng-container *ngFor="let evaluacion of finalTareas2" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <mat-form-field appearance="outline" style="width: 80px;">
+                  <input matInput type="number" min="1" max="7" step="0.1" disabled
+                    style="font-size: larger; font-weight: bold;"
+                    [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                    [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                    (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="separatorFinal2" *ngIf="finalParciales2 && finalParciales2.length > 0">
+              <th mat-header-cell *matHeaderCellDef
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </th>
+              <td mat-cell *matCellDef="let element"
+                style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
+              </td>
+            </ng-container>
+
+            <ng-container *ngFor="let evaluacion of final2" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <mat-form-field appearance="outline" style="width: 80px;">
+                  <input matInput type="number" min="1" max="7" step="0.1" disabled
+                    style="font-size: larger; font-weight: bold;"
+                    [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
+                    [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
+                    (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
+
+                </mat-form-field>
+              </td>
+            </ng-container>
+            <ng-container *ngFor="let evaluacion of conceptofinal2" [matColumnDef]="evaluacion.nombre_evaluacion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                <b>{{ evaluacion.nombre_evaluacion }}</b>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                <div class="custom-outline-field"
+                  style="width: 80px; padding: 8px; border: 1px solid rgba(0,0,0,0.38); border-radius: 4px; font-size: larger; font-weight: bold; text-align: center;">
+                  {{ getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion) }}
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Fila de cabecera y de datos -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
+          </table>
+        </div>
+
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

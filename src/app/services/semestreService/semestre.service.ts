@@ -25,6 +25,22 @@ export class SemestreService {
       );
   }
 
+  getEstadoSemestres(){
+    const url = `${environment.api}/semestres/estado`;
+    return this.http.get<any[]>(url, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  cierreSemestre(id_semestre: number) {
+    const url = `${environment.api}/cierre-semestre/${id_semestre}`;
+    return this.http.post(url, {}, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     const errorMessage = `An error occurred: ${error.message}`;
     console.error(errorMessage);
