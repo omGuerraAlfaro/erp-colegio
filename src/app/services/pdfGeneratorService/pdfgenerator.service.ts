@@ -8,35 +8,58 @@ import { environment } from 'src/environments/environment';
 })
 export class PdfgeneratorService {
 
-  private httpOptions = {
+  // Para POST con JSON que retorna Blob (PDF)
+  private postHttpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
     responseType: 'blob' as 'json'
   };
 
+  // Para GET que retorna ZIP u otros archivos
+  private blobHttpOptions = {
+    responseType: 'blob' as 'json'
+  };
+
   constructor(private http: HttpClient) { }
 
+  // ------------------ POST: Certificados individuales (PDF) ------------------
+
   getPdfContrato(data: any): Observable<Blob> {
-    return this.http.post<Blob>(`${environment.api}/pdf/generate`, data, this.httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.post<Blob>(`${environment.api}/pdf/generate`, data, this.postHttpOptions)
+      .pipe(catchError(this.handleError));
   }
 
   getPdfCertificadoAlumnoRegular(data: any): Observable<Blob> {
-    return this.http.post<Blob>(`${environment.api}/pdf/generate/alumno-regular`, data, this.httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.post<Blob>(`${environment.api}/pdf/generate/alumno-regular`, data, this.postHttpOptions)
+      .pipe(catchError(this.handleError));
   }
 
-  getPdfCertificadoAlumnoNotas(data: any): Observable<Blob> {
-    return this.http.post<Blob>(`${environment.api}/pdf/generate/alumno-notas`, data, this.httpOptions)
-      .pipe(
-        catchError(this.handleError2)
-      );
+  getPdfCertificadoAlumnoNotasParcial(data: any): Observable<Blob> {
+    return this.http.post<Blob>(`${environment.api}/pdf/generate/alumno-notas-parcial`, data, this.postHttpOptions)
+      .pipe(catchError(this.handleError2));
   }
+
+  getPdfCertificadoAlumnoNotasFinal(data: any): Observable<Blob> {
+    return this.http.post<Blob>(`${environment.api}/pdf/generate/alumno-notas-final`, data, this.postHttpOptions)
+      .pipe(catchError(this.handleError2));
+  }
+
+  // ------------------ GET: Certificados por curso (ZIP) ------------------
+
+  getPdfCertificadoNotasCursoFinal(cursoId: number, semestreId: number): Observable<Blob> {
+    return this.http.get(`${environment.api}/pdf/curso-notas-final/pdf-zip?cursoId=${cursoId}&semestreId=${semestreId}`, {
+      responseType: 'blob' as const
+    });
+  }
+
+  getPdfCertificadoNotasCursoParcial(cursoId: number, semestreId: number): Observable<Blob> {
+    return this.http.get(`${environment.api}/pdf/curso-notas-parcial/pdf-zip?cursoId=${cursoId}&semestreId=${semestreId}`, {
+      responseType: 'blob' as const
+    });
+  }
+
+  // ------------------ Errores ------------------
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred: ' + error.message;
@@ -45,13 +68,14 @@ export class PdfgeneratorService {
   }
 
   private handleError2(error: HttpErrorResponse): Observable<never> {
+    // Si el error viene como Blob (por responseType: 'blob') y tiene tipo JSON
     if (error.error instanceof Blob && error.error.type === 'application/json') {
       return new Observable((observer) => {
         const reader = new FileReader();
         reader.onload = () => {
           try {
             const errorText = JSON.parse(reader.result as string);
-            observer.error(errorText);  // 🔁 envía el JSON al componente
+            observer.error(errorText);  // Devuelve el JSON interpretado
           } catch (e) {
             observer.error({ message: 'Error desconocido al parsear JSON de error.' });
           }
@@ -63,7 +87,7 @@ export class PdfgeneratorService {
       });
     }
 
-    // Error normal (no es Blob o no es JSON)
+    // Error genérico o no JSON
     return throwError(() => error);
   }
 }

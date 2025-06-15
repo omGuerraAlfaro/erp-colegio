@@ -1,36 +1,76 @@
 <h2 mat-dialog-title>Generar {{ data.certificado }}</h2>
-<mat-divider></mat-divider>
+<mat-divider class="mb-3"></mat-divider>
 
 <div mat-dialog-content>
-  <!-- Selección de Curso -->
-  <mat-form-field class="full-width mt-3">
-    <mat-label>Curso</mat-label>
-    <mat-select [(value)]="cursoSeleccionado" (selectionChange)="onCursoChange()">
-      <mat-option *ngFor="let curso of cursos" [value]="curso">{{ curso.nombre }}</mat-option>
-    </mat-select>
-  </mat-form-field>
 
-  <!-- Selección de Estudiante -->
-  <mat-form-field class="full-width" *ngIf="estudiantes.length">
-    <mat-label>Estudiante</mat-label>
-    <mat-select [(value)]="estudianteSeleccionado">
-      <mat-option *ngFor="let est of estudiantes" [value]="est">{{ est.primer_nombre_alumno }} {{ est.primer_apellido_alumno }}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <!-- Fila para tipo de certificado y tipo de selección -->
+  <div style="margin-bottom: 1rem;">
+    <p style="font-weight: bold; margin-bottom: 4px;">Tipo de Certificado:</p>
+    <mat-radio-group [(ngModel)]="tipoCertificado" style="display: flex; gap: 20px;">
+      <mat-radio-button value="parcial">Certificado Parcial</mat-radio-button>
+      <mat-radio-button value="final">Certificado Final</mat-radio-button>
+    </mat-radio-group>
+  </div>
 
-  <!-- Selección de Semestre -->
-  <mat-form-field class="full-width">
-    <mat-label>Semestre</mat-label>
-    <mat-select [(value)]="semestreSeleccionado">
-      <mat-option [value]="1">Primer Semestre</mat-option>
-      <mat-option [value]="2">Segundo Semestre</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <!-- Grupo: Modo de selección -->
+  <div style="margin-bottom: 1rem;">
+    <p style="font-weight: bold; margin-bottom: 4px;">Descargar por:</p>
+    <mat-radio-group [(ngModel)]="tipoSeleccion" style="display: flex; gap: 20px;">
+      <mat-radio-button value="alumno">Por Alumno</mat-radio-button>
+      <mat-radio-button value="curso">Por Curso</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <!-- Vista para 'Por Alumno' -->
+  <ng-container *ngIf="tipoSeleccion === 'alumno'">
+    <mat-form-field class="full-width">
+      <mat-label>Curso</mat-label>
+      <mat-select [(value)]="cursoSeleccionado" (selectionChange)="onCursoChange()">
+        <mat-option *ngFor="let curso of cursos" [value]="curso">{{ curso.nombre }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" *ngIf="estudiantes.length">
+      <mat-label>Estudiante</mat-label>
+      <mat-select [(value)]="estudianteSeleccionado">
+        <mat-option *ngFor="let est of estudiantes" [value]="est">
+          {{ est.primer_nombre_alumno }} {{ est.primer_apellido_alumno }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Semestre</mat-label>
+      <mat-select [(value)]="semestreSeleccionado">
+        <mat-option [value]="1">Primer Semestre</mat-option>
+        <mat-option [value]="2">Segundo Semestre</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-container>
+
+  <!-- Vista para 'Por Curso' -->
+  <ng-container *ngIf="tipoSeleccion === 'curso'">
+    <mat-form-field class="full-width">
+      <mat-label>Curso</mat-label>
+      <mat-select [(value)]="cursoSeleccionado">
+        <mat-option *ngFor="let curso of cursos" [value]="curso">{{ curso.nombre }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Semestre</mat-label>
+      <mat-select [(value)]="semestreSeleccionado">
+        <mat-option [value]="1">Primer Semestre</mat-option>
+        <mat-option [value]="2">Segundo Semestre</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-container>
 </div>
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="close()" [disabled]="isLoading">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="generatePDF()" [disabled]="!estudianteSeleccionado || !semestreSeleccionado || isLoading">
+  <button mat-raised-button color="primary" (click)="generatePDF()"
+    [disabled]="!cursoSeleccionado || !semestreSeleccionado || (tipoSeleccion === 'alumno' && !estudianteSeleccionado) || isLoading">
     Generar
   </button>
 </mat-dialog-actions>
