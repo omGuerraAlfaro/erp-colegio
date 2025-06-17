@@ -45,19 +45,24 @@ export class PdfgeneratorService {
       .pipe(catchError(this.handleError2));
   }
 
-  // ------------------ GET: Certificados por curso (ZIP) ------------------
+  // ------------------ GET: Certificados por curso ------------------
 
   getPdfCertificadoNotasCursoFinal(cursoId: number, semestreId: number): Observable<Blob> {
-    return this.http.get(`${environment.api}/pdf/curso-notas-final/pdf-zip?cursoId=${cursoId}&semestreId=${semestreId}`, {
-      responseType: 'blob' as const
-    });
+    return this.http.post<Blob>(
+      `${environment.api}/pdf/generate/curso-notas-final?cursoId=${cursoId}&semestreId=${semestreId}`,
+      null, // 👈 body vacío
+      this.postHttpOptions // 👈 ahora es el tercer parámetro
+    ).pipe(catchError(this.handleError2));
   }
 
   getPdfCertificadoNotasCursoParcial(cursoId: number, semestreId: number): Observable<Blob> {
-    return this.http.get(`${environment.api}/pdf/curso-notas-parcial/pdf-zip?cursoId=${cursoId}&semestreId=${semestreId}`, {
-      responseType: 'blob' as const
-    });
+    return this.http.post<Blob>(
+      `${environment.api}/pdf/generate/curso-notas-parcial?cursoId=${cursoId}&semestreId=${semestreId}`,
+      null, // 👈 body vacío
+      this.postHttpOptions // 👈 headers y responseType
+    ).pipe(catchError(this.handleError2));
   }
+
 
   // ------------------ Errores ------------------
 

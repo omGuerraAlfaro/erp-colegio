@@ -119,25 +119,63 @@ export class CertificadoAlumnoNotasModalComponent {
       });
 
     } else {
-      // Por CURSO: usar redirección directa para evitar errores con zip y XHR
       const cursoId = this.cursoSeleccionado.id;
       const semestreId = this.semestreSeleccionado;
-      const tipo = this.tipoCertificado; // 'parcial' o 'final'
+      const tipo = this.tipoCertificado;
 
-      const url = `${environment.api}/pdf/curso-notas-${tipo}/pdf-zip?cursoId=${cursoId}&semestreId=${semestreId}`;
-      window.location.href = url;
+      const request$ = tipo === 'parcial'
+        ? this.pdfService.getPdfCertificadoNotasCursoParcial(cursoId, semestreId!)
+        : this.pdfService.getPdfCertificadoNotasCursoFinal(cursoId, semestreId!);
 
-      this.dialogRef.close();
-      this.isLoading = false;
+      request$.subscribe({
+        next: (blob) => {
+          if (!(blob instanceof Blob) || blob.size === 0) {
+            Swal.fire('Advertencia', 'La respuesta no contiene un archivo válido.', 'warning');
+            this.isLoading = false;
+            return;
+          }
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Generando ZIP',
-        text: `La descarga del certificado del curso ${this.cursoSeleccionado.nombre} comenzará automáticamente.`,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Entendido'
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `certificado_notas_curso_${this.cursoSeleccionado.nombre}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+
+          this.dialogRef.close();
+          this.isLoading = false;
+
+          Swal.fire({
+            icon: 'success',
+            title: 'PDF generado con éxito',
+            text: `Certificado de notas del curso ${this.cursoSeleccionado.nombre} ha sido generado.`,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Entendido'
+          });
+        },
+        error: async (err) => {
+          this.isLoading = false;
+
+          let msg = 'Error al generar PDF.';
+
+          if (err.error instanceof Blob && err.error.type === 'application/json') {
+            try {
+              const text = await err.error.text();
+              const parsed = JSON.parse(text);
+              msg = parsed?.message || msg;
+            } catch (_) {
+              msg = 'No se pudo interpretar el error del servidor.';
+            }
+          }
+
+          Swal.fire('Advertencia', msg, 'warning');
+        }
       });
     }
+
+
   }
 
 
