@@ -159,7 +159,12 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
 
   dateClass = (date: Date) => {
     const formattedDate = date.toISOString().split('T')[0];
-    const tipos = this.markedDates[formattedDate]?.map((d) => d.tipo) || [];
+    const eventos = this.markedDates[formattedDate] || [];
+    const tipos = eventos.map((d) => d.tipo);
+
+    if (eventos.length >= 2) {
+      return 'varios-eventos-class'; // aplica fondo morado si hay 2 o más eventos
+    }
 
     if (tipos.includes('Feriado') || tipos.includes('Interferiado')) {
       return 'feriado-class';
@@ -168,6 +173,7 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     } else if (tipos.includes('Evento') || tipos.includes('Vacaciones')) {
       return 'evento-class';
     }
+
     return '';
   };
 

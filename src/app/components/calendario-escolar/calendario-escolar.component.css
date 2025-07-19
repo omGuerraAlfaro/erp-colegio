@@ -71,6 +71,13 @@
     font-weight: bold;
 }
 
+.mat-calendar .varios-eventos-class {
+  background-color: #8e24aa; /* morado o cualquier color que elijas */
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
 .selected-class {
     background-color: #c3e6c4;
     color: white;
@@ -155,6 +162,10 @@
 .circle.green {
     background-color: #4caf50;
     /* Amarillo */
+}
+
+.circle.purple {
+  background-color: #8e24aa; /* tono más suave */
 }
 
 .list-wrapper {
