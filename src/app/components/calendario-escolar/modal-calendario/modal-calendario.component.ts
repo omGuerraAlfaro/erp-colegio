@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 export class ModalCalendarioComponent implements OnInit {
   eventos: Array<{ id_dia: number; tipo: string; descripcion: string | null }> = [];
   fecha: string = ''; // formato DD-MM-YYYY
+  cursoId: number | null = null;
   nuevoTipo: string = '';
   nuevaDescripcion: string = '';
   eventoEditando: any = null; // Para saber si estamos editando
@@ -24,6 +25,7 @@ export class ModalCalendarioComponent implements OnInit {
   ) {
     this.eventos = data.eventos || [];
     this.fecha = data.fecha;
+    this.cursoId = data.cursoId || null;
   }
 
   ngOnInit(): void { }
@@ -41,6 +43,7 @@ export class ModalCalendarioComponent implements OnInit {
       tipo: this.nuevoTipo,
       descripcion: this.nuevaDescripcion,
       fecha: fechaFormateada,
+      curso: this.cursoId ? { id: this.cursoId } : null
     };
 
     this.calendarioService.createFecha(nuevoEvento).subscribe({
@@ -102,7 +105,7 @@ export class ModalCalendarioComponent implements OnInit {
             tipo: this.nuevoTipo,
             descripcion: this.nuevaDescripcion,
             fecha: fechaFormat,
-            curso: null
+            curso: this.cursoId ? { id: this.cursoId } : null
           };
 
           const id = this.eventoEditando.id;

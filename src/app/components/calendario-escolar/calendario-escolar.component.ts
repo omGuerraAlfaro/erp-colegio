@@ -12,6 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatCalendar } from '@angular/material/datepicker';
 import { ModalCalendarioComponent } from './modal-calendario/modal-calendario.component';
 import { CalendarioEscolarService } from 'src/app/services/calendarioService/calendario-escolar.service';
+import { CursosService } from 'src/app/services/cursoService/cursos.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-calendario-escolar',
@@ -28,16 +30,38 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     [key: string]: Array<{ id: number; tipo: string; descripcion: string | null }>;
   } = {};
 
+  rolUser: string = "";
+  cursos: any[] = [];
+  cursoSeleccionado: number | null = null;
+  mostrarCursoSeleccionado = false;
+
   private calendarObserver: MutationObserver | undefined;
 
   constructor(
     private dialog: MatDialog,
     private calendarioService: CalendarioEscolarService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private cursoService: CursosService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.rolUser = localStorage.getItem('rol') || '';
     this.loadDates();
+    this.getAllCursos();
+  }
+
+  volverCalendario(): void {
+    this.cursoSeleccionado = null;
+    this.loadDates();
+  }
+
+  getAllCursos(): void {
+    this.cursoService.getAllCursos().subscribe({
+      next: (cursos) => {
+        this.cursos = cursos;
+      },
+      error: (err) => console.error('Error al obtener los cursos:', err),
+    });
   }
 
   ngAfterViewInit() {
@@ -101,7 +125,6 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     }
 
     const elements = this.calendarContainer.nativeElement.querySelectorAll('.mat-calendar-body-cell');
-    console.log('Injecting badges into calendar cells:', elements.length);
 
     elements.forEach((cell: HTMLElement) => {
       const text = cell.innerText.trim();
@@ -125,7 +148,6 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
         const content = cell.querySelector('.mat-calendar-body-cell-content');
         if (content) {
           content.appendChild(badge);
-          console.log(`Insertando badge para ${key} con ${eventos.length} eventos`);
         }
       }
     });
@@ -145,7 +167,8 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
       width: '500px',
       data: {
         fecha: this.formatToDDMMYYYY(formattedDate),
-        eventos: eventosDelDia
+        eventos: eventosDelDia,
+        cursoId: this.cursoSeleccionado
       },
     });
 
@@ -181,4 +204,52 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     const [year, month, day] = fecha.split('-');
     return `${day}-${month}-${year}`;
   }
+
+  buscarCalendarioCurso(): void {
+    this.mostrarCursoSeleccionado = true;
+
+    if (!this.cursoSeleccionado) {
+      Swal.fire({
+        title: 'Curso no seleccionado',
+        text: 'Por favor, selecciona un curso para ver su calendario.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    this.calendarioService.getAllFechasCurso(this.cursoSeleccionado).subscribe({
+      next: (data: Array<{ id_dia: number; fecha: string; tipo: string; descripcion: string | null }>) => {
+        this.markedDates = {};
+        data.forEach((fecha) => {
+          if (fecha.fecha) {
+            if (!this.markedDates[fecha.fecha]) {
+              this.markedDates[fecha.fecha] = [];
+            }
+            this.markedDates[fecha.fecha].push({
+              id: fecha.id_dia,
+              tipo: fecha.tipo,
+              descripcion: fecha.descripcion,
+            });
+          }
+        });
+
+        console.log('Calendario del curso:', this.markedDates);
+        this.selectedDate = null;
+        this.calendar.updateTodaysDate();
+        this.cdr.detectChanges();
+        setTimeout(() => this.injectBadges(), 50);
+      },
+      error: (error) => {
+        console.error('Error fetching fechas:', error);
+      },
+    });
+  }
+
+  getNombreCursoSeleccionado(): string {
+    const curso = this.cursos.find(c => c.id === this.cursoSeleccionado);
+    return curso ? curso.nombre : '';
+  }
+
+
 }

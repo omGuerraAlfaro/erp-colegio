@@ -28,6 +28,20 @@ export class CalendarioEscolarService {
       );
   }
 
+  getAllFechasProximas(): Observable<[]> {
+    return this.http.get<[]>(`${this.apiUrl}/proximas`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getAllFechasCurso(cursoId: number): Observable<[]> {
+    return this.http.get<[]>(`${this.apiUrl}/curso/${cursoId}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   /**
    * Crear un nuevo registro en el calendario escolar.
    * @param calendario Objeto con los datos a guardar.
