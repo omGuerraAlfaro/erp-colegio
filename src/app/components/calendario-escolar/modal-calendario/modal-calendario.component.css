@@ -1,27 +1,28 @@
+/* Estilo general del contenido del diálogo */
 mat-dialog-content {
-  font-size: 16px;
+  font-size: 1.2rem;
   line-height: 1.5;
+  overflow: visible !important;
 }
 
-mat-dialog-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-button {
-  margin-left: 10px;
-}
-
+/* Alineación de los botones */
 mat-dialog-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
 
+/* Margen entre botones */
+button {
+  margin-left: 10px;
+}
+
+/* Header del modal */
 .dialog-header {
   position: relative;
 }
 
+/* Botón de cerrar */
 .close-button {
   position: absolute;
   top: 0px;
@@ -29,7 +30,82 @@ mat-dialog-actions {
   z-index: 2;
 }
 
-mat-dialog-content {
-  overflow: visible !important;
+/* Titulos */
+h2[mat-dialog-title],
+h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
 }
 
+/* Estilo de los campos */
+mat-form-field {
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+mat-form-field textarea,
+mat-form-field input,
+mat-select {
+  font-size: 1.2rem !important;
+  padding: 12px !important;
+}
+
+/* Etiquetas de los campos */
+mat-label {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+/* Hint debajo del textarea */
+mat-hint {
+  font-size: 1rem;
+}
+
+/* Estilo de la lista de eventos */
+mat-list-item div {
+  font-size: 1.2rem;
+}
+
+/* Iconos de editar y eliminar */
+button[color="accent"] mat-icon {
+  color: #f8bc25; /* amarillo */
+}
+
+button[color="warn"] mat-icon {
+  color: #d32f2f; /* rojo */
+}
+
+button[color="accent"]:hover mat-icon {
+  color: #fdd835; /* tono más claro al hacer hover */
+}
+
+button[color="warn"]:hover mat-icon {
+  color: #ef5350; /* tono más claro al hacer hover */
+}
+
+/* Icono de cerrar */
+.close-button mat-icon {
+  color: #555; /* gris oscuro */
+  font-size: 24px;
+}
+
+mat-list-item {
+  background-color: #e1dede; /* color de fondo */
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* sombra sutil */
+  display: flex;
+  align-items: center;
+}
+
+/* Asegura espacio entre texto y botones */
+mat-list-item .w-100 {
+  margin-right: 16px;
+}
+
+/* Espaciado entre íconos */
+mat-list-item button {
+  margin-left: 8px;
+}

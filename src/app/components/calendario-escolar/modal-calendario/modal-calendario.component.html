@@ -1,38 +1,56 @@
 <div class="dialog-header">
-  <!-- Botón de cerrar arriba a la derecha -->
   <button mat-icon-button (click)="onClose()" class="close-button" matTooltip="Cerrar">
     <mat-icon>close</mat-icon>
   </button>
-  <h2 mat-dialog-title>Detalle del Día</h2>
+  <h2 mat-dialog-title>Programación del día: {{ fecha }} </h2>
 </div>
+
 <mat-divider class="mb-3"></mat-divider>
 
-<form mat-dialog-content [formGroup]="detalleDiaForm">
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Fecha</mat-label>
-    <input matInput [value]="data.fecha" readonly>
-    <mat-hint>Fecha seleccionada (no editable)</mat-hint>
-  </mat-form-field>
+<!-- Lista de eventos existentes -->
+<div *ngIf="eventos.length > 0; else sinEventos">
+  <mat-list>
+    <mat-list-item *ngFor="let evento of eventos" >
+      <div class="w-100">
+        <div><strong>{{ evento.tipo }}</strong></div>
+        <div>{{ evento.descripcion }}</div>
+      </div>
+      <button mat-icon-button color="accent" (click)="onEditar(evento)" matTooltip="Editar">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="onEliminar(evento)" matTooltip="Eliminar">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+</div>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Tipo</mat-label>
-    <mat-select formControlName="tipo">
-      <mat-option *ngFor="let opcion of tiposOpciones" [value]="opcion">{{ opcion }}</mat-option>
-    </mat-select>
-    <mat-error *ngIf="detalleDiaForm.get('tipo')?.hasError('required')">Este campo es obligatorio</mat-error>
-  </mat-form-field>
+<ng-template #sinEventos>
+  <p class="text-muted">No hay eventos registrados para este día.</p>
+</ng-template>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Descripción</mat-label>
-    <textarea matInput formControlName="descripcion" placeholder="Añade una descripción"></textarea>
-    <mat-hint>Máximo 200 caracteres</mat-hint>
-    <mat-error *ngIf="detalleDiaForm.get('descripcion')?.hasError('maxlength')">Máximo 200 caracteres permitidos</mat-error>
-  </mat-form-field>
-</form>
+<mat-divider class="my-3"></mat-divider>
 
-<mat-divider></mat-divider>
+<!-- Formulario para agregar nueva actividad -->
+<h3>Agregar nueva actividad</h3>
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Tipo</mat-label>
+  <mat-select [(ngModel)]="nuevoTipo">
+    <mat-option *ngFor="let opcion of tiposOpciones" [value]="opcion">{{ opcion }}</mat-option>
+  </mat-select>
+</mat-form-field>
 
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Descripción</mat-label>
+  <textarea matInput [(ngModel)]="nuevaDescripcion" placeholder="Ej. Día del estudiante" maxlength="200"></textarea>
+  <mat-hint align="end">{{ nuevaDescripcion.length || 0 }}/200</mat-hint>
+</mat-form-field>
+
+<!-- Botones -->
 <div mat-dialog-actions align="end">
-  <button mat-raised-button color="primary" (click)="onGuardar()">Guardar Fecha</button>
-  <button mat-raised-button color="warn" (click)="onEliminar()">Eliminar Fecha</button>
+  <button mat-raised-button color="primary" (click)="eventoEditando ? onGuardarEdicion() : onAgregar()">
+    {{ eventoEditando ? 'Guardar Cambios' : 'Agregar Evento' }}
+  </button>
+
+  <button mat-button (click)="onClose()">Cerrar</button>
 </div>

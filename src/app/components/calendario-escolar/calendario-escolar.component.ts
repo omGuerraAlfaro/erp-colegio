@@ -139,27 +139,22 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     if (!date) return;
 
     const formattedDate = date.toISOString().split('T')[0];
-    const dayDetails = this.markedDates[formattedDate]?.[0] || {
-      id: null,
-      tipo: '',
-      descripcion: null,
-    };
+    const eventosDelDia = this.markedDates[formattedDate] || [];
 
     const dialogRef = this.dialog.open(ModalCalendarioComponent, {
-      width: '400px',
+      width: '500px',
       data: {
-        id_dia: dayDetails.id,
         fecha: this.formatToDDMMYYYY(formattedDate),
-        tipo: dayDetails.tipo,
-        descripcion: dayDetails.descripcion,
+        eventos: eventosDelDia
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.action === 'guardar' || result?.action === 'eliminar') {
+      if (result?.action === 'guardar' || result?.action === 'eliminar' || result?.action === 'editar') {
         this.loadDates();
       }
     });
+
   }
 
   dateClass = (date: Date) => {
