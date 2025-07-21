@@ -64,6 +64,14 @@
     font-weight: bold;
 }
 
+.mat-calendar .reunion-apoderados-class {
+    background-color: #42a5f5;
+    /* Azul vibrante */
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
 .mat-calendar .evento-class {
     background-color: #ffc107;
     color: black;
@@ -72,10 +80,34 @@
 }
 
 .mat-calendar .varios-eventos-class {
-  background-color: #8e24aa; /* morado o cualquier color que elijas */
-  color: white;
-  border-radius: 50%;
-  font-weight: bold;
+    background-color: #8e24aa;
+    /* morado o cualquier color que elijas */
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.mat-calendar .prueba-class {
+    background-color: #F44336;
+    /* Azul fuerte para “Prueba” */
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.mat-calendar .tarea-class {
+    background-color: #FFC107;
+    /* Amarillo para “Tarea” */
+    color: black;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.mat-calendar .excursion-pedagogica-class {
+    background-color: #4CAF50;
+    color: black;
+    border-radius: 50%;
+    font-weight: bold;
 }
 
 .selected-class {
@@ -165,7 +197,8 @@
 }
 
 .circle.purple {
-  background-color: #8e24aa; /* tono más suave */
+    background-color: #8e24aa;
+    /* tono más suave */
 }
 
 .list-wrapper {
@@ -183,23 +216,65 @@
 }
 
 .mat-calendar-body-cell-content {
-  position: relative;
+    position: relative;
 }
 
 .event-badge {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  background-color: red;
-  color: white;
-  font-size: 0.65rem;
-  font-weight: bold;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  pointer-events: none;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: red;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    pointer-events: none;
+}
+
+
+.varios-eventos-class {
+    background-color: #9C27B0;
+    color: #fff;
+}
+
+.feriado-class {
+    background-color: #F44336;
+    color: #fff;
+}
+
+.clase-class {
+    background-color: #1E88E5;
+    color: #fff;
+}
+
+.evento-class {
+    background-color: #FFC107;
+    color: #000;
+}
+
+.prueba-class {
+    /* background-color: #2196F3; */
+    background-color: #F44336;
+    color: #fff;
+}
+
+.tarea-class {
+    background-color: #FFC107;
+    color: #000;
+}
+
+.reunion-apoderados-class {
+    background-color: #2196F3;
+    color: #fff;
+}
+
+.excursion-pedagogica-class {
+    background-color: #4CAF50;
+    color: #000;
 }

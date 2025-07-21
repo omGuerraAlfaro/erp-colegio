@@ -10,7 +10,7 @@
 <!-- Lista de eventos existentes -->
 <div *ngIf="eventos.length > 0; else sinEventos">
   <mat-list>
-    <mat-list-item *ngFor="let evento of eventos" >
+    <mat-list-item *ngFor="let evento of eventos">
       <div class="w-100">
         <div><strong>{{ evento.tipo }}</strong></div>
         <div>{{ evento.descripcion }}</div>
@@ -36,9 +36,21 @@
 <mat-form-field appearance="outline" class="full-width">
   <mat-label>Tipo</mat-label>
   <mat-select [(ngModel)]="nuevoTipo">
-    <mat-option *ngFor="let opcion of tiposOpciones" [value]="opcion">{{ opcion }}</mat-option>
+    <!-- si hay curso, muestra solo las opciones de curso -->
+    <ng-container *ngIf="cursoId; else globalOptions">
+      <mat-option *ngFor="let opcion of tiposOpcionesCurso" [value]="opcion">
+        {{ opcion }}
+      </mat-option>
+    </ng-container>
+    <!-- si no hay curso, muestra las opciones globales -->
+    <ng-template #globalOptions>
+      <mat-option *ngFor="let opcion of tiposOpciones" [value]="opcion">
+        {{ opcion }}
+      </mat-option>
+    </ng-template>
   </mat-select>
 </mat-form-field>
+
 
 <mat-form-field appearance="outline" class="full-width">
   <mat-label>Descripción</mat-label>

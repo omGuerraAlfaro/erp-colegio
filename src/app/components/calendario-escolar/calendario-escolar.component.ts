@@ -176,7 +176,7 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
       if (result?.action === 'guardar' || result?.action === 'eliminar' || result?.action === 'editar') {
         if (!this.cursoSeleccionado) {
           this.loadDates();
-        }else {
+        } else {
           this.buscarCalendarioCurso();
         }
       }
@@ -187,22 +187,42 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
   dateClass = (date: Date) => {
     const formattedDate = date.toISOString().split('T')[0];
     const eventos = this.markedDates[formattedDate] || [];
-    const tipos = eventos.map((d) => d.tipo);
+    const tipos = eventos.map(e => e.tipo);
 
+    // 1) Si hay 2 o más eventos, prioridad a "varios"
     if (eventos.length >= 2) {
-      return 'varios-eventos-class'; // aplica fondo morado si hay 2 o más eventos
+      return 'varios-eventos-class';
     }
+    console.log('Tipos de eventos:', tipos);
 
+    // 2) Eventos generales (sin curso)
     if (tipos.includes('Feriado') || tipos.includes('Interferiado')) {
       return 'feriado-class';
-    } else if (tipos.includes('Clase')) {
+    }
+    if (tipos.includes('Clase')) {
       return 'clase-class';
-    } else if (tipos.includes('Evento') || tipos.includes('Vacaciones')) {
+    }
+    if (tipos.includes('Evento') || tipos.includes('Vacaciones')) {
       return 'evento-class';
+    }
+
+    // 3) Eventos de curso
+    if (tipos.includes('Prueba')) {
+      return 'prueba-class';
+    }
+    if (tipos.includes('Tarea')) {
+      return 'tarea-class';
+    }
+    if (tipos.includes('Reunión de Apoderado')) {
+      return 'reunion-apoderados-class';
+    }
+    if (tipos.includes('Excursión Pedagógica')) {
+      return 'excursion-pedagogica-class';
     }
 
     return '';
   };
+
 
   formatToDDMMYYYY(fecha: string): string {
     const [year, month, day] = fecha.split('-');
