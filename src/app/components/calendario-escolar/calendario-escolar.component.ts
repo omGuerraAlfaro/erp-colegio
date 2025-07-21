@@ -174,7 +174,11 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.action === 'guardar' || result?.action === 'eliminar' || result?.action === 'editar') {
-        this.loadDates();
+        if (!this.cursoSeleccionado) {
+          this.loadDates();
+        }else {
+          this.buscarCalendarioCurso();
+        }
       }
     });
 
