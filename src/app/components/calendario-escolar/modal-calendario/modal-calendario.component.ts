@@ -17,7 +17,7 @@ export class ModalCalendarioComponent implements OnInit {
   nuevaDescripcion: string = '';
   eventoEditando: any = null; // Para saber si estamos editando
   tiposOpciones: string[] = ['Feriado', 'Interferiado', 'Evento', 'Clase', 'Vacaciones'];
-  tiposOpcionesCurso: string[] = ['Prueba', 'Tarea', 'Reunión de Apoderados', 'Excursión Pedagógica'];
+  tiposOpcionesCurso: string[] = ['Prueba', 'Trabajo Evaluado', 'Tarea', 'Reunión de Apoderados', 'Excursión Pedagógica'];
 
 
   constructor(

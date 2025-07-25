@@ -251,6 +251,9 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     if (tipos.includes('Prueba')) {
       return 'prueba-class';
     }
+    if (tipos.includes('Trabajo Evaluado')) {
+      return 'trabajo-evaluado-class';
+    }
     if (tipos.includes('Tarea')) {
       return 'tarea-class';
     }

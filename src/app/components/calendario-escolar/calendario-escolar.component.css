@@ -95,6 +95,14 @@
     font-weight: bold;
 }
 
+.mat-calendar .trabajo-evaluado-class {
+    background-color: rgb(225, 139, 153);
+    /* Azul fuerte para “Trabajo Evaluado” */
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
 .mat-calendar .tarea-class {
     background-color: #FFC107;
     /* Amarillo para “Tarea” */
@@ -179,6 +187,10 @@
 .circle.red {
     background-color: #f44336;
     /* Rojo */
+}
+
+.circle.pink {
+    background-color: rgb(225, 139, 153);
 }
 
 .circle.blue {
