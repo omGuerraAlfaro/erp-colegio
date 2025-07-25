@@ -14,6 +14,7 @@ import { ModalCalendarioComponent } from './modal-calendario/modal-calendario.co
 import { CalendarioEscolarService } from 'src/app/services/calendarioService/calendario-escolar.service';
 import { CursosService } from 'src/app/services/cursoService/cursos.service';
 import Swal from 'sweetalert2';
+import { AsignaturaService } from 'src/app/services/asignaturaService/asignatura.service';
 
 @Component({
   selector: 'app-calendario-escolar',
@@ -34,6 +35,9 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
   cursos: any[] = [];
   cursoSeleccionado: number | null = null;
   mostrarCursoSeleccionado = false;
+  nombreAsignaturaSeleccionada: string = '';
+  asignaturaSeleccionada: number | null = null;
+  asignaturas: any[] = [];
 
   private calendarObserver: MutationObserver | undefined;
 
@@ -41,18 +45,24 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     private dialog: MatDialog,
     private calendarioService: CalendarioEscolarService,
     private cdr: ChangeDetectorRef,
-    private cursoService: CursosService
+    private cursoService: CursosService,
+    private asignaturaService: AsignaturaService,
   ) { }
 
   ngOnInit(): void {
     this.rolUser = localStorage.getItem('rol') || '';
     this.loadDates();
     this.getAllCursos();
+    this.getAllAsignaturas();
   }
 
   volverCalendario(): void {
     this.cursoSeleccionado = null;
     this.loadDates();
+  }
+
+  onClickSelect() {
+    this.asignaturaSeleccionada = null;
   }
 
   getAllCursos(): void {
@@ -62,6 +72,35 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
       },
       error: (err) => console.error('Error al obtener los cursos:', err),
     });
+  }
+
+  getAllAsignaturas(): void {
+    this.asignaturaSeleccionada = null;
+    this.nombreAsignaturaSeleccionada = '';
+
+    if (this.cursoSeleccionado == 1 || this.cursoSeleccionado == 2) {
+      this.asignaturaService.getAllAsignaturasPreBasica().subscribe({
+        next: (asignaturas) => {
+          asignaturas.pop();
+          this.asignaturas = asignaturas;
+        },
+        error: (err) => console.error('Error al obtener asignaturas:', err),
+      });
+    } else {
+      this.asignaturaService.getAllAsignaturasBasica().subscribe({
+        next: (asignaturas) => {
+          asignaturas.pop();
+          this.asignaturas = asignaturas;
+        },
+        error: (err) => console.error('Error al obtener asignaturas:', err),
+      });
+    }
+  }
+
+  onAsignaturaSelected(asigId: number) {
+    this.asignaturaSeleccionada = asigId;
+    const asig = this.asignaturas.find(a => a.id === asigId);
+    this.nombreAsignaturaSeleccionada = asig?.nombre_asignatura || '';
   }
 
   ngAfterViewInit() {
@@ -168,7 +207,9 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
       data: {
         fecha: this.formatToDDMMYYYY(formattedDate),
         eventos: eventosDelDia,
-        cursoId: this.cursoSeleccionado
+        cursoId: this.cursoSeleccionado,
+        asignaturas: this.asignaturas,
+        asignaturaId: this.asignaturaSeleccionada,
       },
     });
 
@@ -242,7 +283,7 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
       return;
     }
 
-    this.calendarioService.getAllFechasCurso(this.cursoSeleccionado).subscribe({
+    this.calendarioService.getAllFechasCurso(this.cursoSeleccionado, this.asignaturaSeleccionada).subscribe({
       next: (data: Array<{ id_dia: number; fecha: string; tipo: string; descripcion: string | null }>) => {
         this.markedDates = {};
         data.forEach((fecha) => {
@@ -273,6 +314,12 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
   getNombreCursoSeleccionado(): string {
     const curso = this.cursos.find(c => c.id === this.cursoSeleccionado);
     return curso ? curso.nombre : '';
+  }
+
+  getNombreAsignaturaSeleccionada(): string {
+    console.log('Asignatura seleccionada:', this.asignaturaSeleccionada);
+    const asignatura = this.asignaturas.find(a => a.id === this.asignaturaSeleccionada);
+    return asignatura ? asignatura.nombre : '';
   }
 
 

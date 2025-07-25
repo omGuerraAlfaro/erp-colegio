@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { AsistenciaService } from 'src/app/services/asistenciaService/asistencia.service';
 import { CursosService } from 'src/app/services/cursoService/cursos.service';
+import { SemestreService } from 'src/app/services/semestreService/semestre.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -33,7 +34,7 @@ export class CursosAsistenciaComponent implements OnInit {
     private asistenciaService: AsistenciaService,
     private cursoService: CursosService,
     private cdRef: ChangeDetectorRef,
-    private appRef: ApplicationRef // opcional, si quieres usar isStable
+    private semestreService: SemestreService
   ) { }
 
   ngOnInit(): void {
@@ -60,7 +61,7 @@ export class CursosAsistenciaComponent implements OnInit {
     this.cargando = true;
     this.cdRef.markForCheck();
 
-    const data = { cursoId: this.cursoSeleccionado, semestreId: 1 };
+    const data = { cursoId: this.cursoSeleccionado, semestreId: 1 }; //quitar semestre.. modificar endpoint
     this.asistenciaService.getAsistenciaByCurso(data).subscribe({
       next: (response: any) => {
         // Map the response to dataSource
@@ -213,71 +214,84 @@ export class CursosAsistenciaComponent implements OnInit {
     const asistenciasPayload = {
       asistencias: [] as any[],
     };
+    const fechaActual = new Date().toISOString().split('T')[0];
 
-    this.cambiosAsistencia.forEach((valor, key) => {
-      const [estudianteId, calendarioId] = key.split('_');
-      const estado = valor ? 1 : 0;
+    this.semestreService.getSemestre(fechaActual).subscribe({
+      next: (res: any) => {
+        const idSemestre = res.id_semestre;
 
-      asistenciasPayload.asistencias.push({
-        estudianteId: +estudianteId,
-        calendarioId: +calendarioId,
-        cursoId: this.cursoSeleccionado,
-        semestreId: 1,
-        estado: estado,
-      });
-    });
+        this.cambiosAsistencia.forEach((valor, key) => {
+          const [estudianteId, calendarioId] = key.split('_');
+          const estado = valor ? 1 : 0;
 
-    // Validamos si hay cambios
-    if (asistenciasPayload.asistencias.length === 0) {
-      Swal.fire({
-        title: 'No hay cambios',
-        text: 'No hay cambios para guardar.',
-        icon: 'info',
-        confirmButtonText: 'Ok'
-      });
-      return;
-    }
-
-    // Activamos spinner
-    this.guardando = true;
-    this.cdRef.markForCheck();
-
-    // Llamada al servicio
-    this.asistenciaService.updateAsistencias(asistenciasPayload).subscribe({
-      next: (resp) => {
-        console.log('Respuesta del backend:', resp);
-
-        // Desactivamos spinner
-        this.guardando = false;
-        this.cdRef.markForCheck();
-
-        // SweetAlert2: éxito
-        Swal.fire({
-          title: '¡Listo!',
-          text: 'Cambios de asistencia guardados exitosamente.',
-          icon: 'success',
-          confirmButtonText: 'Ok'
+          asistenciasPayload.asistencias.push({
+            estudianteId: +estudianteId,
+            calendarioId: +calendarioId,
+            cursoId: this.cursoSeleccionado,
+            semestreId: idSemestre,
+            estado: estado,
+          });
         });
 
-        // Limpiamos mapa de cambios
-        this.cambiosAsistencia.clear();
-      },
-      error: (err) => {
-        console.error('Error al guardar asistencia:', err);
+        // Validamos si hay cambios
+        if (asistenciasPayload.asistencias.length === 0) {
+          Swal.fire({
+            title: 'No hay cambios',
+            text: 'No hay cambios para guardar.',
+            icon: 'info',
+            confirmButtonText: 'Ok'
+          });
+          return;
+        }
 
-        // Desactivamos spinner
-        this.guardando = false;
+        // Activamos spinner
+        this.guardando = true;
         this.cdRef.markForCheck();
 
-        // SweetAlert2: error
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error al guardar la asistencia.',
-          icon: 'error',
-          confirmButtonText: 'Ok'
+        // Llamada al servicio
+        this.asistenciaService.updateAsistencias(asistenciasPayload).subscribe({
+          next: (resp) => {
+            console.log('Respuesta del backend:', resp);
+
+            // Desactivamos spinner
+            this.guardando = false;
+            this.cdRef.markForCheck();
+
+            // SweetAlert2: éxito
+            Swal.fire({
+              title: '¡Listo!',
+              text: 'Cambios de asistencia guardados exitosamente.',
+              icon: 'success',
+              confirmButtonText: 'Ok'
+            });
+
+            // Limpiamos mapa de cambios
+            this.cambiosAsistencia.clear();
+          },
+          error: (err) => {
+            console.error('Error al guardar asistencia:', err);
+
+            // Desactivamos spinner
+            this.guardando = false;
+            this.cdRef.markForCheck();
+
+            // SweetAlert2: error
+            Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error al guardar la asistencia.',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+          },
         });
+
       },
+      error: () => {
+        Swal.fire('Error', 'No se pudo obtener el semestre.', 'error');
+      }
     });
+
+
   }
 
   isEditableDate(fecha: string): boolean {
