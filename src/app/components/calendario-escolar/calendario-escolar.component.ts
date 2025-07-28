@@ -276,10 +276,10 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
   buscarCalendarioCurso(): void {
     this.mostrarCursoSeleccionado = true;
 
-    if (!this.cursoSeleccionado) {
+    if (!this.cursoSeleccionado || !this.asignaturaSeleccionada) {
       Swal.fire({
-        title: 'Curso no seleccionado',
-        text: 'Por favor, selecciona un curso para ver su calendario.',
+        title: 'Curso o asignatura no seleccionada',
+        text: 'Por favor, selecciona un curso y una asignatura para ver su calendario.',
         icon: 'warning',
         confirmButtonText: 'Aceptar'
       });
