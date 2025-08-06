@@ -1,111 +1,73 @@
-/* Estilo general del contenido del diálogo */
-mat-dialog-content {
-  font-size: 1.2rem;
-  line-height: 1.5;
-  overflow: visible !important;
-}
-
-/* Alineación de los botones */
-mat-dialog-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-/* Margen entre botones */
-button {
-  margin-left: 10px;
-}
-
-/* Header del modal */
+/* Estilo general del diálogo */
 .dialog-header {
   position: relative;
 }
 
-/* Botón de cerrar */
 .close-button {
   position: absolute;
-  top: 0px;
+  top: 0;
   right: 8px;
-  z-index: 2;
+  color: #555;
 }
 
-/* Titulos */
-h2[mat-dialog-title],
-h3 {
-  font-size: 1.5rem;
+/* Tabla */
+table.mat-table {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+th.mat-header-cell, td.mat-cell {
+  font-size: 1.2rem;
+  padding: 16px;
+  text-align: left;
+}
+
+th.mat-header-cell {
+  background-color: #f1f1f1;
   font-weight: bold;
-  margin-top: 1rem;
 }
 
-/* Estilo de los campos */
+/* Iconos de acciones */
+button[color="accent"] mat-icon {
+  color: #f8bc25;
+}
+
+button[color="warn"] mat-icon {
+  color: #d32f2f;
+}
+
+button[color="accent"]:hover mat-icon {
+  color: #fdd835;
+}
+
+button[color="warn"]:hover mat-icon {
+  color: #ef5350;
+}
+
+/* Campos del formulario */
 mat-form-field {
   width: 100%;
   font-size: 1.2rem;
+  margin-top: 8px;
 }
 
 mat-form-field textarea,
 mat-form-field input,
 mat-select {
-  font-size: 1.2rem !important;
-  padding: 12px !important;
+  font-size: 1.2rem;
+  padding: 12px;
 }
 
-/* Etiquetas de los campos */
 mat-label {
   font-size: 1.3rem;
   font-weight: bold;
 }
 
-/* Hint debajo del textarea */
 mat-hint {
   font-size: 1rem;
 }
 
-/* Estilo de la lista de eventos */
-mat-list-item div {
-  font-size: 1.2rem;
-}
-
-/* Iconos de editar y eliminar */
-button[color="accent"] mat-icon {
-  color: #f8bc25; /* amarillo */
-}
-
-button[color="warn"] mat-icon {
-  color: #d32f2f; /* rojo */
-}
-
-button[color="accent"]:hover mat-icon {
-  color: #fdd835; /* tono más claro al hacer hover */
-}
-
-button[color="warn"]:hover mat-icon {
-  color: #ef5350; /* tono más claro al hacer hover */
-}
-
-/* Icono de cerrar */
-.close-button mat-icon {
-  color: #555; /* gris oscuro */
-  font-size: 24px;
-}
-
-mat-list-item {
-  background-color: #e1dede; /* color de fondo */
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* sombra sutil */
-  display: flex;
-  align-items: center;
-}
-
-/* Asegura espacio entre texto y botones */
-mat-list-item .w-100 {
-  margin-right: 16px;
-}
-
-/* Espaciado entre íconos */
-mat-list-item button {
+/* Botones del formulario */
+mat-dialog-actions button {
   margin-left: 8px;
 }

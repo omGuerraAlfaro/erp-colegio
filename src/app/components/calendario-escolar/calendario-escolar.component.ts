@@ -27,9 +27,7 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild(MatCalendar, { static: true, read: ElementRef }) calendarContainer!: ElementRef;
 
   selectedDate: Date | null = null;
-  markedDates: {
-    [key: string]: Array<{ id: number; tipo: string; descripcion: string | null }>;
-  } = {};
+  markedDates: { [fecha: string]: Array<{ id: number; tipo: string; descripcion: string | null; asignatura?: string | null }> } = {};
 
   rolUser: string = "";
   cursos: any[] = [];
@@ -118,6 +116,7 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
       next: (data: Array<{ id_dia: number; fecha: string; tipo: string; descripcion: string | null }>) => {
         this.markedDates = {};
         data.forEach((fecha) => {
+          console.log('Fecha obtenida:', fecha);
           if (fecha.fecha) {
             if (!this.markedDates[fecha.fecha]) {
               this.markedDates[fecha.fecha] = [];
@@ -202,8 +201,10 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     const formattedDate = date.toISOString().split('T')[0];
     const eventosDelDia = this.markedDates[formattedDate] || [];
 
+    console.log('Eventos del día:', eventosDelDia);
+
     const dialogRef = this.dialog.open(ModalCalendarioComponent, {
-      width: '500px',
+      width: '900px',
       data: {
         fecha: this.formatToDDMMYYYY(formattedDate),
         eventos: eventosDelDia,
@@ -287,9 +288,10 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     }
 
     this.calendarioService.getAllFechasCurso(this.cursoSeleccionado, this.asignaturaSeleccionada).subscribe({
-      next: (data: Array<{ id_dia: number; fecha: string; tipo: string; descripcion: string | null }>) => {
+      next: (data: Array<{ id_dia: number; fecha: string; tipo: string; descripcion: string | null; asignatura: { nombre_asignatura: string } }>) => {
         this.markedDates = {};
         data.forEach((fecha) => {
+          console.log('Fecha obtenida:', fecha);
           if (fecha.fecha) {
             if (!this.markedDates[fecha.fecha]) {
               this.markedDates[fecha.fecha] = [];
@@ -298,6 +300,7 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
               id: fecha.id_dia,
               tipo: fecha.tipo,
               descripcion: fecha.descripcion,
+              asignatura: fecha.asignatura.nombre_asignatura || null
             });
           }
         });

@@ -2,28 +2,52 @@
   <button mat-icon-button (click)="onClose()" class="close-button" matTooltip="Cerrar">
     <mat-icon>close</mat-icon>
   </button>
-  <h2 mat-dialog-title>Programación del día: {{ fecha }} </h2>
+  <h2 mat-dialog-title>Programación del día: {{ fecha }}</h2>
 </div>
 
 <mat-divider class="mb-3"></mat-divider>
 
-<!-- Lista de eventos existentes -->
-<div *ngIf="eventos.length > 0; else sinEventos">
-  <mat-list>
-    <mat-list-item *ngFor="let evento of eventos">
-      <div class="w-100">
-        <div><strong>{{ evento.tipo }}</strong></div>
-        <div>{{ evento.descripcion }}</div>
-      </div>
+<!-- Tabla de eventos existentes -->
+<table mat-table [dataSource]="eventos" class="mat-elevation-z8" *ngIf="eventos.length > 0; else sinEventos">
+
+  <!-- Columna Tipo -->
+  <ng-container matColumnDef="tipo">
+    <th mat-header-cell *matHeaderCellDef>Tipo</th>
+    <td mat-cell *matCellDef="let evento">{{ evento.tipo }}</td>
+  </ng-container>
+
+  <!-- Columna Descripción -->
+  <ng-container matColumnDef="descripcion">
+    <th mat-header-cell *matHeaderCellDef>Descripción</th>
+    <td mat-cell *matCellDef="let evento">{{ evento.descripcion }}</td>
+  </ng-container>
+
+  <!-- Columna Asignatura -->
+  <ng-container matColumnDef="asignatura">
+    <th mat-header-cell *matHeaderCellDef>Asignatura</th>
+    <td mat-cell *matCellDef="let evento">
+      {{ evento.asignatura?.nombre_asignatura || evento.asignatura || 'Sin asignatura' }}
+    </td>
+  </ng-container>
+
+  <!-- Columna Acciones -->
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+    <td mat-cell *matCellDef="let evento" style="display: flex;">
       <button mat-icon-button color="accent" (click)="onEditar(evento)" matTooltip="Editar">
         <mat-icon>edit</mat-icon>
       </button>
       <button mat-icon-button color="warn" (click)="onEliminar(evento)" matTooltip="Eliminar">
         <mat-icon>delete</mat-icon>
       </button>
-    </mat-list-item>
-  </mat-list>
-</div>
+    </td>
+  </ng-container>
+
+  <!-- Encabezado y filas -->
+  <tr mat-header-row *matHeaderRowDef="['tipo', 'descripcion', 'asignatura', 'acciones']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['tipo', 'descripcion', 'asignatura', 'acciones'];"></tr>
+
+</table>
 
 <ng-template #sinEventos>
   <p class="text-muted">No hay eventos registrados para este día.</p>
@@ -32,37 +56,28 @@
 <mat-divider class="my-3"></mat-divider>
 
 <!-- Formulario para agregar nueva actividad -->
-<h3>Agregar nueva actividad</h3>
+<h3><strong>Agregar nueva actividad</strong></h3>
 <mat-form-field appearance="outline" class="full-width">
   <mat-label>Tipo</mat-label>
   <mat-select [(ngModel)]="nuevoTipo">
-    <!-- si hay curso, muestra solo las opciones de curso -->
     <ng-container *ngIf="cursoId; else globalOptions">
-      <mat-option *ngFor="let opcion of tiposOpcionesCurso" [value]="opcion">
-        {{ opcion }}
-      </mat-option>
+      <mat-option *ngFor="let opcion of tiposOpcionesCurso" [value]="opcion">{{ opcion }}</mat-option>
     </ng-container>
-    <!-- si no hay curso, muestra las opciones globales -->
     <ng-template #globalOptions>
-      <mat-option *ngFor="let opcion of tiposOpciones" [value]="opcion">
-        {{ opcion }}
-      </mat-option>
+      <mat-option *ngFor="let opcion of tiposOpciones" [value]="opcion">{{ opcion }}</mat-option>
     </ng-template>
   </mat-select>
 </mat-form-field>
 
-
 <mat-form-field appearance="outline" class="full-width">
   <mat-label>Descripción</mat-label>
-  <textarea matInput [(ngModel)]="nuevaDescripcion" placeholder="Ej. Día del estudiante" maxlength="200"></textarea>
+  <textarea matInput [(ngModel)]="nuevaDescripcion" maxlength="200"></textarea>
   <mat-hint align="end">{{ nuevaDescripcion.length || 0 }}/200</mat-hint>
 </mat-form-field>
 
-<!-- Botones -->
 <div mat-dialog-actions align="end">
   <button mat-raised-button color="primary" (click)="eventoEditando ? onGuardarEdicion() : onAgregar()">
     {{ eventoEditando ? 'Guardar Cambios' : 'Agregar Evento' }}
   </button>
-
   <button mat-button (click)="onClose()">Cerrar</button>
 </div>

@@ -475,9 +475,10 @@ export class CursosNotasComponent implements OnInit {
   }
 
 
-  getEvaluacionId(nombreEvaluacion: string): number | null {
+  getEvaluacionId(nombreEvaluacion: string, semestreId: number): number | null {
     // Buscar en el primer estudiante una evaluación con ese nombre para obtener su ID
-    const estudiante = this.dataSourceNotas.find(e => e.evaluaciones.some((ev: any) => ev.nombre_evaluacion === nombreEvaluacion));
+    const dataSource = semestreId === 1 ? this.dataSourceNotas : this.dataSourceNotas2;
+    const estudiante = dataSource.find(e => e.evaluaciones.some((ev: any) => ev.nombre_evaluacion === nombreEvaluacion));
     if (estudiante) {
       const evaluacion = estudiante.evaluaciones.find((ev: any) => ev.nombre_evaluacion === nombreEvaluacion);
       return evaluacion ? evaluacion.id_evaluacion : null;

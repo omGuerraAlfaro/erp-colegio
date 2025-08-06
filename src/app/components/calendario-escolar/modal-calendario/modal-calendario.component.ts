@@ -9,7 +9,18 @@ import Swal from 'sweetalert2';
   styleUrls: ['./modal-calendario.component.css'],
 })
 export class ModalCalendarioComponent implements OnInit {
-  eventos: Array<{ id_dia: number; tipo: string; descripcion: string | null }> = [];
+  eventos: Array<{
+    id_dia: number;
+    tipo: string;
+    descripcion: string | null;
+    asignatura?: {
+      id: number;
+      nombre_asignatura: string;
+      descripcion?: string | null;
+      estado_asignatura?: boolean;
+    };
+  }> = [];
+
   fecha: string = ''; // formato DD-MM-YYYY
   cursoId: number | null = null;
   asignaturaId: number | null = null;
@@ -18,7 +29,6 @@ export class ModalCalendarioComponent implements OnInit {
   eventoEditando: any = null; // Para saber si estamos editando
   tiposOpciones: string[] = ['Feriado', 'Interferiado', 'Evento', 'Clase', 'Vacaciones'];
   tiposOpcionesCurso: string[] = ['Prueba', 'Trabajo Evaluado', 'Tarea', 'Reunión de Apoderados', 'Excursión Pedagógica'];
-
 
   constructor(
     public dialogRef: MatDialogRef<ModalCalendarioComponent>,
@@ -31,7 +41,7 @@ export class ModalCalendarioComponent implements OnInit {
     this.asignaturaId = data.asignaturaId || null;
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   onAgregar(): void {
     if (!this.nuevoTipo || this.nuevoTipo.trim() === '') {
@@ -47,7 +57,7 @@ export class ModalCalendarioComponent implements OnInit {
       descripcion: this.nuevaDescripcion,
       fecha: fechaFormateada,
       curso: this.cursoId ? { id: this.cursoId } : null,
-      asignatura: this.asignaturaId ? { id: this.asignaturaId } : null
+      asignatura: this.asignaturaId ? { id: this.asignaturaId } : null,
     };
 
     this.calendarioService.createFecha(nuevoEvento).subscribe({
@@ -101,7 +111,6 @@ export class ModalCalendarioComponent implements OnInit {
         cancelButtonText: 'Cancelar',
       }).then((res) => {
         if (res.isConfirmed) {
-
           const [day, month, year] = this.fecha.split('-');
           const fechaFormat = `${year}-${month}-${day}`;
 
@@ -110,7 +119,7 @@ export class ModalCalendarioComponent implements OnInit {
             descripcion: this.nuevaDescripcion,
             fecha: fechaFormat,
             curso: this.cursoId ? { id: this.cursoId } : null,
-            asignatura: this.asignaturaId ? { id: this.asignaturaId } : null
+            asignatura: this.asignaturaId ? { id: this.asignaturaId } : null,
           };
 
           const id = this.eventoEditando.id;
@@ -120,7 +129,7 @@ export class ModalCalendarioComponent implements OnInit {
               Swal.fire('Guardado', 'El evento ha sido actualizado.', 'success');
               this.dialogRef.close({ action: 'guardar' });
               // Actualiza en la lista local
-              const index = this.eventos.findIndex(e => e.id_dia === id);
+              const index = this.eventos.findIndex((e) => e.id_dia === id);
               if (index !== -1) {
                 this.eventos[index] = response;
               }

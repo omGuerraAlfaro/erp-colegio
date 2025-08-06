@@ -36,6 +36,13 @@ export class CalendarioEscolarService {
   }
 
   getAllFechasCurso(cursoId: number, asignaturaId: number | null): Observable<[]> {
+    return this.http.get<[]>(`${this.apiUrl}/curso/${cursoId}`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getAllFechasCursoyAsignatura(cursoId: number, asignaturaId: number | null): Observable<[]> {
     return this.http.get<[]>(`${this.apiUrl}/curso/${cursoId}/asignatura/${asignaturaId}`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
