@@ -235,7 +235,7 @@
             </ng-container>
 
             <!-- Columna separadora -->
-            <ng-container matColumnDef="separator" *ngIf="tareas && tareas.length > 0">
+            <ng-container matColumnDef="separator1" *ngIf="tareas && tareas.length > 0">
               <th mat-header-cell *matHeaderCellDef
                 style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
               </th>
@@ -324,7 +324,6 @@
                     [value]="getNotaDeEvaluacion(element, evaluacion.nombre_evaluacion)"
                     [ngClass]="{'nota-baja': isNotaBaja(element, evaluacion.nombre_evaluacion), 'nota-normal': !isNotaBaja(element, evaluacion.nombre_evaluacion)}"
                     (change)="onNotaChange($event, element, evaluacion.nombre_evaluacion)" />
-
                 </mat-form-field>
               </td>
             </ng-container>
@@ -455,7 +454,7 @@
             </ng-container>
 
             <!-- Columna separadora -->
-            <ng-container matColumnDef="separator" *ngIf="tareas && tareas.length > 0">
+            <ng-container matColumnDef="separator2" *ngIf="tareas2 && tareas2.length > 0">
               <th mat-header-cell *matHeaderCellDef
                 style="background-color: rgb(223, 223, 223); text-align: center; border-left: 2px solid #ccc;">
               </th>

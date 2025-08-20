@@ -213,7 +213,7 @@ export class CursosNotasComponent implements OnInit {
       this.displayedColumns = ['numero', 'alumno', ...parciales.map(ev => ev.nombre_evaluacion)];
 
       if (tareas.length > 0) {
-        this.displayedColumns.push('separator', ...tareas.map(ev => ev.nombre_evaluacion));
+        this.displayedColumns.push('separator1', ...tareas.map(ev => ev.nombre_evaluacion));
       }
       if (finalParciales.length > 0) {
         this.displayedColumns.push('separatorFinal1', ...finalParciales.map(ev => ev.nombre_evaluacion));
@@ -234,7 +234,7 @@ export class CursosNotasComponent implements OnInit {
       this.displayedColumns2 = ['numero', 'alumno', ...parciales.map(ev => ev.nombre_evaluacion)];
 
       if (tareas.length > 0) {
-        this.displayedColumns2.push('separator', ...tareas.map(ev => ev.nombre_evaluacion));
+        this.displayedColumns2.push('separator2', ...tareas.map(ev => ev.nombre_evaluacion));
       }
       if (finalParciales.length > 0) {
         this.displayedColumns2.push('separatorFinal1', ...finalParciales.map(ev => ev.nombre_evaluacion));
