@@ -27,7 +27,7 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild(MatCalendar, { static: true, read: ElementRef }) calendarContainer!: ElementRef;
 
   selectedDate: Date | null = null;
-  markedDates: { [fecha: string]: Array<{ id: number; tipo: string; descripcion: string | null; asignatura?: string | null }> } = {};
+  markedDates: { [fecha: string]: Array<{ id: number; tipo: string; descripcion: string | null; asignatura?: string | null; asignaturaPreBasica?: string | null }> } = {};
 
   rolUser: string = "";
   cursos: any[] = [];
@@ -288,7 +288,7 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
     }
 
     this.calendarioService.getAllFechasCurso(this.cursoSeleccionado, this.asignaturaSeleccionada).subscribe({
-      next: (data: Array<{ id_dia: number; fecha: string; tipo: string; descripcion: string | null; asignatura: { nombre_asignatura: string } }>) => {
+      next: (data: Array<{ id_dia: number; fecha: string; tipo: string; descripcion: string | null; asignatura: { nombre_asignatura: string }; asignaturaPreBasica: { nombre_asignatura: string } }>) => {
         this.markedDates = {};
         data.forEach((fecha) => {
           console.log('Fecha obtenida:', fecha);
@@ -300,7 +300,8 @@ export class CalendarioEscolarComponent implements OnInit, AfterViewInit, OnDest
               id: fecha.id_dia,
               tipo: fecha.tipo,
               descripcion: fecha.descripcion,
-              asignatura: fecha.asignatura.nombre_asignatura || null
+              asignatura: fecha.asignatura?.nombre_asignatura || null,
+              asignaturaPreBasica: fecha.asignaturaPreBasica?.nombre_asignatura || null
             });
           }
         });

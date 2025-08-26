@@ -14,17 +14,54 @@
 table.mat-table {
   width: 100%;
   margin-bottom: 16px;
+  table-layout: fixed;
 }
 
-th.mat-header-cell, td.mat-cell {
+th.mat-header-cell,
+td.mat-cell {
   font-size: 1.2rem;
   padding: 16px;
   text-align: left;
+  vertical-align: top;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 th.mat-header-cell {
   background-color: #f1f1f1;
   font-weight: bold;
+}
+
+/* Anchos por columna */
+.mat-column-tipo {
+  width: 160px;
+  min-width: 140px;
+}
+
+.mat-column-asignatura {
+  width: 200px;
+  min-width: 160px;
+}
+
+.mat-column-descripcion {
+  width: auto;
+}
+
+/* ocupa el resto */
+.mat-column-acciones {
+  width: 120px;
+  min-width: 110px;
+  text-align: center;
+  overflow: visible;
+}
+
+.acciones-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
 /* Iconos de acciones */
@@ -55,7 +92,7 @@ mat-form-field textarea,
 mat-form-field input,
 mat-select {
   font-size: 1.2rem;
-  padding: 12px;
+  padding: 8px;
 }
 
 mat-label {
@@ -70,4 +107,19 @@ mat-hint {
 /* Botones del formulario */
 mat-dialog-actions button {
   margin-left: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mat-column-tipo {
+    width: 130px;
+  }
+
+  .mat-column-asignatura {
+    width: 150px;
+  }
+
+  .mat-column-acciones {
+    width: 96px;
+  }
 }
