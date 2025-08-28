@@ -43,25 +43,34 @@ export class ModalCalendarioComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  /** Helper: arma payload respetando la regla de pre-básica vs básica */
+  private buildEventoPayload() {
+    const [day, month, year] = this.fecha.split('-'); // DD-MM-YYYY
+    const fechaISO = `${year}-${month}-${day}`;
+
+    const isPreBasica = this.cursoId === 1 || this.cursoId === 2;
+
+    return {
+      tipo: this.nuevoTipo?.trim(),
+      descripcion: this.nuevaDescripcion?.trim() ?? null,
+      fecha: fechaISO,
+      curso: this.cursoId ? { id: this.cursoId } : null,
+      // Regla:
+      asignatura: isPreBasica ? null : (this.asignaturaId ? { id: this.asignaturaId } : null),
+      asignaturaPreBasica: isPreBasica ? (this.asignaturaId ? { id: this.asignaturaId } : null) : null,
+    };
+  }
+
   onAgregar(): void {
     if (!this.nuevoTipo || this.nuevoTipo.trim() === '') {
       Swal.fire('Tipo requerido', 'Debes seleccionar un tipo de evento.', 'warning');
       return;
     }
 
-    const [day, month, year] = this.fecha.split('-');
-    const fechaFormateada = `${year}-${month}-${day}`;
-
-    const nuevoEvento = {
-      tipo: this.nuevoTipo,
-      descripcion: this.nuevaDescripcion,
-      fecha: fechaFormateada,
-      curso: this.cursoId ? { id: this.cursoId } : null,
-      asignatura: this.asignaturaId ? { id: this.asignaturaId } : null,
-    };
+    const nuevoEvento = this.buildEventoPayload();
 
     this.calendarioService.createFecha(nuevoEvento).subscribe({
-      next: (resp) => {
+      next: () => {
         Swal.fire('Agregado', 'El evento fue agregado correctamente.', 'success');
         this.dialogRef.close({ action: 'guardar' });
       },
@@ -87,7 +96,9 @@ export class ModalCalendarioComponent implements OnInit {
       cancelButtonText: 'Cancelar',
     }).then((res) => {
       if (res.isConfirmed) {
-        this.calendarioService.deleteFecha(evento.id).subscribe({
+        // Asegúrate de usar el ID correcto según tu backend (evento.id o evento.id_dia)
+        const id = evento.id ?? evento.id_dia;
+        this.calendarioService.deleteFecha(id).subscribe({
           next: () => {
             Swal.fire('Eliminado', 'El evento ha sido eliminado.', 'success');
             this.dialogRef.close({ action: 'eliminar' });
@@ -111,25 +122,17 @@ export class ModalCalendarioComponent implements OnInit {
         cancelButtonText: 'Cancelar',
       }).then((res) => {
         if (res.isConfirmed) {
-          const [day, month, year] = this.fecha.split('-');
-          const fechaFormat = `${year}-${month}-${day}`;
-
-          const updatedEvento = {
-            tipo: this.nuevoTipo,
-            descripcion: this.nuevaDescripcion,
-            fecha: fechaFormat,
-            curso: this.cursoId ? { id: this.cursoId } : null,
-            asignatura: this.asignaturaId ? { id: this.asignaturaId } : null,
-          };
-
-          const id = this.eventoEditando.id;
+          const updatedEvento = this.buildEventoPayload();
+          // Asegúrate de usar el ID correcto según tu backend
+          const id = this.eventoEditando?.id ?? this.eventoEditando?.id_dia;
 
           this.calendarioService.updateFecha(id, updatedEvento).subscribe({
             next: (response: any) => {
               Swal.fire('Guardado', 'El evento ha sido actualizado.', 'success');
               this.dialogRef.close({ action: 'guardar' });
-              // Actualiza en la lista local
-              const index = this.eventos.findIndex((e) => e.id_dia === id);
+
+              // Actualiza en la lista local (si usas id_dia en la grilla)
+              const index = this.eventos.findIndex((e) => (e as any).id_dia === id || (e as any).id === id);
               if (index !== -1) {
                 this.eventos[index] = response;
               }

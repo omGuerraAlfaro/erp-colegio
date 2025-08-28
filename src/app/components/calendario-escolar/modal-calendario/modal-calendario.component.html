@@ -27,7 +27,8 @@
     <th mat-header-cell *matHeaderCellDef>Asignatura</th>
     <td mat-cell *matCellDef="let evento">
       {{ evento.asignatura?.nombre_asignatura
-      || evento.asignaturaPreBasica?.nombre_asignatura
+      || evento.asignaturaPreBasica
+      || evento.asignatura
       || 'Sin asignatura' }}
     </td>
   </ng-container>
