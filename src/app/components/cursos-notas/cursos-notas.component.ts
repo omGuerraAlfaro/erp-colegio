@@ -871,6 +871,10 @@ export class CursosNotasComponent implements OnInit {
   esPermitidoUTP(): boolean {
     return this.perfil === 'profesor-utp' || this.perfil === 'administrador';
   }
+  
+  semestresCerrados(): boolean {
+    return (this.primerSemestreCerrado && this.segundoSemestreCerrado);
+  }
 
   cierreFinalSemestre(semestreId: number): void {
     Swal.fire({
@@ -886,6 +890,33 @@ export class CursosNotasComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.semestreService.cierreSemestre(semestreId).subscribe({
+          next: () => {
+            Swal.fire('Cerrado', 'El semestre ha sido cerrado exitosamente.', 'success');
+            // Aquí podrías recargar la vista o redirigir a otra página
+          },
+          error: (err: any) => {
+            console.error('Error al cerrar el semestre:', err);
+            Swal.fire('Error', 'No se pudo cerrar el semestre.', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  cierreFinalAno(): void {
+    Swal.fire({
+      title: '¿Estás seguro de cerrar el año?',
+      html: `
+      Esta acción <b>bloqueará el guardado, modificación y cierre de notas</b>.<br><br>
+      Asegúrese de que <b>todos los promedios finales estén calculados</b> antes de continuar.
+    `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cerrar semestre',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.semestreService.cierreAnno().subscribe({
           next: () => {
             Swal.fire('Cerrado', 'El semestre ha sido cerrado exitosamente.', 'success');
             // Aquí podrías recargar la vista o redirigir a otra página

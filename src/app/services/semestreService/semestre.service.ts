@@ -41,6 +41,14 @@ export class SemestreService {
       );
   }
 
+  cierreAnno() {
+    const url = `${environment.api}/cierre-semestre/anual`;
+    return this.http.post(url, {}, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     const errorMessage = `An error occurred: ${error.message}`;
     console.error(errorMessage);

@@ -2,6 +2,15 @@
   <!-- TÍTULO -->
   <div class="cabecera">
     <h1><b>Registro de Notas</b></h1>
+
+    <div class="btn-cierre-final-anno-wrapper" matTooltip="Permitido solo para usuarios UTP y Administradores"
+      matTooltipPosition="above" (click)="$event.stopPropagation()">
+      <button mat-stroked-button color="primary" (click)="cierreFinalAno()"
+        [disabled]="!esPermitidoUTP() || !semestresCerrados()">
+        <mat-icon class="me-1">lock</mat-icon>
+        Cierre Final Año
+      </button>
+    </div>
   </div>
   <mat-divider></mat-divider>
 
@@ -139,7 +148,8 @@
         <mat-panel-description>
           <div class="btn-cierre-final-wrapper" matTooltip="Permitido solo para usuarios UTP y Administradores"
             matTooltipPosition="above" (click)="$event.stopPropagation()">
-            <button mat-stroked-button color="primary" (click)="cierreFinalSemestre(1)" [disabled]="!esPermitidoUTP() || primerSemestreCerrado">
+            <button mat-stroked-button color="primary" (click)="cierreFinalSemestre(1)"
+              [disabled]="!esPermitidoUTP() || primerSemestreCerrado">
               <mat-icon class="me-1">lock</mat-icon>
               Cierre Final Semestre
             </button>
@@ -172,13 +182,16 @@
           <button mat-raised-button color="primary" (click)="buscarNotas(1)">
             Buscar
           </button>
-          <button mat-raised-button color="warn" class="ms-3" (click)="guardarNotas(1)" [disabled]="primerSemestreCerrado">
+          <button mat-raised-button color="warn" class="ms-3" (click)="guardarNotas(1)"
+            [disabled]="primerSemestreCerrado">
             Guardar Cambios
           </button>
-          <button mat-raised-button color="accent" class="ms-3" (click)="agregarEvaluacion(1)" [disabled]="primerSemestreCerrado">
+          <button mat-raised-button color="accent" class="ms-3" (click)="agregarEvaluacion(1)"
+            [disabled]="primerSemestreCerrado">
             Agregar Evaluación
           </button>
-          <button mat-raised-button color="secondary" class="ms-3" (click)="cierreSemestre(1)" [disabled]="primerSemestreCerrado">
+          <button mat-raised-button color="secondary" class="ms-3" (click)="cierreSemestre(1)"
+            [disabled]="primerSemestreCerrado">
             Cierre Parcial Semestre
           </button>
         </div>
@@ -357,7 +370,8 @@
         <mat-panel-description>
           <div class="btn-cierre-final-wrapper" matTooltip="Permitido solo para usuarios UTP y Administradores"
             matTooltipPosition="above" (click)="$event.stopPropagation()">
-            <button mat-stroked-button color="primary" (click)="cierreFinalSemestre(2)" [disabled]="!esPermitidoUTP() || segundoSemestreCerrado">
+            <button mat-stroked-button color="primary" (click)="cierreFinalSemestre(2)"
+              [disabled]="!esPermitidoUTP() || segundoSemestreCerrado">
               <mat-icon class="me-1">lock</mat-icon>
               Cierre Final Semestre
             </button>
