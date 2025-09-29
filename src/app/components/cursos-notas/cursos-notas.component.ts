@@ -5,6 +5,8 @@ import { NotasService } from 'src/app/services/notaService/nota.service';
 import Swal from 'sweetalert2';
 import { SemestreService } from 'src/app/services/semestreService/semestre.service';
 import * as e from 'cors';
+import { ModalObservacionAlumnosComponent } from './modal-observacion-alumnos/modal-observacion-alumnos.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-cursos-notas',
@@ -52,13 +54,16 @@ export class CursosNotasComponent implements OnInit {
 
   primerSemestreCerrado = false;
   segundoSemestreCerrado = false;
+  observacionesCerradas = false;
+  finalAnnioCerrado = false;
 
   constructor(
     private notasService: NotasService,
     private cursoService: CursosService,
     private asignaturaService: AsignaturaService,
     private semestreService: SemestreService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -66,7 +71,15 @@ export class CursosNotasComponent implements OnInit {
       next: (estado: any) => {
         this.primerSemestreCerrado = estado.some((sem: any) => sem.id === 1 && sem.cerrado);
         this.segundoSemestreCerrado = estado.some((sem: any) => sem.id === 2 && sem.cerrado);
+        this.observacionesCerradas = estado.some((sem: any) => sem.id === 3 && sem.cerrado);
+        this.finalAnnioCerrado = estado.some((sem: any) => sem.id === 4 && sem.cerrado);
+
         this.cdRef.markForCheck();
+        console.log('Primer semestre cerrado:', this.primerSemestreCerrado);
+        console.log('Segundo semestre cerrado:', this.segundoSemestreCerrado);
+        console.log('Observaciones cerradas:', this.observacionesCerradas);
+        console.log('Fin de año:', this.observacionesCerradas);
+
       },
     });
     this.getAllCursos();
@@ -78,6 +91,7 @@ export class CursosNotasComponent implements OnInit {
     this.cursoService.getAllCursos().subscribe({
       next: (cursos) => {
         this.cursos = cursos;
+        console.log('Cursos cargados:', this.cursos);
         this.cdRef.markForCheck();
       },
       error: (err) => console.error('Error al obtener cursos:', err),
@@ -871,10 +885,16 @@ export class CursosNotasComponent implements OnInit {
   esPermitidoUTP(): boolean {
     return this.perfil === 'profesor-utp' || this.perfil === 'administrador';
   }
-  
-  semestresCerrados(): boolean {
-    return (this.primerSemestreCerrado && this.segundoSemestreCerrado);
+
+  deshabilitarObservaciones(): boolean {
+    return !(this.primerSemestreCerrado && this.segundoSemestreCerrado) || this.observacionesCerradas;
   }
+
+  deshabilitarCierreFinalAnno(): boolean {
+    const listoParaCierre = this.primerSemestreCerrado && this.segundoSemestreCerrado && this.observacionesCerradas;
+    return !this.esPermitidoUTP() || !listoParaCierre || this.finalAnnioCerrado;
+  }
+
 
   cierreFinalSemestre(semestreId: number): void {
     Swal.fire({
@@ -926,6 +946,23 @@ export class CursosNotasComponent implements OnInit {
             Swal.fire('Error', 'No se pudo cerrar el semestre.', 'error');
           }
         });
+      }
+    });
+  }
+
+  abrirModalObservaciones(): void {
+    const dialogRef = this.dialog.open(ModalObservacionAlumnosComponent, {
+      width: '900px',
+      disableClose: true, // opcional: evita cerrar al hacer clic fuera
+      autoFocus: false    // opcional: evita que enfoque automático rompa scroll
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        //time out
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     });
   }

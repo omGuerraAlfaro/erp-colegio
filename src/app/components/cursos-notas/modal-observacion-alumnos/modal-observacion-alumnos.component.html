@@ -1,0 +1,69 @@
+<h2 mat-dialog-title>{{ titulo }}</h2>
+
+<mat-dialog-content [formGroup]="form" class="w-full">
+    <!-- Fila de selección de curso -->
+    <mat-form-field appearance="fill" class="min-w-[260px] mb-4">
+        <mat-label>Curso</mat-label>
+        <mat-select [value]="cursoSeleccionadoId"
+            (selectionChange)="cursoSeleccionadoId = castToNumber($event.value); onCursoChange()"
+            [disabled]="loadingCursos || !cursos.length">
+            <mat-option *ngFor="let c of cursos" [value]="c.id">
+                {{ c.nombre }}
+            </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="loadingCursos">Cargando cursos…</mat-hint>
+    </mat-form-field>
+
+    <!-- Lista de alumnos -->
+    <ng-container formArrayName="alumnosObservaciones">
+        <table mat-table [dataSource]="alumnosObservaciones.controls" class="w-full"
+            *ngIf="alumnosObservaciones.length > 0">
+            <!-- Alumno -->
+            <ng-container matColumnDef="alumno">
+                <th mat-header-cell *matHeaderCellDef> Alumno </th>
+                <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                    <div class="font-medium">{{ alumnosObservaciones.at(i).get('alumnoNombre')?.value }}</div>
+                </td>
+            </ng-container>
+
+            <!-- Observación -->
+            <ng-container matColumnDef="observacion">
+                <th mat-header-cell *matHeaderCellDef class="col-observacion"> Observación </th>
+                <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i" class="col-observacion">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Escribe la observación</mat-label>
+                        <textarea matInput formControlName="observacion" [maxlength]="maxLengthObservacion"
+                            rows="3"></textarea>
+                        <mat-hint align="end">
+                            {{ (alumnosObservaciones.at(i).get('observacion')?.value || '').length }}/{{
+                            maxLengthObservacion }}
+                        </mat-hint>
+                        <mat-error *ngIf="isInvalidObservacion(i)">{{ getErrorObservacion(i) }}</mat-error>
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let r; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-card *ngIf="!alumnosObservaciones.length && cursoSeleccionadoId" class="mt-2">
+            <mat-card-content>No hay alumnos para este curso.</mat-card-content>
+        </mat-card>
+    </ng-container>
+
+    <!-- Confirmación: solo visible cuando ya hay alumnos cargados -->
+    <div class="mt-4" *ngIf="alumnosObservaciones.length > 0">
+        <mat-checkbox [formControl]="confirmadoCtrl">
+            Confirmo que he revisado todas las observaciones
+        </mat-checkbox>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="guardar()" [disabled]="!puedeGuardar">
+        Guardar
+    </button>
+</mat-dialog-actions>

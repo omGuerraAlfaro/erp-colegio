@@ -26,10 +26,11 @@
     text-transform: none;
 }
 
-.btn-cierre-final-anno-wrapper {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
+.acciones {
+  margin-left: auto;       /* empuja los botones a la derecha */
+  display: flex;
+  gap: 1rem;               /* espacio entre botones */
+  align-items: center;
 }
 
 .nota-baja {

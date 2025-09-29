@@ -3,15 +3,27 @@
   <div class="cabecera">
     <h1><b>Registro de Notas</b></h1>
 
-    <div class="btn-cierre-final-anno-wrapper" matTooltip="Permitido solo para usuarios UTP y Administradores"
-      matTooltipPosition="above" (click)="$event.stopPropagation()">
-      <button mat-stroked-button color="primary" (click)="cierreFinalAno()"
-        [disabled]="!esPermitidoUTP() || !semestresCerrados()">
-        <mat-icon class="me-1">lock</mat-icon>
-        Cierre Final Año
-      </button>
+    <div class="acciones">
+      <div class="btn-cierre-final-anno-wrapper" matTooltip="Para la habilitación de Observaciones Finales, ambos semestres deben estar cerrados"
+        matTooltipPosition="above" (click)="$event.stopPropagation()">
+        <button mat-stroked-button color="primary" (click)="abrirModalObservaciones()"
+          [disabled]="deshabilitarObservaciones()">
+          <mat-icon class="me-1">lock</mat-icon>
+          Observaciones Finales
+        </button>
+      </div>
+
+      <div class="btn-cierre-final-anno-wrapper" matTooltip="Permitido solo para UTP/Administradores y cuando las Observaciones estén cerradas."
+        matTooltipPosition="above" (click)="$event.stopPropagation()">
+        <button mat-stroked-button color="primary" (click)="cierreFinalAno()"
+          [disabled]="deshabilitarCierreFinalAnno()">
+          <mat-icon class="me-1">lock</mat-icon>
+          Cierre Final Año
+        </button>
+      </div>
     </div>
   </div>
+
   <mat-divider></mat-divider>
 
   <!-- Spinner mientras se cargan los datos -->

@@ -36,7 +36,7 @@ export class CursosService {
         catchError(this.handleError)
       );
   }
-  
+
   getCursoByRutEstudiante(rut: string): Observable<any> {
     return this.http.get<any>(`${environment.api}/curso/curso-estudiante/` + rut, this.httpOptions)
       .pipe(
@@ -50,9 +50,17 @@ export class CursosService {
         catchError(this.handleError)
       );
   }
-  
+
   getAllCursosBasica(): Observable<any> {
     return this.http.get<any>(`${environment.api}/curso/all/basica`, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  cambiarEstadoCerrarObservacion(cursoId: number): Observable<any> {
+    const url = `${environment.api}/curso/cerrar-observacion/${cursoId}`;
+    return this.http.patch(url, {}, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );

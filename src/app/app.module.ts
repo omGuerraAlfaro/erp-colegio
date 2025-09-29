@@ -80,6 +80,7 @@ import { BoletaEdicionComponent } from './components/boleta-edicion/boleta-edici
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalVerBoletasComponent } from './components/modal-ver-boletas/modal-ver-boletas.component';
 import { CertificadoAlumnoNotasModalComponent } from './components/certificados/certificado-alumno-notas-modal/certificado-alumno-notas-modal.component';
+import { ModalObservacionAlumnosComponent } from './components/cursos-notas/modal-observacion-alumnos/modal-observacion-alumnos.component';
 
 
 
@@ -121,6 +122,7 @@ import { CertificadoAlumnoNotasModalComponent } from './components/certificados/
     InscripcionTalleresComponent,
     BoletaEdicionComponent,
     ModalVerBoletasComponent,
+    ModalObservacionAlumnosComponent,
   ],
   imports: [
     BrowserModule,

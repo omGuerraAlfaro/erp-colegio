@@ -49,6 +49,14 @@ export class SemestreService {
       );
   }
 
+  cierreObservacionMultiple(payload: { cierres: { alumnoRut: string; observacion: string }[] }) {
+    const url = `${environment.api}/cierre-semestre/observaciones/multiple`;
+    return this.http.post(url, payload, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     const errorMessage = `An error occurred: ${error.message}`;
     console.error(errorMessage);
