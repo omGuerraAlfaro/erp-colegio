@@ -126,7 +126,7 @@ export class CertificadoAlumnoNotasModalComponent {
 
       const request$ = tipo === 'parcial'
         ? this.pdfService.getPdfCertificadoNotasCursoParcial(cursoId, semestreId!)
-        : this.pdfService.getPdfCertificadoNotasCursoFinal(cursoId, semestreId!);
+        : this.pdfService.getPdfCertificadoNotasCursoFinal(cursoId);
 
       request$.subscribe({
         next: (blob) => {
