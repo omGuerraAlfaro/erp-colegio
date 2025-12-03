@@ -49,7 +49,8 @@ export class CertificadoAlumnoNotasModalComponent {
   }
 
   generatePDF() {
-    if (!this.cursoSeleccionado || !this.semestreSeleccionado) return;
+    if (!this.cursoSeleccionado) return;
+    if (this.tipoCertificado === 'parcial' && !this.semestreSeleccionado) return;
 
     this.isLoading = true;
 
@@ -125,7 +126,7 @@ export class CertificadoAlumnoNotasModalComponent {
 
       const request$ = tipo === 'parcial'
         ? this.pdfService.getPdfCertificadoNotasCursoParcial(cursoId, semestreId!)
-        : this.pdfService.getPdfCertificadoNotasCursoFinal(cursoId, semestreId!);
+        : this.pdfService.getPdfCertificadoNotasCursoFinal(cursoId);
 
       request$.subscribe({
         next: (blob) => {

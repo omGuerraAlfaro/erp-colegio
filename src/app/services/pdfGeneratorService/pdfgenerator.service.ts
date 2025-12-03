@@ -47,19 +47,19 @@ export class PdfgeneratorService {
 
   // ------------------ GET: Certificados por curso ------------------
 
-  getPdfCertificadoNotasCursoFinal(cursoId: number, semestreId: number): Observable<Blob> {
+  getPdfCertificadoNotasCursoFinal(cursoId: number): Observable<Blob> {
     return this.http.post<Blob>(
-      `${environment.api}/pdf/generate/curso-notas-final?cursoId=${cursoId}&semestreId=${semestreId}`,
-      null, // 👈 body vacío
-      this.postHttpOptions // 👈 ahora es el tercer parámetro
+      `${environment.api}/pdf/generate/curso-notas-final`,
+      { cursoId },
+      this.postHttpOptions
     ).pipe(catchError(this.handleError2));
   }
 
   getPdfCertificadoNotasCursoParcial(cursoId: number, semestreId: number): Observable<Blob> {
     return this.http.post<Blob>(
       `${environment.api}/pdf/generate/curso-notas-parcial?cursoId=${cursoId}&semestreId=${semestreId}`,
-      null, // 👈 body vacío
-      this.postHttpOptions // 👈 headers y responseType
+      null,
+      this.postHttpOptions
     ).pipe(catchError(this.handleError2));
   }
 
