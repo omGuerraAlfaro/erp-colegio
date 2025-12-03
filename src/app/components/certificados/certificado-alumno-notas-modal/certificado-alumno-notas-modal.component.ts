@@ -49,7 +49,8 @@ export class CertificadoAlumnoNotasModalComponent {
   }
 
   generatePDF() {
-    if (!this.cursoSeleccionado || !this.semestreSeleccionado) return;
+    if (!this.cursoSeleccionado) return;
+    if (this.tipoCertificado === 'parcial' && !this.semestreSeleccionado) return;
 
     this.isLoading = true;
 
